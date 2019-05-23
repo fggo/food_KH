@@ -29,6 +29,10 @@ public class MainMenu {
 		System.out.print("메뉴 입력: ");
 	}
 
+	public static void initPageView() {
+		
+	}
+
 	public static void mainMenu() {
 		int choice = -1;
 		do {
