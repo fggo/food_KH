@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
+import java.util.Objects;
 
 import com.kh.food.view.MainMenu;
 
@@ -32,10 +33,6 @@ public class User implements Serializable {
 		this.seatNo = seatNo;
 	}
 
-	public void mainMenu() {
-		MainMenu.mainMenu();
-	}
-
 	public void showUserInfo() {
 		String date = null;
 		if(orderCreated !=null) {
@@ -52,7 +49,7 @@ public class User implements Serializable {
 	
 	@Override
 	public int hashCode() {
-		return this.phone.hashCode();
+		return Objects.hash(this.phone);
 	}
 
 	@Override

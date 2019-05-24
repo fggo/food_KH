@@ -17,25 +17,16 @@ import com.kh.food.view.MainMenu;
 public class UserController {
 	//사용자 데이터 읽고(readFromFile),쓰기(storeToFile) 위한 파일
 	private final File dataFile=new File("Users.dat"); 
-
 	HashSet<User> users = new HashSet<User>();
-
 	private String phone; //현재 로그인 유저 정보(User객체에 1:1맵핑 시킴)
-
-	private MainMenu menu; //메뉴 선택을 위한 객체
-	
+	private MainMenu menu = new MainMenu(); //메뉴 선택을 위한 객체
 	private final static int SEATS = 10;
-	
 	private boolean[] reservations = new boolean[SEATS];
 
-	public UserController() {
-		phone = null;
-		readFromFile();
-	}
-
 	public void mainMenu() {
-		menu = new MainMenu();
-		MainMenu.mainMenu();
+		phone = null;
+		this.readFromFile();
+		menu.mainMenu(this);
 	}
 
 	public void readFromFile() {
@@ -82,7 +73,7 @@ public class UserController {
 		if(this.phone != null)
 			System.out.println("회원가입 하려면 먼저 로그아웃 해주세요.");
 
-		User user = MainMenu.signUpView();
+		User user = menu.signUpView();
 		boolean isAdded = users.add(user);
 		if(isAdded)
 			System.out.println("회원가입이 성공적으로 처리되었습니다.");
@@ -92,7 +83,7 @@ public class UserController {
 	}
 
 	public void signIn() {
-		String phoneInput = MainMenu.signInView();
+		String phoneInput = menu.signInView();
 		if(phoneInput.equals(this.phone) || phone != null)
 			System.out.println("이미 로그인 되어 있습니다.");
 
@@ -144,7 +135,7 @@ public class UserController {
 		
 		//주문
 		User user = getUserByPhone(this.phone);
-		Map<String, Integer> orderList = MainMenu.orderView();
+		Map<String, Integer> orderList = menu.orderView();
 		user.setOrderList(orderList);
 
 		//좌석
@@ -168,7 +159,7 @@ public class UserController {
 	}
 
 	public void reserveSeat() {
-		int seatNo = MainMenu.reserveSeatView();
+		int seatNo = menu.reserveSeatView();
 		User user = getUserByPhone(this.phone);
 		if(seatNo >=1 && seatNo <= reservations.length) {
 			user.setSeatNo(seatNo);

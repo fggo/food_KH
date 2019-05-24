@@ -15,9 +15,10 @@ import static com.kh.food.view.Constants.*;
 
 public class MainMenu {
 	public final static Scanner CONSOLE = new Scanner(System.in);
-	static UserController controller = Main.getController();
+	@SuppressWarnings("unused")
+	private UserController controller;
 	
-	public static void showMainMenu() {
+	public void showMainMenu() {
 		System.out.println("=== 홈페이지 ===");
 		System.out.println("1. 회원 가입");
 		System.out.println("2. 로그인");
@@ -29,15 +30,16 @@ public class MainMenu {
 		System.out.print("메뉴 입력: ");
 	}
 
-	public static void initPageView() {
+	public void initPageView() {
 		
 	}
 
-	public static void mainMenu() {
+	public void mainMenu(UserController controller) {
+		this.controller = controller;
 		int choice = -1;
 		do {
 			try {
-				MainMenu.showMainMenu();
+				showMainMenu();
 				choice = CONSOLE.nextInt(); CONSOLE.nextLine();
 				if(choice <MENU_EXIT || choice > SHOW_USERS)
 					throw new MenuChoiceException(choice);
@@ -62,7 +64,7 @@ public class MainMenu {
 		} while(choice != 0);
 	}
 	
-	public static User signUpView() {
+	public User signUpView() {
 		System.out.println("=== 회원 가입 ===");
 		System.out.print("회원 이름 : ");
 		String username = CONSOLE.nextLine();
@@ -78,7 +80,7 @@ public class MainMenu {
 		return user;
 	}
 
-	public static String signInView() {
+	public String signInView() {
 		System.out.println("=== 회원 로그인 ===");
 		System.out.print("핸드폰번호 : ");
 		String phone = CONSOLE.nextLine();
@@ -86,7 +88,7 @@ public class MainMenu {
 		return phone;
 	}
 
-	public static void showFoodMenu() {
+	public void showFoodMenu() {
 		System.out.println("=== 음식 메뉴 ===");
 		System.out.println("  1. 햄버거 --- 2,000");
 		System.out.println("  2. 치킨 --- 9,000");
@@ -97,14 +99,14 @@ public class MainMenu {
 		System.out.print(" 번호입력: ");
 	}
 
-	public static Map<String,Integer> orderView(){
+	public Map<String,Integer> orderView(){
 		Map<String, Integer> orderList =new HashMap<String,Integer>();
 		int total = 0;
 		int choice = -1;
 		int qty = 0;
 		do {
 			try {
-				MainMenu.showFoodMenu();
+				showFoodMenu();
 				choice = CONSOLE.nextInt(); CONSOLE.nextLine();
 
 				if(choice!=MENU_EXIT) {
@@ -145,7 +147,7 @@ public class MainMenu {
 		return new HashMap<String,Integer>();
 	}
 	
-	public static void seatView() {
+	public void seatView() {
 		System.out.println("테이블 현황(X: 빈좌석)");
 		boolean[] reservations = controller.getReservations();
 		
@@ -157,8 +159,8 @@ public class MainMenu {
 		System.out.println();
 	}
 
-	public static int reserveSeatView() {
-		MainMenu.seatView();
+	public int reserveSeatView() {
+		seatView();
 		boolean[] reservations = controller.getReservations();
 		Set<Integer> seatNos = new HashSet<Integer>();
 		
