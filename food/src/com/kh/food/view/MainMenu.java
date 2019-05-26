@@ -1,5 +1,7 @@
 package com.kh.food.view;
 
+import static com.kh.food.view.Constants.*;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,15 +10,15 @@ import java.util.Scanner;
 import java.util.Set;
 
 import com.kh.food.controller.UserController;
-import com.kh.food.main.Main;
+import com.kh.food.gui.LoginPageFrame;
 import com.kh.food.model.vo.MenuChoiceException;
 import com.kh.food.model.vo.User;
-import static com.kh.food.view.Constants.*;
 
 public class MainMenu {
 	public final static Scanner CONSOLE = new Scanner(System.in);
 	@SuppressWarnings("unused")
 	private UserController controller;
+//	private LoginPageFrame winFrame = new LoginPageFrame("food");
 	
 	public void showMainMenu() {
 		System.out.println("=== 홈페이지 ===");
@@ -96,7 +98,7 @@ public class MainMenu {
 		System.out.println("  3. 콜라 --- 1,000");
 		System.out.println("  4. 우유 --- 500");
 		System.out.println("  0. 주문 종료");
-		System.out.print(" 번호입력: ");
+		System.out.print("메뉴번호 입력 : ");
 	}
 
 	public Map<String,Integer> orderView(){
@@ -110,7 +112,7 @@ public class MainMenu {
 				choice = CONSOLE.nextInt(); CONSOLE.nextLine();
 
 				if(choice!=MENU_EXIT) {
-					System.out.print("수량: ");
+					System.out.print("수량 : ");
 					qty = CONSOLE.nextInt(); CONSOLE.nextLine();
 					if(qty <0)
 						throw new MenuChoiceException(qty);
@@ -148,7 +150,7 @@ public class MainMenu {
 	}
 	
 	public void seatView() {
-		System.out.println("테이블 현황(X: 빈좌석)");
+		System.out.println("좌석 현황(X: 빈좌석)");
 		boolean[] reservations = controller.getReservations();
 		
 		for(int i=0;i<reservations.length; i++) {
@@ -170,7 +172,7 @@ public class MainMenu {
 		char answer = '\u0000';
 		int seatNo = -1;
 		do {
-			System.out.print("식사하고 가시겠습니까? (Y/N): ");
+			System.out.print("식사하고 가시겠습니까? (Y/N) : ");
 			answer = Character.toUpperCase(CONSOLE.nextLine().charAt(0));
 			if(answer =='Y') {
 				try {
@@ -194,7 +196,7 @@ public class MainMenu {
 				System.out.println("음식 포장을 선택하셨습니다.");
 			}
 			else {
-				System.out.println("Y/N으로 다시 입력해주세요.");
+				System.out.println("Y/N 으로 다시 입력해주세요.");
 			}
 		} while(answer!='Y' && answer!='N');
 

@@ -15,13 +15,20 @@ import com.kh.food.model.vo.User;
 import com.kh.food.view.MainMenu;
 
 public class UserController {
-	//사용자 데이터 읽고(readFromFile),쓰기(storeToFile) 위한 파일
+	//User 데이터 readFromFile, storeToFile
 	private final File dataFile=new File("Users.dat"); 
+ 
+	//User데이터 집합
 	HashSet<User> users = new HashSet<User>();
-	private String phone; //현재 로그인 유저 정보(User객체에 1:1맵핑 시킴)
-	private MainMenu menu = new MainMenu(); //메뉴 선택을 위한 객체
-	private final static int SEATS = 10;
-	private boolean[] reservations = new boolean[SEATS];
+
+	//현재 로그인 유저 정보(User객체에 1:1맵핑)
+	private String phone;
+
+	//메뉴 선택을 위한 객체
+	private MainMenu menu = new MainMenu(); 
+
+	private final static int SEATS = 10; //좌석 수
+	private boolean[] reservations = new boolean[SEATS]; //좌석 예약여부
 
 	public void mainMenu() {
 		phone = null;
