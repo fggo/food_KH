@@ -26,6 +26,8 @@ import javax.swing.UIManager;
 
 import org.openide.awt.DropDownButtonFactory;
 
+import com.kh.food.view.MainMenu;
+
 public class LoginPageFrame extends JFrame implements ActionListener {
 	/**
 	 * 
@@ -43,7 +45,7 @@ public class LoginPageFrame extends JFrame implements ActionListener {
 	
 	private JTextField phoneInput;
 
-	public LoginPageFrame(String title) throws HeadlessException {
+	public LoginPageFrame(String title, MainMenu menu) throws HeadlessException {
 		super(title);
 		setSize(WIDTH, HEIGHT);
 		setLocationRelativeTo(null);
@@ -72,7 +74,6 @@ public class LoginPageFrame extends JFrame implements ActionListener {
 		rightPanel.add(subPanel1);
 		rightPanel.add(subPanel2);
 
-		
 		topPanel = new JPanel(new GridLayout(1,2));
 		topPanel.add(leftPanel);
 		topPanel.add(rightPanel);
@@ -81,6 +82,7 @@ public class LoginPageFrame extends JFrame implements ActionListener {
 		bottomPanel.add(orderBtn);
 		splitPane1.setTopComponent(topPanel);
 		splitPane1.setBottomComponent(bottomPanel);
+		splitPane1.setEnabled(false);
 
 		
 		JToolBar navBar = this.createNavBar();
@@ -94,6 +96,7 @@ public class LoginPageFrame extends JFrame implements ActionListener {
 		bottomPanel.add(splitPane1);
 		splitPane2.setTopComponent(topPanel);
 		splitPane2.setBottomComponent(bottomPanel);
+		splitPane2.setEnabled(false);
 
 
 		JPanel topMostPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -109,6 +112,7 @@ public class LoginPageFrame extends JFrame implements ActionListener {
 		bottomPanel.add(splitPane2);
 		splitPane3.setTopComponent(topPanel);
 		splitPane3.setBottomComponent(bottomPanel);
+		splitPane3.setEnabled(false);
 
 		add(splitPane3);
 		
@@ -194,6 +198,8 @@ public class LoginPageFrame extends JFrame implements ActionListener {
 	private JPopupMenu createDropDownMenu() {
 		JPopupMenu popupMenu = new JPopupMenu();
 		
+
+
 		JMenuItem menuItemCreateSpringProject = new JMenuItem("햄버거 - 2000원");
 		popupMenu.add(menuItemCreateSpringProject);
 		
@@ -221,21 +227,11 @@ public class LoginPageFrame extends JFrame implements ActionListener {
 		
 		menuBar.add(menuFile);
 	}
-	
-	public static void main(String[] args) throws Exception {
-		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		new LoginPageFrame("food").setVisible(true);
-//		SwingUtilities.invokeLater(new Runnable() {
-//			
-//			@Override
-//			public void run() {
-//			}
-//		});
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		Object source = evt.getSource();
+//		System.out.println(source);
 		if (source instanceof JMenuItem) {
 			JMenuItem clickedMenuItem = (JMenuItem) source;
 			String menuText = clickedMenuItem.getText();
@@ -243,6 +239,18 @@ public class LoginPageFrame extends JFrame implements ActionListener {
 		} else if (source instanceof JButton) {
 			System.out.println("메뉴를 선택합니다.");
 		}
+	}
+
+	
+	public static void main(String[] args) throws Exception {
+		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		new LoginPageFrame("food", new MainMenu()).setVisible(true);
+//		SwingUtilities.invokeLater(new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//			}
+//		});
 	}
 
 }
