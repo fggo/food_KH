@@ -2,13 +2,14 @@ package com.kh.food.model.vo;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Objects;
 
 @SuppressWarnings("serial")
-public class User implements Serializable, Comparable<User> {
+public class User implements Serializable, Comparator<User> {
 	private String username;
 	private String phone;
 	private String email;
@@ -49,21 +50,21 @@ public class User implements Serializable, Comparable<User> {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.phone);
+		return this.phone.length();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		User user = (User)obj;
-		if(phone.equals(user.getPhone()))
+		if(this.phone.equals(user.getPhone()))
 			return true;
 		else
 			return false;
 	}
 	
 	@Override
-	public int compareTo(User o) {
-		return this.username.compareTo(o.getUsername());
+	public int compare(User o1, User o2) {
+		return o1.getUsername().compareTo(o2.getUsername());
 	}
 
 	//getter setter
@@ -83,5 +84,6 @@ public class User implements Serializable, Comparable<User> {
 	public void setOrderCreated(GregorianCalendar orderCreated) { this.orderCreated = orderCreated; }
 	public int getSeatNo() { return seatNo; }
 	public void setSeatNo(int seatNo) { this.seatNo = seatNo; }
+
 
 }

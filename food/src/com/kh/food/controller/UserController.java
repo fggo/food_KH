@@ -9,9 +9,11 @@ import java.io.WriteAbortedException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.kh.food.model.vo.Food;
 import com.kh.food.model.vo.User;
@@ -93,9 +95,15 @@ public class UserController {
 			System.out.println("회원가입 하려면 먼저 로그아웃 해주세요.");
 
 		User user = menu.signUpView();
-		boolean isAdded = users.add(user);
-		if(isAdded)
+
+		Set<User> set = new HashSet<User>();
+		for (User u: users) set.add(u);
+		boolean isAdded = set.add(user);
+
+		if(isAdded) {
 			System.out.println("회원가입이 성공적으로 처리되었습니다.");
+			users.add(user);
+		}
 		else {
 			System.out.println("이미 존재하는 회원 입니다.");
 		}
@@ -216,6 +224,14 @@ public class UserController {
 		Collections.sort(foodMenu, (i,j)->{
 			return i.getMenuNo() - j.getMenuNo();
 		});
+	}
+
+	private <T> boolean hasDuplicate(Iterable<T> all) {
+		Set<T> set = new HashSet<T>();
+		// Set#add returns false if the set does not change, which
+		// indicates that a duplicate element has been added.
+		for (T each: all) if (!set.add(each)) return true;
+		return false;
 	}
 
 	//getter setter

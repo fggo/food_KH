@@ -1,9 +1,10 @@
 package com.kh.food.model.vo;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 @SuppressWarnings("serial")
-public class Food implements Serializable, Comparable<Food> {
+public class Food implements Serializable, Comparator<Food> {
 
 	private int menuNo;
 	private String menuName;
@@ -21,11 +22,6 @@ public class Food implements Serializable, Comparable<Food> {
 	}
 
 	@Override
-	public int compareTo(Food o) {
-		return this.menuNo - o.getMenuNo();
-	}
-	
-	@Override
 	public boolean equals(Object obj) {
 		Food food = (Food)obj;
 		return this.menuNo == food.getMenuNo();
@@ -37,6 +33,11 @@ public class Food implements Serializable, Comparable<Food> {
 	public void setMenuName(String menuName) { this.menuName = menuName; } 
 	public int getMenuPrice() { return menuPrice; } 
 	public void setMenuPrice(int menuPrice) { this.menuPrice = menuPrice; }
+
+	@Override
+	public int compare(Food o1, Food o2) {
+		return o1.getMenuNo() - o2.getMenuNo();
+	}
 
 
 }
