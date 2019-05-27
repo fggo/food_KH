@@ -175,17 +175,16 @@ public class UserController {
 		
 			//주문총액 및 주문내역 출력
 			int total = 0;
-			for(Food food : foodMenu) {
-				total += (orderList.get(food) * food.getMenuPrice());
-				System.out.println("\t" + food.getMenuName() + " ----- "
-						+ food.getMenuPrice() + " * " + orderList.get(food) + "개");
+			for(Map.Entry<Food, Integer> entry : orderList.entrySet()) {
+				total += (entry.getValue() * entry.getKey().getMenuPrice());
+				System.out.println("\t" + entry.getKey().getMenuName() + " ----- "
+						+ entry.getKey().getMenuPrice() + " * " + entry.getValue() + "개");
 			}
 
 			System.out.println("주문하신 총액은 : " + total + "원 입니다.");
 		}
 		else
 			System.out.println("주문을 취소하셨습니다.");
-		
 	}
 
 	public void viewOrder() {

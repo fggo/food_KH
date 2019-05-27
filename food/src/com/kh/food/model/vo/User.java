@@ -2,14 +2,12 @@ package com.kh.food.model.vo;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
-import java.util.Objects;
 
 @SuppressWarnings("serial")
-public class User implements Serializable, Comparator<User> {
+public class User implements Serializable, Comparable<User> {
 	private String username;
 	private String phone;
 	private String email;
@@ -63,8 +61,8 @@ public class User implements Serializable, Comparator<User> {
 	}
 	
 	@Override
-	public int compare(User o1, User o2) {
-		return o1.getUsername().compareTo(o2.getUsername());
+	public int compareTo(User o) {
+		return this.getUsername().compareTo(o.getUsername());
 	}
 
 	//getter setter

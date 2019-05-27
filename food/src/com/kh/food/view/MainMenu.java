@@ -124,6 +124,10 @@ public class MainMenu {
 					if(qty <0)
 						throw new MenuChoiceException(qty);
 
+					System.out.println(foodMenu.get(0).getMenuName());
+					System.out.println(foodMenu.get(1).getMenuName());
+					System.out.println(foodMenu.get(2).getMenuName());
+					System.out.println(foodMenu.get(3).getMenuName());
 					orderList.put(foodMenu.get(choice-1), qty);
 				}
 				else if(choice == MENU_EXIT) {

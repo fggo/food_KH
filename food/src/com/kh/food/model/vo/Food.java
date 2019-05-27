@@ -1,10 +1,9 @@
 package com.kh.food.model.vo;
 
 import java.io.Serializable;
-import java.util.Comparator;
 
 @SuppressWarnings("serial")
-public class Food implements Serializable, Comparator<Food> {
+public class Food implements Serializable, Comparable<Food> {
 
 	private int menuNo;
 	private String menuName;
@@ -35,9 +34,7 @@ public class Food implements Serializable, Comparator<Food> {
 	public void setMenuPrice(int menuPrice) { this.menuPrice = menuPrice; }
 
 	@Override
-	public int compare(Food o1, Food o2) {
-		return o1.getMenuNo() - o2.getMenuNo();
+	public int compareTo(Food o) {
+		return this.getMenuNo() - o.getMenuNo();
 	}
-
-
 }
