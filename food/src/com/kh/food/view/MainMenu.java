@@ -9,6 +9,8 @@ import static com.kh.food.view.Constants.SIGNIN;
 import static com.kh.food.view.Constants.SIGNUP;
 import static com.kh.food.view.Constants.VIEW_ORDER;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -17,7 +19,10 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.swing.JFrame;
+
 import com.kh.food.controller.UserController;
+import com.kh.food.gui.InitPageFrame;
 import com.kh.food.model.vo.Food;
 import com.kh.food.model.vo.MenuChoiceException;
 import com.kh.food.model.vo.User;
@@ -25,7 +30,7 @@ import com.kh.food.model.vo.User;
 public class MainMenu {
 	public final static Scanner CONSOLE = new Scanner(System.in);
 	private UserController controller;
-//	private LoginPageFrame winFrame = new LoginPageFrame("food");
+	private InitPageFrame initPageFrame;
 	
 	public void showMainMenu() {
 		System.out.println("=== 홈페이지 ===");
@@ -40,11 +45,40 @@ public class MainMenu {
 	}
 
 	public void initPageView() {
-		
+		try {
+			initPageFrame = new InitPageFrame("food 프로그램", controller);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void signInEventView() {
+		initPageFrame.getSignInBtn1().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String phoneTextField = initPageFrame.getPhoneTextField().getText().replaceAll("\\s+", "");
+				controller.signIn(phoneTextField);
+			}
+		});
+//		p1.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				String name=((JPanel)e.getSource()).getName();
+//				if(Integer.parseInt(name)==1) {
+//					card.next(p2.getParent());
+//					flag=false;
+//				}
+//			}
+//		});
+
 	}
 
-	public void mainMenu(UserController controller) {
+	public void mainMenu(UserController controller) throws Exception {
 		this.controller = controller;
+
+		initPageView();
+		signInEventView();
+
 		int choice = -1;
 		do {
 			try {

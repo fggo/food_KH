@@ -1,9 +1,11 @@
 package com.kh.food.model.vo;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.Map;
 
 @SuppressWarnings("serial")
@@ -40,12 +42,16 @@ public class User implements Serializable, Comparable<User> {
 		System.out.printf("%s\t%s\t%s\t%s\t%s\t%s\n",
 							username, phone, email, address,
 							(logged? "로그ON":"로그OFF"), date);
-		for(Map.Entry<Food, Integer> entry : orderList.entrySet())
-			System.out.println("\t[" + entry.getKey().getMenuName() + " --- " 
-									+ entry.getKey().getMenuPrice() +"원, " 
-									+ entry.getValue() + "개]");
+		this.showOrderList();
 	}
 	
+	public void showOrderList() {
+		for(Map.Entry<Food, Integer> entry : orderList.entrySet())
+			System.out.println("\t[" + entry.getKey().getMenuName() + " --- " 
+									+ toCurrency(entry.getKey().getMenuPrice()) +", " 
+									+ entry.getValue() + "개]");
+	}
+
 	@Override
 	public int hashCode() {
 		return this.phone.length();
@@ -63,6 +69,12 @@ public class User implements Serializable, Comparable<User> {
 	@Override
 	public int compareTo(User o) {
 		return this.getUsername().compareTo(o.getUsername());
+	}
+
+	private String toCurrency(int price) {
+		NumberFormat n = NumberFormat.getCurrencyInstance(Locale.KOREA); 
+		String s = n.format(price);
+		return s;
 	}
 
 	//getter setter

@@ -20,24 +20,22 @@ import com.kh.food.model.vo.User;
 import com.kh.food.view.MainMenu;
 
 public class UserController {
-	//User 데이터 readFromFile, storeToFile
-	private final File dataFile=new File("Users.dat"); 
+	private final File dataFile=new File("Users.dat"); //List<User> 저장용 파일
  
-	//User데이터 집합
-	private List<User> users = new ArrayList<User>();
+	private List<User> users = new ArrayList<User>(); //User 리스트
 
-	private List<Food> foodMenu;
+	private List<Food> foodMenu; //선택가능한 음식메뉴
 	
-	//현재 로그인 유저 정보(User객체에 1:1맵핑)
-	private String phone;
+	private String phone; //로그인 유저 폰번호 (User객체에 1:1맵핑)
 
-	//메뉴 선택을 위한 객체
-	private MainMenu menu = new MainMenu(); 
+	private MainMenu menu = new MainMenu(); //메뉴 선택을 위한 객체
 
 	private final static int SEATS = 10; //좌석 수
-	private boolean[] reservations = new boolean[SEATS]; //좌석 예약여부
 
-	public void mainMenu() {
+	private boolean[] reservations = new boolean[SEATS]; //좌석 예약정보
+
+	/* 메인메뉴 실행하기 */
+	public void mainMenu() throws Exception {
 		phone = null;
 		this.readFromFile();
 		this.loadDefaultFoodMenu();
@@ -47,44 +45,31 @@ public class UserController {
 	public void readFromFile() {
 		if(dataFile.exists()==false)
 			return;
-		try {
-			FileInputStream file=new FileInputStream(dataFile);		
-			ObjectInputStream in=new ObjectInputStream(file);
+
+		try (FileInputStream file=new FileInputStream(dataFile);
+			ObjectInputStream in=new ObjectInputStream(file);){
 			
-//			while(true) {
-//				User user=(User)in.readObject();
-//				if(user==null)
-//					break;
-//				users.add(user);
-//			}
 			this.users = (ArrayList<User>)in.readObject();
 			this.foodMenu = (ArrayList<Food>)in.readObject();
 			
-			in.close();
-		}
-		catch(WriteAbortedException e) {
+		} catch(WriteAbortedException e) {
 			e.printStackTrace();
-		}
-		catch(Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 			return;
 		}
 	}
 
 	public void storeToFile() {
-		try {
-			FileOutputStream file=new FileOutputStream(dataFile);		
-			ObjectOutputStream out=new ObjectOutputStream(file);
+
+		try (FileOutputStream file=new FileOutputStream(dataFile);
+			ObjectOutputStream out=new ObjectOutputStream(file);){
 			
-//			Iterator<User> itr=users.iterator();
-//			while(itr.hasNext())
-//				out.writeObject(itr.next());
 			out.writeObject(this.users);
 			out.writeObject(this.foodMenu);
 			
 			out.close();
-		}
-		catch(Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 			return;
 		}
@@ -96,22 +81,20 @@ public class UserController {
 
 		User user = menu.signUpView();
 
-		Set<User> set = new HashSet<User>();
-		for (User u: users) set.add(u);
-		boolean isAdded = set.add(user);
-
-		if(isAdded) {
-			System.out.println("회원가입이 성공적으로 처리되었습니다.");
-			users.add(user);
+		if(isDuplicate(user)) {
+			System.out.println("이미 존재하는 회원 입니다.");
+			return;
 		}
 		else {
-			System.out.println("이미 존재하는 회원 입니다.");
+			System.out.println("회원가입이 성공적으로 처리되었습니다.");
+			users.add(user);
 		}
 
 		Collections.sort(this.users, (i,j)->{
 			return i.getUsername().compareTo(j.getUsername());
 		});
 	}
+
 
 	public void signIn() {
 		String phoneInput = menu.signInView();
@@ -129,6 +112,21 @@ public class UserController {
 		}
 	}
 	
+	public void signIn(String phoneTextField) {
+		if(phoneTextField.equals(this.phone) || phone != null)
+			System.out.println("이미 로그인 되어 있습니다.");
+
+		User user = getUserByPhone(phoneTextField);
+		if(user==null) {
+			System.out.println("로그인에 실패 하였습니다.");
+		}
+		else {
+			user.setLogged(true);
+			setPhone(phoneTextField);
+			System.out.println("로그인 됐슨니다.");
+		}
+	}
+
 	public void logOff() {
 		User user = null;
 		Iterator<User>itr = users.iterator();
@@ -144,18 +142,6 @@ public class UserController {
 				System.out.println("로그아웃 됐습니다.");
 			}
 		}
-	}
-
-	private User getUserByPhone(String phoneNum) {
-		User user = null;
-		Iterator<User> itr = users.iterator();
-		while(itr.hasNext()) {
-			user = itr.next();
-			if(user.getPhone().equals(phoneNum)) {
-				return user;
-			}
-		}
-		return null;
 	}
 
 	public void order() {
@@ -188,7 +174,18 @@ public class UserController {
 	}
 
 	public void viewOrder() {
-		
+		if (phone==null) {
+			System.out.println("로그인 후 이용할 수 있습니다.");
+			return;
+		}
+		else {
+			User user = getUserByPhone(phone);
+			if(user!= null)
+				user.showOrderList();
+			else{
+				System.out.println("해당하는 유저가 없습니다.");
+			}
+		}
 	}
 
 	public void reserveSeat() {
@@ -215,22 +212,32 @@ public class UserController {
 			return;
 
 		foodMenu = new ArrayList<Food>();
-		foodMenu.add(new Food(1, "BURGER", 2000));
-		foodMenu.add(new Food(2, "CHICKEN", 9000));
-		foodMenu.add(new Food(3, "COKE", 1000));
-		foodMenu.add(new Food(4, "MILK", 500));
+		foodMenu.add(new Food(1, "햄버거", 2000));
+		foodMenu.add(new Food(2, "치킨", 9000));
+		foodMenu.add(new Food(3, "콜라", 1000));
+		foodMenu.add(new Food(4, "우유", 500));
 
 		Collections.sort(foodMenu, (i,j)->{
 			return i.getMenuNo() - j.getMenuNo();
 		});
 	}
 
-	private <T> boolean hasDuplicate(Iterable<T> all) {
-		Set<T> set = new HashSet<T>();
-		// Set#add returns false if the set does not change, which
-		// indicates that a duplicate element has been added.
-		for (T each: all) if (!set.add(each)) return true;
-		return false;
+	private User getUserByPhone(String phoneNum) {
+		User user = null;
+		Iterator<User> itr = users.iterator();
+		while(itr.hasNext()) {
+			user = itr.next();
+			if(user.getPhone().equals(phoneNum)) {
+				return user;
+			}
+		}
+		return null;
+	}
+
+	private boolean isDuplicate(User user) {
+		Set<User> set = new HashSet<User>();
+		for (User u: users) set.add(u);
+		return !set.add(user);
 	}
 
 	//getter setter

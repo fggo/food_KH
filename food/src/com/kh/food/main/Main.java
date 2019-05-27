@@ -4,7 +4,11 @@ import com.kh.food.controller.UserController;
 
 public class Main {
 	public static void main(String[] args) {
-		new UserController().mainMenu();
+		try {
+			new UserController().mainMenu();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 
 //		Runtime.getRuntime().addShutdownHook(
 //			new Thread() { 
