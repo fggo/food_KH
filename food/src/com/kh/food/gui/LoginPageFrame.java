@@ -241,7 +241,6 @@ public class LoginPageFrame extends JFrame implements ActionListener {
 		}
 	}
 
-	
 	public static void main(String[] args) throws Exception {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		new LoginPageFrame("food", new MainMenu()).setVisible(true);

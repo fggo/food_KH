@@ -1,22 +1,29 @@
 package com.kh.food.view;
 
-import static com.kh.food.view.Constants.*;
+import static com.kh.food.view.Constants.LOGOFF;
+import static com.kh.food.view.Constants.MENU_EXIT;
+import static com.kh.food.view.Constants.OFF;
+import static com.kh.food.view.Constants.ORDER;
+import static com.kh.food.view.Constants.SHOW_USERS;
+import static com.kh.food.view.Constants.SIGNIN;
+import static com.kh.food.view.Constants.SIGNUP;
+import static com.kh.food.view.Constants.VIEW_ORDER;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.TreeMap;
 
 import com.kh.food.controller.UserController;
-import com.kh.food.gui.LoginPageFrame;
+import com.kh.food.model.vo.Food;
 import com.kh.food.model.vo.MenuChoiceException;
 import com.kh.food.model.vo.User;
 
 public class MainMenu {
 	public final static Scanner CONSOLE = new Scanner(System.in);
-	@SuppressWarnings("unused")
 	private UserController controller;
 //	private LoginPageFrame winFrame = new LoginPageFrame("food");
 	
@@ -78,7 +85,7 @@ public class MainMenu {
 		String address = CONSOLE.nextLine();
 		
 		User user = new User(username, phone, email, address, OFF,
-				new HashMap<String, Integer>(), null, -1);
+				new TreeMap<Food, Integer>(), null, -1);
 		return user;
 	}
 
@@ -101,52 +108,50 @@ public class MainMenu {
 		System.out.print("메뉴번호 입력 : ");
 	}
 
-	public Map<String,Integer> orderView(){
-		Map<String, Integer> orderList =new HashMap<String,Integer>();
-		int total = 0;
+	public Map<Food,Integer> orderView(){
+		Map<Food, Integer> orderList = new TreeMap<Food,Integer>();
+		List<Food> foodMenu = controller.getFoodMenu();
 		int choice = -1;
 		int qty = 0;
 		do {
 			try {
-				showFoodMenu();
+				this.showFoodMenu();
 				choice = CONSOLE.nextInt(); CONSOLE.nextLine();
 
-				if(choice!=MENU_EXIT) {
+				if(choice > MENU_EXIT && choice <= foodMenu.size()) {
 					System.out.print("수량 : ");
 					qty = CONSOLE.nextInt(); CONSOLE.nextLine();
 					if(qty <0)
 						throw new MenuChoiceException(qty);
+
+					orderList.put(foodMenu.get(choice-1), qty);
 				}
-				switch(choice) {
-					case MENU_BURGER:
-						orderList.put(BURGER, qty);
-						total += PRICE_BURGER * qty;
-						break;
-					case MENU_CHICKEN:
-						orderList.put(CHICKEN, qty);
-						total += PRICE_CHICKEN * qty;
-						break;
-					case MENU_COKE:
-						orderList.put(COKE, qty);
-						total += PRICE_COKE * qty;
-						break;
-					case MENU_MILK:
-						orderList.put(MILK, qty);
-						total += PRICE_MILK * qty;
-						break;
-					case MENU_EXIT:
-						System.out.println("주문을 완료하였습니다.");
-						return orderList;
-					default:
-						throw new MenuChoiceException(choice);
+				else if(choice == MENU_EXIT) {
+					System.out.println("주문을 마칩니다.");
+					return orderList;
 				}
+				else {
+					throw new MenuChoiceException(choice);
+				}
+
+//				switch(choice) {
+//					case MENU_BURGER:
+//						orderList.put(BURGER, qty);
+//						total += PRICE_BURGER * qty;
+//						break;
+//					case MENU_EXIT:
+//						System.out.println("주문을 완료하였습니다.");
+//						return orderList;
+//					default:
+//						throw new MenuChoiceException(choice);
+//				}
 			} catch(MenuChoiceException e) {
 				e.showWrongChoice();
 				System.out.println("메뉴선택을 다시합니다.\n");
 			}
 		}while(choice!= 0);
 		
-		return new HashMap<String,Integer>();
+		return orderList;
 	}
 	
 	public void seatView() {
@@ -203,7 +208,4 @@ public class MainMenu {
 		return seatNo;
 	}
 	
-	public int[] getFoodPrices() {
-		return new int[] {PRICE_BURGER, PRICE_CHICKEN, PRICE_COKE, PRICE_MILK};
-	}
 }

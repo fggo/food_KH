@@ -3,14 +3,17 @@ package com.kh.food.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.WriteAbortedException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import com.kh.food.model.vo.Food;
 import com.kh.food.model.vo.User;
 import com.kh.food.view.MainMenu;
 
@@ -19,8 +22,10 @@ public class UserController {
 	private final File dataFile=new File("Users.dat"); 
  
 	//User데이터 집합
-	HashSet<User> users = new HashSet<User>();
+	private List<User> users = new ArrayList<User>();
 
+	private List<Food> foodMenu;
+	
 	//현재 로그인 유저 정보(User객체에 1:1맵핑)
 	private String phone;
 
@@ -33,6 +38,7 @@ public class UserController {
 	public void mainMenu() {
 		phone = null;
 		this.readFromFile();
+		this.loadDefaultFoodMenu();
 		menu.mainMenu(this);
 	}
 
@@ -43,19 +49,22 @@ public class UserController {
 			FileInputStream file=new FileInputStream(dataFile);		
 			ObjectInputStream in=new ObjectInputStream(file);
 			
-			while(true) {
-				User user=(User)in.readObject();
-				if(user==null)
-					break;
-				users.add(user);
-			}
+//			while(true) {
+//				User user=(User)in.readObject();
+//				if(user==null)
+//					break;
+//				users.add(user);
+//			}
+			this.users = (ArrayList<User>)in.readObject();
+			this.foodMenu = (ArrayList<Food>)in.readObject();
 			
 			in.close();
 		}
-		catch(IOException e) {
-			return;
+		catch(WriteAbortedException e) {
+			e.printStackTrace();
 		}
-		catch(ClassNotFoundException e) {
+		catch(Exception e) {
+			e.printStackTrace();
 			return;
 		}
 	}
@@ -65,14 +74,17 @@ public class UserController {
 			FileOutputStream file=new FileOutputStream(dataFile);		
 			ObjectOutputStream out=new ObjectOutputStream(file);
 			
-			Iterator<User> itr=users.iterator();
-			while(itr.hasNext())
-				out.writeObject(itr.next());
+//			Iterator<User> itr=users.iterator();
+//			while(itr.hasNext())
+//				out.writeObject(itr.next());
+			out.writeObject(this.users);
+			out.writeObject(this.foodMenu);
 			
 			out.close();
 		}
-		catch(IOException e) {
+		catch(Exception e) {
 			e.printStackTrace();
+			return;
 		}
 	}
 	
@@ -87,6 +99,10 @@ public class UserController {
 		else {
 			System.out.println("이미 존재하는 회원 입니다.");
 		}
+
+		Collections.sort(this.users, (i,j)->{
+			return i.getUsername().compareTo(j.getUsername());
+		});
 	}
 
 	public void signIn() {
@@ -142,23 +158,26 @@ public class UserController {
 		
 		//주문
 		User user = getUserByPhone(this.phone);
-		Map<String, Integer> orderList = menu.orderView();
+		Map<Food, Integer> orderList = menu.orderView();
 		user.setOrderList(orderList);
 
 		//좌석
-		this.reserveSeat();
+		if(orderList.size() > 0) {
+			this.reserveSeat();
 		
-		//주문총액 및 주문내역 출력
-		int[] foodPrices = menu.getFoodPrices();
-		int total = 0;
-		int index = 0;
-		for(Map.Entry<String, Integer> entry : orderList.entrySet()) {
-			total += (entry.getValue()*foodPrices[index]);
-			System.out.println("\t" + entry.getKey() + " ----- " 
-					+ foodPrices[index++] +" * " + entry.getValue() + "개");
-		}
+			//주문총액 및 주문내역 출력
+			int total = 0;
+			for(Food food : foodMenu) {
+				total += (orderList.get(food) * food.getMenuPrice());
+				System.out.println("\t" + food.getMenuName() + " ----- "
+						+ food.getMenuPrice() + " * " + orderList.get(food) + "개");
+			}
 
-		System.out.println("주문하신 총액은 : " + total + "원 입니다.");
+			System.out.println("주문하신 총액은 : " + total + "원 입니다.");
+		}
+		else
+			System.out.println("주문을 취소하셨습니다.");
+		
 	}
 
 	public void viewOrder() {
@@ -171,7 +190,8 @@ public class UserController {
 		if(seatNo >=1 && seatNo <= reservations.length) {
 			user.setSeatNo(seatNo);
 		}
-		user.setOrderCreated(new GregorianCalendar());
+		if(user.getOrderList().size() > 0)
+			user.setOrderCreated(new GregorianCalendar());
 	}
 
 	public void showUsers() {
@@ -183,10 +203,26 @@ public class UserController {
 		}
 	}
 
+	private void loadDefaultFoodMenu() {
+		if(this.foodMenu != null && foodMenu.size() > 0)
+			return;
+
+		foodMenu = new ArrayList<Food>();
+		foodMenu.add(new Food(1, "BURGER", 2000));
+		foodMenu.add(new Food(2, "CHICKEN", 9000));
+		foodMenu.add(new Food(3, "COKE", 1000));
+		foodMenu.add(new Food(4, "MILK", 500));
+
+		Collections.sort(foodMenu, (i,j)->{
+			return i.getMenuNo() - j.getMenuNo();
+		});
+	}
+
 	//getter setter
 	public String getPhone() { return phone; }
 	public void setPhone(String phone) { this.phone = phone; }
 	public boolean[] getReservations() { return reservations; }
 	public void setReservations(boolean[] reservations) { this.reservations = reservations; }
 	public static int getSeats() { return SEATS; }
+	public List<Food> getFoodMenu() { return foodMenu; }
 }
