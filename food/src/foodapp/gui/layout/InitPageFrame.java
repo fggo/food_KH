@@ -402,14 +402,4 @@ public class InitPageFrame extends JFrame implements ActionListener {
 	public JButton getOrderBtn() { return orderBtn; } 
 	public void setOrderBtn(JButton orderBtn) { this.orderBtn = orderBtn; }
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			InitPageFrame window = new InitPageFrame(new UserRepository());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 }
