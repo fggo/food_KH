@@ -1,6 +1,16 @@
 package foodapp.gui.layout;
 
+import static foodapp.dao.Constants.FOOD_MENU_PAGE;
+import static foodapp.dao.Constants.INIT_PAGE;
+import static foodapp.dao.Constants.MY_PAGE;
+import static foodapp.dao.Constants.ORDER_PAGE;
+import static foodapp.dao.Constants.ORDER_VIEW_PAGE;
+import static foodapp.dao.Constants.SIGN_UP_PAGE;
+import static foodapp.dao.Constants.WINDOW_HEIGHT;
+import static foodapp.dao.Constants.WINDOW_WIDTH;
+
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -9,6 +19,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -24,15 +36,26 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
+
 import org.openide.awt.DropDownButtonFactory;
+
+import foodapp.dao.UserRepository;
+import foodapp.gui.event.HomeBtnEventHandler;
+import foodapp.gui.event.MenuItemEventHandler;
+import foodapp.gui.event.MenuPageBtnEventHandler;
+import foodapp.gui.event.OrderBtnEvenHandler;
+import foodapp.gui.event.OrderViewBtnEventHandler;
+import foodapp.gui.event.SignInEventHandler;
+import foodapp.gui.event.SignOffEventHandler;
+import foodapp.model.vo.Food;
 
 
 public class InitPageFrame extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final int WIDTH = 900;
-	private static final int HEIGHT = 900;
+	private JPanel cards;
+	private JPanel card1, card2, card3, card4, card5, card6;
 	
 	private JPanel topPanel, bottomPanel, rightPanel, leftPanel, subPanel1, subPanel2;
 	
@@ -41,14 +64,40 @@ public class InitPageFrame extends JFrame implements ActionListener {
 	private JButton logOffBtn1, logOffBtn2;
 	private JButton orderBtn;
 	
+	private JButton backBtn;
+	
 	private JTextField phoneTextField;
+	
+	private UserRepository userRepo = null;
 
-	public InitPageFrame(String title) throws Exception {
-		super(title);
-		setSize(WIDTH, HEIGHT);
+	/**
+	 * Create the application.
+	 */
+	public InitPageFrame(UserRepository userRepo) throws Exception {
+		this.userRepo = userRepo;
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() throws Exception {
+
+		CardLayout cl = new CardLayout();
+		cards = new JPanel(cl);
+
+		card1 = new JPanel(new BorderLayout());
+		card2 = new JPanel(new BorderLayout());
+		card3 = new JPanel(new BorderLayout());
+		card4 = new JPanel(new BorderLayout());
+		card5 = new JPanel(new BorderLayout());
+		card6 = new JPanel(new BorderLayout());
+
+		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setLocationRelativeTo(null); //center window
-		setLayout(new BorderLayout());
-		
+		getContentPane().setLayout(new BorderLayout());
+
+
 		/* 상단 메뉴 바 */
 		this.createTopMenuBar();
 
@@ -61,6 +110,8 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		signUpBtn1 = new JButton("회원가입");
 		logOffBtn1 = new JButton("로그아웃");
 		orderBtn = new JButton("주문하기");
+		orderBtn.setName(ORDER_PAGE);
+		signUpBtn1.setName(SIGN_UP_PAGE);
 
 		leftPanel = new JPanel();
 		rightPanel = new JPanel(new GridLayout(4,1));
@@ -75,8 +126,9 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		rightPanel.add(subPanel1);
 		rightPanel.add(subPanel2);
 
-		topPanel = new JPanel(new GridLayout(1,2));
+		topPanel = new JPanel(new GridLayout(1,3));
 		topPanel.add(leftPanel);
+		topPanel.add(new JPanel());
 		topPanel.add(rightPanel);
 		bottomPanel = new JPanel(new GridLayout(2,1));
 		bottomPanel.add(new JPanel());
@@ -104,6 +156,7 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		signInBtn2 = new JButton("로그인");
 		signUpBtn2 = new JButton("회원가입");
 		logOffBtn2 = new JButton("로그아웃");
+		signUpBtn2.setName(SIGN_UP_PAGE);
 		topMostPanel.add(signInBtn2);
 		topMostPanel.add(signUpBtn2);
 		topMostPanel.add(logOffBtn2);
@@ -117,23 +170,47 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		splitPane3.setBottomComponent(bottomPanel);
 		splitPane3.setEnabled(false);
 
-		add(splitPane3);
-		
+		card1.add(splitPane3);
+		card2.add(new FoodMenuPageFrame(cl, cards));
+		card3.add(new OrderViewPageFrame(cl, cards));
+		card4.add(new MyPageFrame(cl, cards));
+		card5.add(new OrderPageFrame(cl, cards));
+		card6.add(new SignUpPageFrame(cl, cards));
+
+		cards.add(card1, INIT_PAGE);
+		cards.add(card2, FOOD_MENU_PAGE);
+		cards.add(card3, ORDER_VIEW_PAGE);
+		cards.add(card4, MY_PAGE);
+		cards.add(card5, ORDER_PAGE);
+		cards.add(card6, SIGN_UP_PAGE);
+
+		getContentPane().add(cards);
 		
 		/* 각 component에 이벤트 추가 */
-//		signInBtn1.addActionListener(new SignInEventHandler(this.phoneTextField));
-//		signInBtn2.addActionListener(new SignInEventHandler(this.phoneTextField));
+		/* 클릭이벤트 */
+		logoBtn.addMouseListener(new HomeBtnEventHandler());
 
-//		p1.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				String name=((JPanel)e.getSource()).getName();
-//				if(Integer.parseInt(name)==1) {
-//					card.next(p2.getParent());
-//					flag=false;
-//				}
-//			}
-//		});
+		signInBtn1.addMouseListener(new SignInEventHandler(phoneTextField, userRepo));
+		signInBtn2.addMouseListener(new SignInEventHandler(phoneTextField, userRepo));
+
+		logOffBtn1.addMouseListener(new SignOffEventHandler(phoneTextField, userRepo));
+		logOffBtn2.addMouseListener(new SignOffEventHandler(phoneTextField, userRepo));
+		
+		signUpBtn1.addActionListener(this);
+		signUpBtn2.addActionListener(this);
+		
+		menuDropDownBtn.addActionListener(new MenuPageBtnEventHandler());
+		orderBtn.addActionListener(new OrderBtnEvenHandler());
+		orderViewBtn.addActionListener(new OrderViewBtnEventHandler());
+
+		/* 새로운 페이지 이동 */
+		logoBtn.addActionListener(this);
+		signUpBtn1.addActionListener(this);
+		signUpBtn2.addActionListener(this);
+		menuDropDownBtn.addActionListener(this);
+		orderBtn.addActionListener(this);
+		orderViewBtn.addActionListener(this);
+		myPageBtn.addActionListener(this);
 
 		setVisible(true);
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -166,12 +243,13 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		toolbar.setFloatable(false);
 		
 		//logo메뉴버튼
-		ImageIcon icon = new ImageIcon(getClass().getResource("images/burger.png"));
+		ImageIcon icon = new ImageIcon(getClass().getResource("../images/burger.png"));
 		icon = new ImageIcon(icon.getImage()
 								.getScaledInstance(100, 50, Image.SCALE_SMOOTH));
 
 		logoBtn = new JButton(icon);
 		logoBtn.setPreferredSize(new Dimension(100, 50));
+		logoBtn.setName(INIT_PAGE);
 
 		JPanel panel = new JPanel();
         panel.add(logoBtn); //add button to panel
@@ -182,6 +260,7 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		//menu dropdown
 		menuDropDownBtn = createDropDownButton();
 		menuDropDownBtn.setPreferredSize(new Dimension(70, 50));
+		menuDropDownBtn.setName(FOOD_MENU_PAGE);
 		
 		panel = new JPanel();
 		panel.add(menuDropDownBtn);
@@ -190,11 +269,12 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		toolbar.add(new JSeparator());
 
 		//order view
-		icon = new ImageIcon(getClass().getResource("images/orderView.png"));
+		icon = new ImageIcon(getClass().getResource("../images/orderView.png"));
 		icon = new ImageIcon(icon.getImage()
 								.getScaledInstance(65, 45, Image.SCALE_SMOOTH));
 		orderViewBtn = new JButton(icon);
 		orderViewBtn.setPreferredSize(new Dimension(100, 50));
+		orderViewBtn.setName(ORDER_VIEW_PAGE);
 
 		panel = new JPanel();
         panel.add(orderViewBtn); //add button to panel
@@ -203,19 +283,17 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		toolbar.add(new JSeparator());
 		
         //mypage
-		icon = new ImageIcon(getClass().getResource("images/mypage.png"));
+		icon = new ImageIcon(getClass().getResource("../images/mypage.png"));
 		icon = new ImageIcon(icon.getImage()
 								.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 		myPageBtn = new JButton(icon);
 		myPageBtn.setPreferredSize(new Dimension(100, 50));
+		myPageBtn.setName(MY_PAGE);
 
 		panel = new JPanel();
         panel.add(myPageBtn); //add button to panel
 
 		toolbar.add(panel);
-
-//		setLayout(new FlowLayout(FlowLayout.LEFT));
-//		add(toolbar);
 
 		return toolbar;
 	}
@@ -223,12 +301,12 @@ public class InitPageFrame extends JFrame implements ActionListener {
 	private JButton createDropDownButton() {
 		JPopupMenu popupMenu = createDropDownMenu();
 		
-		ImageIcon icon = new ImageIcon(getClass().getResource("images/menu2.png"));
+		ImageIcon icon = new ImageIcon(getClass().getResource("../images/menu2.png"));
 		icon = new ImageIcon(icon.getImage()
 								.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 		
 		JButton menuDropDownBtn = DropDownButtonFactory.createDropDownButton(icon, popupMenu);
-		menuDropDownBtn.addActionListener(this);
+//		menuDropDownBtn.addActionListener(this);
 		
 		return menuDropDownBtn;
 	}
@@ -236,30 +314,68 @@ public class InitPageFrame extends JFrame implements ActionListener {
 	private JPopupMenu createDropDownMenu() {
 		JPopupMenu popupMenu = new JPopupMenu();
 
-//		List<Food> foodMenu = userRepo.getFoodMenu();
-//		Iterator<Food> itr = foodMenu.iterator();
-//		Food food = null;
-//		while(itr.hasNext()) {
-//			food = itr.next();
-//			JMenuItem menuItem = new JMenuItem(food.toString());
-//			popupMenu.add(menuItem);
-//			menuItem.addActionListener(this);
-//		}
+		List<Food> foodMenu = userRepo.getFoodMenu();
+		Iterator<Food> itr = foodMenu.iterator();
+		Food food = null;
+		while(itr.hasNext()) {
+			food = itr.next();
+			JMenuItem menuItem = new JMenuItem(food.toString());
+			popupMenu.add(menuItem);
+			menuItem.addActionListener(new MenuItemEventHandler());
+		}
 		
 		return popupMenu;
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent evt) {
-		Object source = evt.getSource();
-//		System.out.println(source);
-		if (source instanceof JMenuItem) {
-			JMenuItem clickedMenuItem = (JMenuItem) source;
-			String menuText = clickedMenuItem.getText();
-			System.out.println(menuText+ "를 추가합니다.");
-		} else if (source instanceof JButton) {
-			System.out.println("메뉴를 선택합니다.");
+	public void actionPerformed(ActionEvent e) {
+		Object source = e.getSource();
+
+		System.out.println(source);
+		if (source instanceof JButton) {
+			String name = ((JButton) e.getSource()).getName();
+			switch(name) {
+				case INIT_PAGE: createHomePage(); break;
+				case FOOD_MENU_PAGE: createMenuPage(); break;
+				case ORDER_VIEW_PAGE: createOrderViewPage(); break;
+				case MY_PAGE: createMyPage(); break;
+				case ORDER_PAGE: createOrderPage(); break;
+				case SIGN_UP_PAGE: createSignUpPage(); break;
+				default:
+					break;
+			}
 		}
+	}
+
+	private void createHomePage() {
+		System.out.println("홈페이지로 이동합니다.");
+		CardLayout cl = (CardLayout)(cards.getLayout());
+        cl.show(cards, INIT_PAGE);
+	}
+	private void createMenuPage() {
+		System.out.println("음식 메뉴페이지로 이동합니다."); 
+		CardLayout cl = (CardLayout)(cards.getLayout());
+        cl.show(cards, FOOD_MENU_PAGE);
+	}
+	private void createOrderViewPage() {
+		System.out.println("주문 조회페이지로 이동합니다."); 
+		CardLayout cl = (CardLayout)(cards.getLayout());
+        cl.show(cards, ORDER_VIEW_PAGE);
+	}
+	private void createMyPage() {
+		System.out.println("마이페이지로 이동합니다."); 
+		CardLayout cl = (CardLayout)(cards.getLayout());
+        cl.show(cards, MY_PAGE);
+	}
+	private void createOrderPage() {
+		System.out.println("주문 페이지로 이동합니다."); 
+		CardLayout cl = (CardLayout)(cards.getLayout());
+        cl.show(cards, ORDER_PAGE);
+	}
+	private void createSignUpPage() {
+		System.out.println("회원가입 페이지로 이동합니다."); 
+		CardLayout cl = (CardLayout)(cards.getLayout());
+        cl.show(cards, SIGN_UP_PAGE);
 	}
 
 	public JTextField getPhoneTextField() { return phoneTextField; }
@@ -285,9 +401,15 @@ public class InitPageFrame extends JFrame implements ActionListener {
 	public void setLogOffBtn2(JButton logOffBtn2) { this.logOffBtn2 = logOffBtn2; } 
 	public JButton getOrderBtn() { return orderBtn; } 
 	public void setOrderBtn(JButton orderBtn) { this.orderBtn = orderBtn; }
-	
-	
-	public static void main(String[] args) throws Exception {
-		new InitPageFrame("food");
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			InitPageFrame window = new InitPageFrame(new UserRepository());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
