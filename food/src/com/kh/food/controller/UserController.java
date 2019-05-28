@@ -113,7 +113,7 @@ public class UserController {
 	}
 	
 	public void signIn(String phoneTextField) {
-		if(phoneTextField.equals(this.phone) || phone != null)
+		if(phoneTextField.equals(this.phone))
 			System.out.println("이미 로그인 되어 있습니다.");
 
 		User user = getUserByPhone(phoneTextField);

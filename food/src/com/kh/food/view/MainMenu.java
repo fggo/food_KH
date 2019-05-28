@@ -60,17 +60,13 @@ public class MainMenu {
 				controller.signIn(phoneTextField);
 			}
 		});
-//		p1.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				String name=((JPanel)e.getSource()).getName();
-//				if(Integer.parseInt(name)==1) {
-//					card.next(p2.getParent());
-//					flag=false;
-//				}
-//			}
-//		});
-
+		initPageFrame.getSignInBtn2().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String phoneTextField = initPageFrame.getPhoneTextField().getText().replaceAll("\\s+", "");
+				controller.signIn(phoneTextField);
+			}
+		});
 	}
 
 	public void mainMenu(UserController controller) throws Exception {
