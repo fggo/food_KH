@@ -19,6 +19,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.Iterator;
 import java.util.List;
 
@@ -113,6 +116,7 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		orderBtn.setName(ORDER_PAGE);
 		signUpBtn1.setName(SIGN_UP_PAGE);
 
+
 		leftPanel = new JPanel();
 		rightPanel = new JPanel(new GridLayout(4,1));
 		subPanel1 = new JPanel(new FlowLayout(FlowLayout.RIGHT)); 
@@ -175,7 +179,7 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		card3.add(new OrderViewPageFrame(cl, cards));
 		card4.add(new MyPageFrame(cl, cards));
 		card5.add(new OrderPageFrame(cl, cards));
-		card6.add(new SignUpPageFrame(cl, cards));
+		card6.add(new SignUpPageFrame(cl, cards, userRepo));
 
 		cards.add(card1, INIT_PAGE);
 		cards.add(card2, FOOD_MENU_PAGE);
@@ -200,7 +204,7 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		signUpBtn2.addActionListener(this);
 		
 		menuDropDownBtn.addActionListener(new MenuPageBtnEventHandler());
-		orderBtn.addActionListener(new OrderBtnEvenHandler());
+		orderBtn.addActionListener(new OrderBtnEvenHandler(userRepo));
 		orderViewBtn.addActionListener(new OrderViewBtnEventHandler());
 
 		/* 새로운 페이지 이동 */
@@ -211,6 +215,19 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		orderBtn.addActionListener(this);
 		orderViewBtn.addActionListener(this);
 		myPageBtn.addActionListener(this);
+		
+		/* shutdown hook */
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				userRepo.readFromFile();
+				
+			}
+			@Override
+			public void windowClosing(WindowEvent e) {
+				userRepo.storeToFile();
+			}
+		});
 
 		setVisible(true);
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

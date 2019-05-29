@@ -27,23 +27,11 @@ public class SignOffEventHandler extends MouseAdapter {
 		if (loggedPhoneTextField != null) {
 			String phoneNum = loggedPhoneTextField.getSelectedText().replaceAll("\\s+", "");
 			if(phoneNum.length() > 0 ) {
-				getUserByPhone(phoneNum).setLogged(false);
+				userRepo.logOff(phoneNum);
 				loggedPhoneTextField.setEditable(true);
 				loggedPhoneTextField.setText("");
 			}
 		}
 	}
 	
-	private User getUserByPhone(String phone) {
-		List<User> users = new ArrayList<User>();
-		Iterator<User> itr = users.iterator();
-		User user = null;
-		while(itr.hasNext()) {
-			user = itr.next();
-			if(user.getPhone().equals(phone))
-				return user;
-		}
-
-		return null;
-	}
 }

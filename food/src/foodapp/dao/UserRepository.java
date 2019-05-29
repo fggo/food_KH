@@ -25,6 +25,9 @@ public class UserRepository {
  
 	private List<User> users = new ArrayList<User>(); //User 리스트
 
+	public List<User> getUsers() {
+		return users;
+	}
 	private List<Food> foodMenu; //선택가능한 음식메뉴
 	
 
@@ -81,26 +84,28 @@ public class UserRepository {
 		}
 	}
 	
-//	public void signUp() {
-//		if(this.phone != null)
-//			System.out.println("회원가입 하려면 먼저 로그아웃 해주세요.");
-//
-//		User user = menu.signUpView();
-//
-//		if(isDuplicate(user)) {
-//			System.out.println("이미 존재하는 회원 입니다.");
-//			return;
-//		}
-//		else {
-//			System.out.println("회원가입이 성공적으로 처리되었습니다.");
-//			users.add(user);
-//		}
-//
-//		Collections.sort(this.users, (i,j)->{
-//			return i.getUsername().compareTo(j.getUsername());
-//		});
-//	}
-//
+	public boolean signUp(User user) {
+		if(this.phone != null) {
+			System.out.println("회원가입 하려면 먼저 로그아웃 해주세요.");
+			return false;
+		}
+
+		if(isDuplicate(user)) {
+			System.out.println("이미 존재하는 회원 입니다.");
+			return false;
+		}
+		else {
+			users.add(user);
+			System.out.println("회원가입이 성공적으로 처리되었습니다.");
+
+			Collections.sort(this.users, (i,j)->{
+				return i.getUsername().compareTo(j.getUsername());
+			});
+			return true;
+		}
+
+	}
+
 //
 //	public void signIn() {
 //		String phoneInput = menu.signInView();
@@ -133,23 +138,29 @@ public class UserRepository {
 //		}
 //	}
 //
-//	public void logOff() {
-//		User user = null;
-//		Iterator<User>itr = users.iterator();
-//		while(itr.hasNext()) {	
-//			user = itr.next();
-//			if(user.getPhone().equals(this.phone)) {
-//				user.setLogged(false);
-//				if(user.getSeatNo() >=1 && user.getSeatNo() <=reservations.length) {
-//					reservations[user.getSeatNo() -1] = false;
-//					user.setSeatNo(0);
-//				}
-//				this.phone = null;
-//				System.out.println("로그아웃 됐습니다.");
-//			}
-//		}
-//	}
-//
+	public void logOff(String phoneNum) {
+		if (phoneNum.equals(this.phone)) {
+			System.out.println("폰번호가 일치하지 않습니다.");
+			System.out.println("로그아웃에 실패하였습니다.");
+			return;
+		}
+
+		User user = null;
+		Iterator<User>itr = users.iterator();
+		while(itr.hasNext()) {	
+			user = itr.next();
+			if(user.getPhone().equals(this.phone)) {
+				user.setLogged(false);
+				if(user.getSeatNo() >=1 && user.getSeatNo() <=reservations.length) {
+					reservations[user.getSeatNo() -1] = false;
+					user.setSeatNo(0);
+				}
+				this.phone = null;
+				System.out.println("로그아웃 됐습니다.");
+			}
+		}
+	}
+
 //	public void order() {
 //		if (phone==null) {
 //			System.out.println("로그인 후 이용할 수 있습니다.");
@@ -203,16 +214,16 @@ public class UserRepository {
 //		if(user.getOrderList().size() > 0)
 //			user.setOrderCreated(new GregorianCalendar());
 //	}
-//
-//	public void showUsers() {
-//		System.out.println("이름\t전화\t이메일\t주소\t로그인상태\t주문날짜");
-//
-//		Iterator<User> itr = users.iterator();
-//		while(itr.hasNext()) {
-//			itr.next().showUserInfo();
-//		}
-//	}
-//
+
+	public void showUsers() {
+		System.out.println("이름\t전화\t이메일\t주소\t로그인상태\t주문날짜");
+
+		Iterator<User> itr = users.iterator();
+		while(itr.hasNext()) {
+			itr.next().showUserInfo();
+		}
+	}
+
 	private void loadDefaultFoodMenu() {
 		if(this.foodMenu != null && foodMenu.size() > 0)
 			return;
@@ -240,11 +251,12 @@ public class UserRepository {
 //		return null;
 //	}
 //
-//	private boolean isDuplicate(User user) {
-//		Set<User> set = new HashSet<User>();
-//		for (User u: users) set.add(u);
-//		return !set.add(user);
-//	}
+
+	private boolean isDuplicate(User user) {
+		Set<User> set = new HashSet<User>();
+		for (User u: users) set.add(u);
+		return !set.add(user);
+	}
 
 	//getter setter
 	public String getPhone() { return phone; }
