@@ -1,6 +1,10 @@
 package foodapp.model.vo;
 
 import java.io.Serializable;
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,10 +12,14 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
 @SuppressWarnings("serial")
 public class User implements Serializable, Comparable<User> {
 	private String username;
 	private String phone;
+	private String password;
 	private String email;
 	private String address;
 	private boolean logged; //로그인 상태 여부
@@ -19,10 +27,11 @@ public class User implements Serializable, Comparable<User> {
 	private GregorianCalendar orderCreated;
 	private int seatNo; //좌석(1~SEATS)
 
-	public User(String username, String phone, String email, String address, boolean logged,
+	public User(String username, String password, String phone, String email, String address, boolean logged,
 			Map<Food, Integer> orderList, GregorianCalendar orderCreated, int seatNo) {
 		super();
 		this.username = username;
+		this.password = password;
 		this.phone = phone;
 		this.email = email;
 		this.address = address;
@@ -31,6 +40,7 @@ public class User implements Serializable, Comparable<User> {
 		this.orderCreated = orderCreated;
 		this.seatNo = seatNo;
 	}
+
 
 	public void showUserInfo() {
 		String date = null;
@@ -76,12 +86,15 @@ public class User implements Serializable, Comparable<User> {
 		String s = n.format(price);
 		return s;
 	}
+	
 
 	//getter setter
 	public String getUsername() { return username; }
 	public void setUsername(String username) { this.username = username; }
 	public String getPhone() { return phone; }
 	public void setPhone(String phone) { this.phone = phone; }
+	public String getPassword() { return password; }
+	public void setPassword(String password) { this.password = password; }
 	public String getEmail() { return email; }
 	public void setEmail(String email) { this.email = email; }
 	public String getAddress() { return address; }
@@ -94,6 +107,4 @@ public class User implements Serializable, Comparable<User> {
 	public void setOrderCreated(GregorianCalendar orderCreated) { this.orderCreated = orderCreated; }
 	public int getSeatNo() { return seatNo; }
 	public void setSeatNo(int seatNo) { this.seatNo = seatNo; }
-
-
 }

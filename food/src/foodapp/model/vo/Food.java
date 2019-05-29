@@ -7,6 +7,7 @@ import java.util.Locale;
 @SuppressWarnings("serial")
 public class Food implements Serializable, Comparable<Food> {
 
+	private String menuCategory;
 	private int menuNo;
 	private String menuName;
 	private int menuPrice;
@@ -14,8 +15,9 @@ public class Food implements Serializable, Comparable<Food> {
 
 	public Food() {}	
 	
-	public Food(int menuNo, String menuName, int menuPrice) {
+	public Food(String menuCategory, int menuNo, String menuName, int menuPrice) {
 		super();
+		this.menuCategory = menuCategory;
 		this.menuNo = menuNo;
 		this.menuName = menuName;
 		this.menuPrice = menuPrice;
@@ -24,17 +26,27 @@ public class Food implements Serializable, Comparable<Food> {
 	@Override
 	public boolean equals(Object obj) {
 		Food food = (Food)obj;
-		return this.menuNo == food.getMenuNo();
+		return this.menuCategory.equals(food.getMenuCategory())
+				&& this.menuNo == food.getMenuNo()
+				&& this.menuName == food.getMenuName();
 	}
 	
 	@Override
 	public String toString() {
-		return menuNo + ". " + menuName + " --- " + toCurrency(menuPrice);
+		return "  [" + menuCategory + "]  " + menuNo + ". " + menuName + " --- " + toCurrency(menuPrice);
 	}
 	
 	@Override
 	public int compareTo(Food o) {
-		return this.getMenuNo() - o.getMenuNo();
+//		if(this.menuCategory.compareTo(o.getMenuCategory()) == 0) {
+//			return this.getMenuNo() - o.getMenuNo();
+//		}
+//		else {
+//			return this.menuCategory.compareTo(o.getMenuCategory());
+//		}
+
+		return this.menuCategory.compareTo(o.getMenuCategory()) == 0 ? 
+					this.menuNo - o.getMenuNo(): this.menuCategory.compareTo(o.getMenuCategory());
 	}
 
 	private String toCurrency(int price) {
@@ -43,6 +55,8 @@ public class Food implements Serializable, Comparable<Food> {
 		return s;
 	}
 
+	public String getMenuCategory() { return menuCategory; }
+	public void setMenuCategory(String menuCategory) { this.menuCategory = menuCategory; }
 	public int getMenuNo() { return menuNo; }
 	public void setMenuNo(int menuNo) { this.menuNo = menuNo; }
 	public String getMenuName() { return menuName; } 

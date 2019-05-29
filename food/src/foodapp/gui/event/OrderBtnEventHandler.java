@@ -5,9 +5,9 @@ import java.awt.event.ActionListener;
 
 import foodapp.dao.UserRepository;
 
-public class OrderBtnEvenHandler implements ActionListener{
+public class OrderBtnEventHandler implements ActionListener{
 
-	public OrderBtnEvenHandler(UserRepository userRepo) {
+	public OrderBtnEventHandler(UserRepository userRepo) {
 
 	}
 
