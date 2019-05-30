@@ -20,6 +20,7 @@ import java.util.Set;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import foodapp.model.vo.Admin;
 import foodapp.model.vo.Food;
 import foodapp.model.vo.FoodMenu;
 import foodapp.model.vo.User;
@@ -50,7 +51,13 @@ public class UserRepository {
 //		menu.mainMenu(this);
 //	}
 
+
 	public UserRepository() {
+		if(users.size() == 0) {
+//			= new Admin("admin", 1, null, null, null, false, 
+
+		}
+
 		this.readFromFile();
 		this.loadDefaultFoodMenu();
 	}
@@ -64,6 +71,7 @@ public class UserRepository {
 			
 			this.users = (ArrayList<User>)in.readObject();
 			this.foodMenu = (FoodMenu)in.readObject();
+			
 			
 		} catch(WriteAbortedException e) {
 			e.printStackTrace();

@@ -38,10 +38,12 @@ import javax.swing.JPasswordField;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 
 import org.openide.awt.DropDownButtonFactory;
 
@@ -92,6 +94,8 @@ public class InitPageFrame extends JFrame implements ActionListener {
 	
 	private JTextField phoneTextField;
 	private JPasswordField passwordField;
+	
+	private JTable menuTable;
 	
 	private UserRepository userRepo = null;
 	
@@ -217,6 +221,30 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		}
 		
 
+		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"};
+
+//		String[][] menuList = 
+//				new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
+
+//
+//				
+//		JTable table = new JTable(
+//				new DefaultTableModel(new Object[]{"Column1", "Column2"})
+//		);
+//
+//		DefaultTableModel model = (DefaultTableModel) table.getModel();
+//		model.addRow(new Object[]{"Column 1", "Column 2", "Column 3"});
+//
+//		List<Food> entityList = userRepo.getFoodMenu().getFoodMenuList();
+//
+//		set the entity objects in the list
+//		menuTable = new JTable(
+//			DefaultTableModel model = new TableModel(entityList);
+//		JScrollPane scrollPane = new JScrollPane(menuTable);
+//		menuTable.setModel(model);
+//		add(scrollPane, BorderLayout.CENTER);
+		
+		
 		orderMenuTextArea = new JTextArea(noodleMenu);
 		orderMenuTextArea.setEditable(false);
 		noodleCard.add(orderMenuTextArea);
@@ -247,8 +275,10 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		menuQtyComboBox = new JComboBox(new Integer[] {1,2,3,4,5});
 		
 		payCardBtn = new JButton("카드 주문");
+		payCardBtn.setName("CARD");
 		payCashBtn = new JButton("현금 주문");
-		
+		payCashBtn.setName("CASH");
+
 		
 		menuCategoryPanel = new JPanel(new GridLayout(1,2));
 		menuChoicePanel = new JPanel(new GridLayout(1,2));
@@ -380,6 +410,7 @@ public class InitPageFrame extends JFrame implements ActionListener {
 			}
 		});
 
+//		pack();
 		setVisible(true);
 		setResizable(false);
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -407,6 +438,8 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		menuBar.add(menuFile);
 	}
 
+	
+	
 	private JToolBar createNavBar() {
 		JToolBar toolbar = new JToolBar();
 		toolbar.setFloatable(false);

@@ -39,9 +39,6 @@ public class SignUpPageFrame extends JPanel implements ActionListener {
 
 	private UserRepository userRepo;
 	
-//		User user = new User(username, phone, email, address, OFF,
-//				new TreeMap<Food, Integer>(), null, -1);
-	
 	public SignUpPageFrame(CardLayout cl, JPanel cards, UserRepository userRepo) {
 		this.userRepo = userRepo;
 		this.cl = cl;

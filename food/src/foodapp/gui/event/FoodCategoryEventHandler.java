@@ -3,10 +3,10 @@ package foodapp.gui.event;
 import java.awt.CardLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -52,8 +52,37 @@ public class FoodCategoryEventHandler extends MouseAdapter {
         cl.show(menuCards, "NOODLE");
         this.menuCategoryTxt.setText("면 메뉴");
         getMenuNos(menuChoiceComboBox, "NOODLE");
-	}
 
+
+//		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"};
+//		String[][] menuList = 
+//				new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
+//
+//				
+//		JTable table = new JTable(
+//				new DefaultTableModel(new Object[]{"Column1", "Column2"})
+//		);
+	}
+	
+//	private void initTableContent(String category) {
+//
+//		category = "NOODLE";
+//
+//		List<Food> foodMenuList = userRepo.getFoodMenu().getFoodMenuList();
+//		List<Food> subFoodMenuList = new ArrayList<Food>();
+//
+//		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"};
+//		String[][] menuTable = new String[subFoodMenuList.size()][colNames.length];
+//
+//		Iterator<Food> itr = foodMenuList.iterator();
+//		Food food = null;
+//		while(itr.hasNext()) {
+//			food = itr.next();
+//			if(food.getMenuCategory().contentEquals(category)) 
+//				subFoodMenuList.add(food);
+//		}
+//	}
+	
 	private void showSoupMenu() {
 		System.out.println("탕 메뉴를 보여줍니다");
 		CardLayout cl = (CardLayout)(menuCards.getLayout());
