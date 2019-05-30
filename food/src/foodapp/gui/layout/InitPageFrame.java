@@ -15,16 +15,17 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -36,10 +37,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
@@ -48,18 +49,17 @@ import javax.swing.table.DefaultTableModel;
 import org.openide.awt.DropDownButtonFactory;
 
 import foodapp.dao.UserRepository;
-import foodapp.gui.event.FoodCategoryEventHandler;
 import foodapp.gui.event.HomeBtnEventHandler;
-import foodapp.gui.event.MenuItemEventHandler;
 import foodapp.gui.event.MenuPageBtnEventHandler;
 import foodapp.gui.event.OrderBtnEventHandler;
-import foodapp.gui.event.OrderViewBtnEventHandler;
 import foodapp.gui.event.SignInEventHandler;
 import foodapp.gui.event.SignOffEventHandler;
+import foodapp.model.vo.Admin;
 import foodapp.model.vo.Food;
+import foodapp.model.vo.User;
 
 
-public class InitPageFrame extends JFrame implements ActionListener {
+public class InitPageFrame extends JFrame implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -79,23 +79,32 @@ public class InitPageFrame extends JFrame implements ActionListener {
 	private JButton logOffBtn1, logOffBtn2;
 	private JButton orderBtn;
 
-	private JTextArea orderMenuTextArea;
 	private JPanel orderSelectionPanel;
 	
 	private JLabel menuCategoryLabel, menuChoiceLabel, menuQtyLabel;
 	private JTextField menuCategoryTxt;
-	private JComboBox menuChoiceComboBox;
-	private JComboBox menuQtyComboBox;
+	private JTextField subMenuTxt;
 	private JButton payCardBtn, payCashBtn;
 	
-	private JPanel menuCategoryPanel, menuChoicePanel, menuQtyPanel, payMethodPanel;
+	private JLabel addMenuLabel;
+	private JButton addMenuBtn;
+	
+	private JPanel menuCategoryPanel, menuChoicePanel, menuQtyPanel, payMethodPanel, addMenuPanel;
 	
 	private JButton noodleBtn, soupBtn, riceBtn;
 	
+	private DefaultTableModel modelN, modelS, modelR;
+	
+	private JComboBox menuQtyComboBox;
 	private JTextField phoneTextField;
 	private JPasswordField passwordField;
 	
-	private JTable menuTable;
+	private JTable menuNoodleTable;
+	private JTable menuSoupTable;
+	private JTable menuRiceTable;
+	private JScrollPane scrollNoodlePane;
+	private JScrollPane scrollSoupPane;
+	private JScrollPane scrollRicePane;
 	
 	private UserRepository userRepo = null;
 	
@@ -209,100 +218,118 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		List<Food> foodMenuList = userRepo.getFoodMenu().getFoodMenuList();
 		Iterator<Food> itr = foodMenuList.iterator();
 		Food food = null;
-		String noodleMenu = "", soupMenu = "", riceMenu = "";
+
+		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"};
+        modelN = new DefaultTableModel(colNames, 0);
+        modelS = new DefaultTableModel(colNames, 0);
+        modelR = new DefaultTableModel(colNames, 0);
+
+		String[][] noodleList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
+		String[][] soupList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
+		String[][] riceList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
+
+		int countN =0, countS=0, countR=0;
 
 		while(itr.hasNext()) {
 			food = itr.next();
+
+			String[] temp = new String[] { food.getMenuCategory(), 
+					String.valueOf(food.getMenuNo()), 
+					food.getMenuName(), 
+					food.toCurrency(food.getMenuPrice()) };
 			switch(food.getMenuCategory()) {
-				case "NOODLE": noodleMenu += food.toString() + "\n"; break;
-				case "SOUP": soupMenu += food.toString() + "\n"; break;
-				case "RICE": riceMenu += food.toString()+ "\n"; break;
+				case "NOODLE": noodleList[countN++] = temp;break;
+				case "SOUP": soupList[countS++] = temp; break;
+				case "RICE": riceList[countR++] = temp; break;
 			}
 		}
 		
+		for(int i =0;  i<noodleList.length; i++)  modelN.addRow(noodleList[i]);
+		for(int i =0;  i<soupList.length; i++)  modelS.addRow(soupList[i]);
+		for(int i =0;  i<riceList.length; i++)  modelR.addRow(riceList[i]);
 
-		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"};
+		menuNoodleTable = new JTable(modelN);
+		menuNoodleTable.setName("NOODLE_TABLE");
+		menuSoupTable = new JTable(modelS);
+		menuSoupTable.setName("SOUP_TABLE");
+		menuRiceTable = new JTable(modelR);
+		menuRiceTable.setName("RICE_TABLE");
 
-//		String[][] menuList = 
-//				new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
+		menuNoodleTable.setAutoCreateRowSorter(true);
+		menuSoupTable.setAutoCreateRowSorter(true);
+		menuRiceTable.setAutoCreateRowSorter(true);
 
-//
-//				
-//		JTable table = new JTable(
-//				new DefaultTableModel(new Object[]{"Column1", "Column2"})
-//		);
-//
-//		DefaultTableModel model = (DefaultTableModel) table.getModel();
-//		model.addRow(new Object[]{"Column 1", "Column 2", "Column 3"});
-//
-//		List<Food> entityList = userRepo.getFoodMenu().getFoodMenuList();
-//
-//		set the entity objects in the list
-//		menuTable = new JTable(
-//			DefaultTableModel model = new TableModel(entityList);
-//		JScrollPane scrollPane = new JScrollPane(menuTable);
-//		menuTable.setModel(model);
-//		add(scrollPane, BorderLayout.CENTER);
+		menuNoodleTable.addMouseListener(this);
+		menuSoupTable.addMouseListener(this);
+		menuRiceTable.addMouseListener(this);
+
+		scrollNoodlePane = new JScrollPane(menuNoodleTable);
+		scrollSoupPane = new JScrollPane(menuSoupTable);
+		scrollRicePane = new JScrollPane(menuRiceTable);
 		
-		
-		orderMenuTextArea = new JTextArea(noodleMenu);
-		orderMenuTextArea.setEditable(false);
-		noodleCard.add(orderMenuTextArea);
-		orderMenuTextArea = new JTextArea(soupMenu);
-		orderMenuTextArea.setEditable(false);
-		soupCard.add(orderMenuTextArea);
-		orderMenuTextArea = new JTextArea(riceMenu);
-		orderMenuTextArea.setEditable(false);
-		riceCard.add(orderMenuTextArea);
+		noodleCard.add(scrollNoodlePane);
+		soupCard.add(scrollSoupPane);
+		riceCard.add(scrollRicePane);
+
 
 		menuCards.add(noodleCard, "NOODLE");
 		menuCards.add(soupCard,"SOUP");
 		menuCards.add(riceCard, "RICE");
 
-		orderSelectionPanel = new JPanel(new GridLayout(4,1));
+		orderSelectionPanel = new JPanel(new GridLayout(5,1));
 
 		menuCategoryLabel = new JLabel("메뉴 카테고리");
-		menuCategoryTxt = new JTextField(10);
+		menuCategoryTxt = new JTextField("", 10);
 		menuCategoryTxt.setEditable(false);
 		
-		menuChoiceLabel = new JLabel("메뉴 선택");
-		menuChoiceComboBox = new JComboBox();
-		menuChoiceComboBox.setModel(new DefaultComboBoxModel());
-		menuChoiceComboBox.addActionListener(this);
-
+		menuChoiceLabel = new JLabel("선택 메뉴");
+		subMenuTxt = new JTextField(10);
+		subMenuTxt.setEditable(false);
 
 		menuQtyLabel = new JLabel("수 량");
 		menuQtyComboBox = new JComboBox(new Integer[] {1,2,3,4,5});
+		
+		addMenuLabel = new JLabel("메뉴 추가");
+		addMenuBtn = new JButton("PUSH 추가");
+		addMenuBtn.setName("ADD_FOOD");
+
 		
 		payCardBtn = new JButton("카드 주문");
 		payCardBtn.setName("CARD");
 		payCashBtn = new JButton("현금 주문");
 		payCashBtn.setName("CASH");
-
 		
+		payCardBtn.addMouseListener(this);
+		payCashBtn.addMouseListener(this);
+
 		menuCategoryPanel = new JPanel(new GridLayout(1,2));
 		menuChoicePanel = new JPanel(new GridLayout(1,2));
 		menuQtyPanel = new JPanel(new GridLayout(1,2));
 		payMethodPanel = new JPanel(new GridLayout(1,2));
+		addMenuPanel = new JPanel(new GridLayout(1,2));
 
 		menuCategoryPanel.add(menuCategoryLabel); menuCategoryPanel.add(menuCategoryTxt);
-		menuChoicePanel.add(menuChoiceLabel); menuChoicePanel.add(menuChoiceComboBox);
+		menuChoicePanel.add(menuChoiceLabel); menuChoicePanel.add(subMenuTxt);
 		menuQtyPanel.add(menuQtyLabel); menuQtyPanel.add(menuQtyComboBox);
 		payMethodPanel.add(payCardBtn); payMethodPanel.add(payCashBtn);
+		addMenuPanel.add(addMenuLabel); addMenuPanel.add(addMenuBtn);
 		
 		orderSelectionPanel.add(menuCategoryPanel);
 		orderSelectionPanel.add(menuChoicePanel);
 		orderSelectionPanel.add(menuQtyPanel);
+		orderSelectionPanel.add(addMenuPanel);
 		orderSelectionPanel.add(payMethodPanel);
 		
-		noodleBtn.addMouseListener(new FoodCategoryEventHandler(menuCards, menuCategoryTxt, menuChoiceComboBox, userRepo));
-		soupBtn.addMouseListener(new FoodCategoryEventHandler(menuCards, menuCategoryTxt, menuChoiceComboBox, userRepo));
-		riceBtn.addMouseListener(new FoodCategoryEventHandler(menuCards, menuCategoryTxt, menuChoiceComboBox, userRepo));
+		noodleBtn.addMouseListener(this);
+		soupBtn.addMouseListener(this);
+		riceBtn.addMouseListener(this);
+		
+		addMenuBtn.addMouseListener(this);
 
 		splitMenuCenterPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		splitMenuCenterPane.setTopComponent(menuCards);
 		splitMenuCenterPane.setBottomComponent(orderSelectionPanel);
-		splitMenuCenterPane.setDividerLocation(200 + splitMenuCenterPane.getInsets().top);
+		splitMenuCenterPane.setDividerLocation(170 + splitMenuCenterPane.getInsets().top);
 		splitMenuCenterPane.setDividerSize(1);
 		centerPanel = new JPanel(new BorderLayout(0, 0));
 		centerPanel.add(splitMenuCenterPane, BorderLayout.CENTER);
@@ -381,31 +408,39 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		logOffBtn1.addMouseListener(new SignOffEventHandler(phoneTextField, passwordField, userRepo));
 		logOffBtn2.addMouseListener(new SignOffEventHandler(phoneTextField, passwordField, userRepo));
 		
-		signUpBtn1.addActionListener(this);
-		signUpBtn2.addActionListener(this);
+		signUpBtn1.addMouseListener(this);
+		signUpBtn2.addMouseListener(this);
 		
 		menuDropDownBtn.addActionListener(new MenuPageBtnEventHandler());
 		orderBtn.addActionListener(new OrderBtnEventHandler(userRepo));
-		orderViewBtn.addActionListener(new OrderViewBtnEventHandler());
 
 		/* 새로운 페이지 이동 */
-		logoBtn.addActionListener(this);
-		signUpBtn1.addActionListener(this);
-		signUpBtn2.addActionListener(this);
-		menuDropDownBtn.addActionListener(this);
-		orderBtn.addActionListener(this);
-		orderViewBtn.addActionListener(this);
-		myPageBtn.addActionListener(this);
+		logoBtn.addMouseListener(this);
+		signUpBtn1.addMouseListener(this);
+		signUpBtn2.addMouseListener(this);
+		menuDropDownBtn.addMouseListener(this);
+		orderBtn.addMouseListener(this);
+		orderViewBtn.addMouseListener(this);
+		myPageBtn.addMouseListener(this);
 		
 		/* window closing */
 		this.addWindowListener(new WindowAdapter() {
+
 			@Override
 			public void windowOpened(WindowEvent e) {
-				userRepo.readFromFile();
 				
 			}
 			@Override
 			public void windowClosing(WindowEvent e) {
+				User user = null;
+				if (userRepo.getPhone() != null) {
+					user = (User)userRepo.getUserByPhone(userRepo.getPhone());
+					if(user.getOrderCreated() == null) {
+						user.setOrderList(null);
+						user.setOrdering(false);
+					}
+					user.setLogged(false);
+				}
 				userRepo.storeToFile();
 			}
 		});
@@ -438,7 +473,6 @@ public class InitPageFrame extends JFrame implements ActionListener {
 		menuBar.add(menuFile);
 	}
 
-	
 	
 	private JToolBar createNavBar() {
 		JToolBar toolbar = new JToolBar();
@@ -523,14 +557,22 @@ public class InitPageFrame extends JFrame implements ActionListener {
 			food = itr.next();
 			JMenuItem menuItem = new JMenuItem(food.toString());
 			popupMenu.add(menuItem);
-			menuItem.addActionListener(new MenuItemEventHandler());
 		}
 		
 		return popupMenu;
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void mousePressed(MouseEvent e) {}
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
 		Object source = e.getSource();
 		System.out.println(source);
 		if (source instanceof JButton) {
@@ -541,13 +583,101 @@ public class InitPageFrame extends JFrame implements ActionListener {
 				case ORDER_VIEW_PAGE: createOrderViewPage(); break;
 				case MY_PAGE: createMyPage(); break;
 				case SIGN_UP_PAGE: createSignUpPage(); break;
+				case "NOODLE": showNoodleMenu(); break;
+				case "SOUP": showSoupMenu(); break;
+				case "RICE": showRiceMenu(); break;
+				case "ADD_FOOD": saveOrderList(name); break;
+				case "CARD": case "CASH": completeOrder(name);break;
 				default:
 					break;
 			}
 		}
-		else if (source instanceof JComboBox) {
-			System.out.println("NULL??");
-			System.out.println(menuChoiceComboBox.getItemCount());
+		else if(source instanceof JTable) {
+			DefaultTableModel model = null;
+			JTable table = (JTable)e.getSource();
+			String name = table.getName();
+			switch(name) {
+				case "NOODLE_TABLE": model = (DefaultTableModel)menuNoodleTable.getModel(); break;
+				case "SOUP_TABLE": model = (DefaultTableModel)menuSoupTable.getModel(); break;
+				case "RICE_TABLE": model = (DefaultTableModel)menuRiceTable.getModel(); break;
+				default:
+					break;
+			}
+
+			int row = table.getSelectedRow();
+			System.out.println(model.getValueAt(row, 1));
+			System.out.println((String)model.getValueAt(row, 2));
+			this.subMenuTxt.setText(model.getValueAt(row, 1).toString() + ". " + (String)model.getValueAt(row, 2).toString());
+		}
+	}
+	public void completeOrder(String name) {
+		User user = userRepo.getUserByPhone(this.phoneTextField.getText());
+		if(user == null) return;
+
+		Map<Food, Integer> orderList = user.getOrderList();
+
+		User admin = userRepo.getUserByPhone("admin");
+
+		Map<Food, Integer> salesResult = ((Admin)admin).getSalesResult();
+		for(Map.Entry<Food, Integer> entry : salesResult.entrySet()) {
+			salesResult.put(entry.getKey(), entry.getValue() + orderList.get(entry.getKey()));
+//			map.put(key, map.get(key) + 1);
+			
+		}
+		user.setRecentPayMethod(name);
+		user.setOrdering(false);
+		user.setOrderCreated(new GregorianCalendar());
+		userRepo.showUsers();
+
+	}
+
+	public void saveOrderList(String name) {
+		if(name.equals("ADD_FOOD")) {
+			DefaultTableModel model = null;
+			int row = 0;
+			if(this.menuCategoryTxt.getText().equals(""))
+				this.menuCategoryTxt.setText("면 메뉴");
+			
+			switch(this.menuCategoryTxt.getText().charAt(0)) {
+				case '면':
+					model = (DefaultTableModel)menuNoodleTable.getModel();
+					row = menuNoodleTable.getSelectedRow();
+					break;
+				case '탕': 
+					model = (DefaultTableModel)menuSoupTable.getModel();
+					row = menuSoupTable.getSelectedRow();
+					break;
+				case '밥':
+					model = (DefaultTableModel)menuRiceTable.getModel();
+					row = menuRiceTable.getSelectedRow();
+					break;
+			}
+			
+			String menuCategory = (String)model.getValueAt(row, 0);
+			int menuNo = Integer.valueOf((String)model.getValueAt(row, 1));
+			String menuName=  (String)model.getValueAt(row, 2);
+			int menuPrice = 0;
+			String temp = ((String)model.getValueAt(row, 3)).substring(1);
+			menuPrice = Integer.valueOf(temp.replace(",", ""));
+
+			Food food = new Food(menuCategory, menuNo, menuName, menuPrice);
+			User user = userRepo.getUserByPhone(this.phoneTextField.getText());
+			
+			if (user == null) {
+				System.out.println("로그인이 필요합니다.");
+				return;
+			}
+			
+			Map<Food, Integer> orderList = user.getOrderList();
+
+			
+			if(user.isOrdering())
+				orderList.put(food, (int)this.menuQtyComboBox.getSelectedItem());
+			else
+				orderList = new TreeMap<Food, Integer>();
+
+			user.setOrderList(orderList);
+			user.setOrdering(true);
 		}
 	}
 
@@ -578,54 +708,29 @@ public class InitPageFrame extends JFrame implements ActionListener {
 	}
 
 
-//	/* 메뉴 */
-//	private void showNoodleMenu() {
-//		System.out.println("면메뉴를 보여줍니다");
-//		CardLayout cl = (CardLayout)(menuCards.getLayout());
-//        cl.show(menuCards, "NOODLE");
-//        this.menuCategoryTxt.setText("면 메뉴");
-//        getMenuNos(menuChoiceComboBox, "NOODLE");
-////        for(Integer item : menus)
-////			this.menuChoiceComboBox.addItem(item);
-//	}
-//
-//	private void showSoupMenu() {
-//		System.out.println("탕 메뉴를 보여줍니다");
-//		CardLayout cl = (CardLayout)(menuCards.getLayout());
-//        cl.show(menuCards, "SOUP");
-//        this.menuCategoryTxt.setText("탕 메뉴");
-//        getMenuNos(menuChoiceComboBox, "SOUP");
-////        for(Integer item : menus)
-////			this.menuChoiceComboBox.addItem(item);
-//	}
-//
-//	private void showRiceMenu() {
-//		System.out.println("밥 메뉴를 보여줍니다.");
-//		CardLayout cl = (CardLayout)(menuCards.getLayout());
-//        cl.show(menuCards, "RICE");
-//        this.menuCategoryTxt.setText("밥 메뉴");
-//        getMenuNos(menuChoiceComboBox, "RICE");
-//	}
-//
-//	private void getMenuNos(JComboBox<Food> comboBox, String menuCategory) {
-//		List<Food> foodlist = this.userRepo.getFoodMenu().getFoodMenuList();
-//		Iterator<Food> itr = foodlist.iterator();
-//		Food food = null;
-//		int count = comboBox.getItemCount();
-//		if(comboBox.getItemCount() > 0) {
-//			for(int i =0; i<count; i++) {
-//				food = comboBox.getItemAt(0);
-//				comboBox.removeItemAt(0);
-//			}
-//		}
-//		while(itr.hasNext()) {
-//			food = itr.next();
-//			if(food.getMenuCategory().equals(menuCategory)) {
-//				comboBox.addItem(food);
-//			}
-//		}
-//	}
+	/* 메뉴 */
+	private void showNoodleMenu() {
+		System.out.println("면메뉴를 보여줍니다");
+		CardLayout cl = (CardLayout)(menuCards.getLayout());
+        cl.show(menuCards, "NOODLE");
+        this.menuCategoryTxt.setText("면 메뉴");
+	}
 
+	private void showSoupMenu() {
+		System.out.println("탕 메뉴를 보여줍니다");
+		CardLayout cl = (CardLayout)(menuCards.getLayout());
+        cl.show(menuCards, "SOUP");
+        this.menuCategoryTxt.setText("탕 메뉴");
+	}
+
+	private void showRiceMenu() {
+		System.out.println("밥 메뉴를 보여줍니다.");
+		CardLayout cl = (CardLayout)(menuCards.getLayout());
+        cl.show(menuCards, "RICE");
+        this.menuCategoryTxt.setText("밥 메뉴");
+	}
+
+	
 	public JTextField getPhoneTextField() { return phoneTextField; }
 	public void setPhoneTextField(JTextField phoneTextField) { this.phoneTextField = phoneTextField; }
 	public JButton getLogoBtn() { return logoBtn; } 

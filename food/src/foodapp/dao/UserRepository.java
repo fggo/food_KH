@@ -12,6 +12,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -31,11 +32,6 @@ public class UserRepository {
  
 	private List<User> users = new ArrayList<User>(); //User 리스트
 
-	public List<User> getUsers() {
-		return users;
-	}
-//	private List<Food> foodMenu;
-
 	private FoodMenu foodMenu; //선택가능한 음식메뉴
 
 	private String phone; //로그인 유저 폰번호 (User객체에 1:1맵핑)
@@ -43,24 +39,18 @@ public class UserRepository {
 	private final static int SEATS = 10; //좌석 수
 
 	private boolean[] reservations = new boolean[SEATS]; //좌석 예약정보
-
-//	public void mainMenu() throws Exception {
-//		phone = null;
-//		this.readFromFile();
-//		this.loadDefaultFoodMenu();
-//		menu.mainMenu(this);
-//	}
-
-
+	
 	public UserRepository() {
-		if(users.size() == 0) {
-//			= new Admin("admin", 1, null, null, null, false, 
-
-		}
 
 		this.readFromFile();
+		if(users.size() < 1) {
+			User admin = new Admin("admin", "1234", "admin", "0", "0", false, 
+					null, null, "0", 0, false, new HashMap<Food, Integer>());
+			signUp(admin, admin.getPassword());
+		}
 		this.loadDefaultFoodMenu();
 	}
+
 
 	public void readFromFile() {
 		if(dataFile.exists()==false)
@@ -181,6 +171,8 @@ public class UserRepository {
 			user = itr.next();
 			if(user.getPhone().equals(this.phone)) {
 				user.setLogged(false);
+				user.setOrdering(false);
+
 				if(user.getSeatNo() >=1 && user.getSeatNo() <=reservations.length) {
 					reservations[user.getSeatNo() -1] = false;
 					user.setSeatNo(0);
@@ -246,11 +238,15 @@ public class UserRepository {
 //	}
 
 	public void showUsers() {
-		System.out.println("이름\t전화\t이메일\t주소\t로그인상태\t주문날짜");
+		System.out.println("이름\t전화\t이메일\t주소\t로그인상태\t주문날짜\t주문수단\t주문여부");
 
 		Iterator<User> itr = users.iterator();
+		User user = null;
 		while(itr.hasNext()) {
-			itr.next().showUserInfo();
+			user = itr.next();
+			user.showUserInfo();
+
+//			if(user instanceof Admin)
 		}
 	}
 
@@ -304,7 +300,23 @@ public class UserRepository {
 		
 		return null;
 	}
+	
 
+	public User getUserByPhone(String phoneNum) {
+		if (phoneNum == null) return null;
+
+		User user = null;
+		Iterator<User> itr = users.iterator();
+		boolean valid= false;
+
+		while(itr.hasNext()) {
+			user = itr.next();
+			if(user.getPhone().equals(phoneNum)) {
+				return user;
+			}
+		}
+		return null;
+	}
 
 	private boolean isDuplicate(User user) {
 		Set<User> set = new HashSet<User>();
@@ -382,4 +394,5 @@ public class UserRepository {
 	public void setReservations(boolean[] reservations) { this.reservations = reservations; }
 	public static int getSeats() { return SEATS; }
 	public FoodMenu getFoodMenu() { return foodMenu; }
+	public List<User> getUsers() { return users; }
 }

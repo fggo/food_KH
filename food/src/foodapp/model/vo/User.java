@@ -25,10 +25,12 @@ public class User implements Serializable, Comparable<User> {
 	private boolean logged; //로그인 상태 여부
 	private Map<Food, Integer> orderList;
 	private GregorianCalendar orderCreated;
+	private String recentPayMethod;
 	private int seatNo; //좌석(1~SEATS)
+	private boolean ordering;
 
 	public User(String username, String password, String phone, String email, String address, boolean logged,
-			Map<Food, Integer> orderList, GregorianCalendar orderCreated, int seatNo) {
+			Map<Food, Integer> orderList, GregorianCalendar orderCreated, String recentPayMethod, int seatNo, boolean ordering) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -38,9 +40,10 @@ public class User implements Serializable, Comparable<User> {
 		this.logged = logged;
 		this.orderList = orderList;
 		this.orderCreated = orderCreated;
+		this.recentPayMethod = recentPayMethod;
 		this.seatNo = seatNo;
+		this.ordering = ordering;
 	}
-
 
 	public void showUserInfo() {
 		String date = null;
@@ -49,10 +52,11 @@ public class User implements Serializable, Comparable<User> {
 			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss yy-MM-dd");
 			date = sdf.format(temp);
 		}
-		System.out.printf("%s\t%s\t%s\t%s\t%s\t%s\n",
+		System.out.printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 							username, phone, email, address,
-							(logged? "로그ON":"로그OFF"), date);
-		this.showOrderList();
+							(logged? "로그ON":"로그OFF"), date, recentPayMethod, ordering? "주문중 O" : "주문중 X");
+		if(orderList != null)
+			this.showOrderList();
 	}
 	
 	public void showOrderList() {
@@ -105,6 +109,10 @@ public class User implements Serializable, Comparable<User> {
 	public void setOrderList(Map<Food, Integer> orderList) { this.orderList = orderList; }
 	public GregorianCalendar getOrderCreated() { return orderCreated; }
 	public void setOrderCreated(GregorianCalendar orderCreated) { this.orderCreated = orderCreated; }
+	public String getRecentPayMethod() { return recentPayMethod; } 
+	public void setRecentPayMethod(String recentPayMethod) { this.recentPayMethod = recentPayMethod; } 
 	public int getSeatNo() { return seatNo; }
 	public void setSeatNo(int seatNo) { this.seatNo = seatNo; }
+	public boolean isOrdering() { return ordering; }
+	public void setOrdering(boolean ordering) { this.ordering = ordering; }
 }

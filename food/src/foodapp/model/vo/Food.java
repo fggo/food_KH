@@ -49,7 +49,7 @@ public class Food implements Serializable, Comparable<Food> {
 					this.menuNo - o.getMenuNo(): this.menuCategory.compareTo(o.getMenuCategory());
 	}
 
-	private String toCurrency(int price) {
+	public String toCurrency(int price) {
 		NumberFormat n = NumberFormat.getCurrencyInstance(Locale.KOREA); 
 		String s = n.format(price);
 		return s;

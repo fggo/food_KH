@@ -87,13 +87,17 @@ public class SignUpPageFrame extends JPanel implements ActionListener {
 				if(username.getText().equals("")
 						|| phone.getText().equals("")
 						|| email.getText().equals("")
-						|| address.getText().equals("")) {
-					System.out.println("일부 필드값이 입력이 안됐습니다.");
+						|| address.getText().equals("")
+						|| phone.getText().length() < 4){
+					System.out.println("일부 필드값이 입력이 잘못됐습니다.");
 					return;
+				}
+				else if(phone.getText().length() < 4){
+					System.out.println("비밀번호는 4자리 이상으로 해주세요.");
 				}
 				User user = new User(username.getText(), new String(password.getPassword()),
 						phone.getText(), email.getText(), address.getText(), OFF,
-						new TreeMap<Food, Integer>(), null, -1);
+						new TreeMap<Food, Integer>(), null, null, -1, false);
 
 				if(userRepo.getPhone() != null) {
 					System.out.println("회원가입 하려면 먼저 로그아웃 해주세요.");
