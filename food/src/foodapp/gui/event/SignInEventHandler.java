@@ -22,6 +22,8 @@ public class SignInEventHandler extends MouseAdapter {
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		userRepo.showUsers();
+
 		if (phoneTextField == null) {
 			return;
 		}

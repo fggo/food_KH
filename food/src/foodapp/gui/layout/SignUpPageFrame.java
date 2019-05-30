@@ -83,7 +83,6 @@ public class SignUpPageFrame extends JPanel implements ActionListener {
 		confirmBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				userRepo.showUsers();
 				if(username.getText().equals("")
 						|| phone.getText().equals("")
 						|| email.getText().equals("")

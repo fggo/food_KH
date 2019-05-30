@@ -15,13 +15,14 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
@@ -79,6 +81,10 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private JButton signInBtn1, signInBtn2, signUpBtn1, signUpBtn2;
 	private JButton logOffBtn1, logOffBtn2;
 	private JButton orderBtn;
+	
+	private JLabel popularMenuLabel;
+	private JTextArea popularMenuTextArea;
+	private JPanel popularMenuPanel;
 
 	private JPanel orderSelectionPanel;
 	
@@ -96,7 +102,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	
 	private DefaultTableModel modelN, modelS, modelR;
 	
-	private JComboBox menuQtyComboBox;
+	private JComboBox<Integer> menuQtyComboBox;
 	private JTextField phoneTextField;
 	private JPasswordField passwordField;
 	
@@ -110,28 +116,13 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private UserRepository userRepo = null;
 	
 
-	/**
-	 * Create the application.
-	 */
 	public InitPageFrame(UserRepository userRepo) throws Exception {
 		this.userRepo = userRepo;
 		initialize();
+		setPopularMenuList();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() throws Exception {
-
-		CardLayout cl = new CardLayout();
-		cards = new JPanel(cl);
-
-		card1 = new JPanel(new BorderLayout());
-		card2 = new JPanel(new BorderLayout());
-		card3 = new JPanel(new BorderLayout());
-		card4 = new JPanel(new BorderLayout());
-		card5 = new JPanel(new BorderLayout());
-		card6 = new JPanel(new BorderLayout());
 
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setLocationRelativeTo(null); //center window
@@ -288,7 +279,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		subMenuTxt.setEditable(false);
 
 		menuQtyLabel = new JLabel("수 량");
-		menuQtyComboBox = new JComboBox(new Integer[] {1,2,3,4,5});
+		menuQtyComboBox = new JComboBox<Integer>(new Integer[] {1,2,3,4,5});
 		
 		addMenuLabel = new JLabel("메뉴 추가");
 		addMenuBtn = new JButton("PUSH 추가");
@@ -335,12 +326,20 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		centerPanel = new JPanel(new BorderLayout(0, 0));
 		centerPanel.add(splitMenuCenterPane, BorderLayout.CENTER);
 
+		popularMenuLabel = new JLabel("실시간 인기 메뉴 TOP 5");
+		popularMenuTextArea = new JTextArea(200, 300);
+		popularMenuTextArea.setEditable(false);
+		popularMenuPanel = new JPanel(new BorderLayout());
+		popularMenuPanel.add(popularMenuLabel);
+		popularMenuPanel.add(popularMenuTextArea);
+
+		
 		topPanel = new JPanel(new GridLayout(1,3));
 		topPanel.add(leftPanel);
 		topPanel.add(centerPanel);
 		topPanel.add(rightPanel);
 		bottomPanel = new JPanel(new GridLayout(2,1));
-		bottomPanel.add(new JPanel());
+		bottomPanel.add(popularMenuPanel);
 		bottomPanel.add(orderBtn);
 		splitPane1.setTopComponent(topPanel);
 		splitPane1.setBottomComponent(bottomPanel);
@@ -382,6 +381,16 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		splitPane2.setEnabled(false);
 		splitPane3.setEnabled(false);
 		splitMenuCenterPane.setEnabled(false);
+
+		CardLayout cl = new CardLayout();
+		cards = new JPanel(cl);
+
+		card1 = new JPanel(new BorderLayout());
+		card2 = new JPanel(new BorderLayout());
+		card3 = new JPanel(new BorderLayout());
+		card4 = new JPanel(new BorderLayout());
+		card5 = new JPanel(new BorderLayout());
+		card6 = new JPanel(new BorderLayout());
 
 		card1.add(splitPane3);
 		card2.add(new FoodMenuPageFrame(cl, cards));
@@ -429,8 +438,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 			@Override
 			public void windowOpened(WindowEvent e) {
-				
 			}
+
 			@Override
 			public void windowClosing(WindowEvent e) {
 				User user = null;
@@ -451,15 +460,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		setResizable(false);
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-	
-	public void signInBtnAddMouseListener(JButton signInBtn) {
-		signInBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				String phoneNum = phoneTextField.getSelectedText().replaceAll("\\s+", "");
-			}
-		});
 	}
 
 	private void createTopMenuBar() {
@@ -631,16 +631,18 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		for(Map.Entry<Food, Integer> entry : orderList.entrySet()) {
 			food = entry.getKey();
 			qty = entry.getValue();
+
 			if(salesResult.get(food) != null)
-				salesResult.put(food, entry.getValue()+salesResult.get(food));
+				salesResult.put(food, salesResult.get(food) + qty);
 			else
-				salesResult.put(food, entry.getValue());
+				salesResult.put(food, qty);
 		}
 		((Admin)admin).setSalesResult(salesResult);
 		user.setRecentPayMethod(name);
 		user.setOrdering(false);
 		user.setOrderCreated(new GregorianCalendar());
 		userRepo.showUsers();
+		setPopularMenuList();
 
 	}
 
@@ -744,7 +746,40 @@ public class InitPageFrame extends JFrame implements MouseListener {
         this.menuCategoryTxt.setText("밥 메뉴");
 	}
 
-	
+	private void setPopularMenuList() {
+		Map<Food, Integer> salesResult = (TreeMap<Food, Integer>)((Admin)userRepo.getAdmin()).getSalesResult();				
+		if (salesResult == null)
+			return;
+
+		List<Map.Entry<Integer, Food>> sortedSales = new ArrayList<Map.Entry<Integer, Food>>();
+
+		Map.Entry<Integer, Food> newEntry = null;
+		for(Map.Entry<Food, Integer> entry : salesResult.entrySet()) {
+			newEntry = new AbstractMap.SimpleEntry<Integer, Food>(entry.getValue(), entry.getKey());
+			sortedSales.add(newEntry);
+		}
+		
+		Collections.sort(sortedSales, (i,j)->{
+			return j.getKey() - i.getKey();
+		});
+
+
+		int count = 0;
+		int qty = 0;
+		String msg = "";
+		Food food = null;
+		Iterator<Map.Entry<Integer, Food>> itr = sortedSales.iterator();
+		this.popularMenuTextArea.setText("");
+
+		while(itr.hasNext() && count++ < 5) {
+			newEntry = itr.next();
+			food = newEntry.getValue();
+			qty = newEntry.getKey();
+			msg = count+ "등 메뉴:   " + food.toString() + " - - - 총 " + qty + " 개 팔렸어요.";
+			this.popularMenuTextArea.append(msg + "\n");
+		}
+	}
+
 	public JTextField getPhoneTextField() { return phoneTextField; }
 	public void setPhoneTextField(JTextField phoneTextField) { this.phoneTextField = phoneTextField; }
 	public JButton getLogoBtn() { return logoBtn; } 
