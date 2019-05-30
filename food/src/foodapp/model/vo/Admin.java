@@ -21,9 +21,9 @@ public class Admin extends User{
 	public void showUserInfo() {
 		super.showUserInfo();
 		if(salesResult.size() >0) {
-			System.out.println("--- 매출액 ---");
+			System.out.println("\t--- 매출액 ---");
 			for(Map.Entry<Food, Integer> entry : salesResult.entrySet())
-				System.out.println(entry.getKey() + "   :  총 " + entry.getValue() + " 개 판매.");
+				System.out.println("\t" + entry.getKey() + "  :  총 " + entry.getValue() + " 개 판매.");
 		}
 	}
 

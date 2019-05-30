@@ -12,11 +12,11 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -45,7 +45,7 @@ public class UserRepository {
 		this.readFromFile();
 		if(users.size() < 1) {
 			User admin = new Admin("admin", "1234", "admin", "0", "0", false, 
-					null, null, "0", 0, false, new HashMap<Food, Integer>());
+					null, null, "0", 0, false, new TreeMap<Food, Integer>());
 			signUp(admin, admin.getPassword());
 		}
 		this.loadDefaultFoodMenu();
@@ -385,6 +385,17 @@ public class UserRepository {
             bytes[i] = (byte)Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
         }
         return bytes;
+    }
+
+    public User getAdmin() {
+		Iterator<User> itr = users.iterator();
+		User user = null;
+		while(itr.hasNext()) {
+			user = itr.next();
+			if(user.getUsername().equals("admin") && user.getPhone().equals("admin"))
+				return user;
+		}
+		return null;
     }
 
 	//getter setter

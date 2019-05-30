@@ -21,6 +21,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -612,18 +613,30 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	}
 	public void completeOrder(String name) {
 		User user = userRepo.getUserByPhone(this.phoneTextField.getText());
-		if(user == null) return;
+		if(user == null)
+			return;
+		if(!user.isOrdering())
+			return;
 
 		Map<Food, Integer> orderList = user.getOrderList();
 
-		User admin = userRepo.getUserByPhone("admin");
+		User admin = userRepo.getAdmin();
 
 		Map<Food, Integer> salesResult = ((Admin)admin).getSalesResult();
-		for(Map.Entry<Food, Integer> entry : salesResult.entrySet()) {
-			salesResult.put(entry.getKey(), entry.getValue() + orderList.get(entry.getKey()));
-//			map.put(key, map.get(key) + 1);
-			
+		if (salesResult == null)
+			((Admin) admin).setSalesResult(new TreeMap<Food, Integer>());
+
+		Food food = null;
+		int qty  =0;
+		for(Map.Entry<Food, Integer> entry : orderList.entrySet()) {
+			food = entry.getKey();
+			qty = entry.getValue();
+			if(salesResult.get(food) != null)
+				salesResult.put(food, entry.getValue()+salesResult.get(food));
+			else
+				salesResult.put(food, entry.getValue());
 		}
+		((Admin)admin).setSalesResult(salesResult);
 		user.setRecentPayMethod(name);
 		user.setOrdering(false);
 		user.setOrderCreated(new GregorianCalendar());
@@ -632,53 +645,54 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	}
 
 	public void saveOrderList(String name) {
-		if(name.equals("ADD_FOOD")) {
-			DefaultTableModel model = null;
-			int row = 0;
-			if(this.menuCategoryTxt.getText().equals(""))
-				this.menuCategoryTxt.setText("면 메뉴");
-			
-			switch(this.menuCategoryTxt.getText().charAt(0)) {
-				case '면':
-					model = (DefaultTableModel)menuNoodleTable.getModel();
-					row = menuNoodleTable.getSelectedRow();
-					break;
-				case '탕': 
-					model = (DefaultTableModel)menuSoupTable.getModel();
-					row = menuSoupTable.getSelectedRow();
-					break;
-				case '밥':
-					model = (DefaultTableModel)menuRiceTable.getModel();
-					row = menuRiceTable.getSelectedRow();
-					break;
-			}
-			
-			String menuCategory = (String)model.getValueAt(row, 0);
-			int menuNo = Integer.valueOf((String)model.getValueAt(row, 1));
-			String menuName=  (String)model.getValueAt(row, 2);
-			int menuPrice = 0;
-			String temp = ((String)model.getValueAt(row, 3)).substring(1);
-			menuPrice = Integer.valueOf(temp.replace(",", ""));
+		User user = userRepo.getUserByPhone(this.phoneTextField.getText());
 
-			Food food = new Food(menuCategory, menuNo, menuName, menuPrice);
-			User user = userRepo.getUserByPhone(this.phoneTextField.getText());
-			
-			if (user == null) {
-				System.out.println("로그인이 필요합니다.");
-				return;
-			}
-			
-			Map<Food, Integer> orderList = user.getOrderList();
+		if(!name.equals("ADD_FOOD"))
+			return;
 
-			
-			if(user.isOrdering())
-				orderList.put(food, (int)this.menuQtyComboBox.getSelectedItem());
-			else
-				orderList = new TreeMap<Food, Integer>();
+		if (user == null) {
+			System.out.println("로그인이 필요합니다.");
+			return;
+		}
 
-			user.setOrderList(orderList);
+		if(!user.isOrdering()) {
+			user.setOrderList(new TreeMap<Food, Integer>());
 			user.setOrdering(true);
 		}
+
+		DefaultTableModel model = null;
+		int row = 0;
+		if(this.menuCategoryTxt.getText().equals(""))
+			this.menuCategoryTxt.setText("면 메뉴");
+		
+		switch(this.menuCategoryTxt.getText().charAt(0)) {
+			case '면':
+				model = (DefaultTableModel)menuNoodleTable.getModel();
+				row = menuNoodleTable.getSelectedRow();
+				break;
+			case '탕': 
+				model = (DefaultTableModel)menuSoupTable.getModel();
+				row = menuSoupTable.getSelectedRow();
+				break;
+			case '밥':
+				model = (DefaultTableModel)menuRiceTable.getModel();
+				row = menuRiceTable.getSelectedRow();
+				break;
+		}
+
+		String menuCategory = (String)model.getValueAt(row, 0);
+		int menuNo = Integer.valueOf((String)model.getValueAt(row, 1));
+		String menuName=  (String)model.getValueAt(row, 2);
+		int menuPrice = 0;
+		String temp = ((String)model.getValueAt(row, 3)).substring(1);
+		menuPrice = Integer.valueOf(temp.replace(",", ""));
+
+		Food food = new Food(menuCategory, menuNo, menuName, menuPrice);
+		
+		Map<Food, Integer> orderList = user.getOrderList();
+		orderList.put(food, (int)this.menuQtyComboBox.getSelectedItem());
+
+		user.setOrderList(orderList);
 	}
 
 	private void createHomePage() {

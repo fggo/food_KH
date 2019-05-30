@@ -1,10 +1,6 @@
 package foodapp.model.vo;
 
 import java.io.Serializable;
-import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,8 +8,6 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 
 @SuppressWarnings("serial")
 public class User implements Serializable, Comparable<User> {
@@ -61,9 +55,7 @@ public class User implements Serializable, Comparable<User> {
 	
 	public void showOrderList() {
 		for(Map.Entry<Food, Integer> entry : orderList.entrySet())
-			System.out.println("\t[" + entry.getKey().getMenuName() + " --- " 
-									+ toCurrency(entry.getKey().getMenuPrice()) +", " 
-									+ entry.getValue() + "개]");
+			System.out.println("\t" + entry.getKey() + "  :  " +  entry.getValue() + "개 주문.");
 	}
 
 	@Override

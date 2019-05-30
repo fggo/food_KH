@@ -32,8 +32,13 @@ public class Food implements Serializable, Comparable<Food> {
 	}
 	
 	@Override
+	public int hashCode() {
+		return menuCategory.length() + menuNo + menuName.length() + menuPrice;
+	}
+	
+	@Override
 	public String toString() {
-		return "  [" + menuCategory + "]  " + menuNo + ". " + menuName + " --- " + toCurrency(menuPrice);
+		return "[" + menuCategory + "]  " + menuNo + ". " + menuName + " --- " + toCurrency(menuPrice);
 	}
 	
 	@Override
