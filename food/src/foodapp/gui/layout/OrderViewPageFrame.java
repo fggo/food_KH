@@ -13,7 +13,6 @@ import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -22,6 +21,10 @@ import foodapp.model.vo.Food;
 import foodapp.model.vo.User;
 
 public class OrderViewPageFrame extends JPanel implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JButton homeBtn;
 	private JTextArea orderViewTextArea;
 
@@ -77,7 +80,6 @@ public class OrderViewPageFrame extends JPanel implements ActionListener {
 			return;
 		}
 
-
 		String msg = "";
 		Food food = null;
 		int qty = 0;
@@ -90,5 +92,6 @@ public class OrderViewPageFrame extends JPanel implements ActionListener {
 		}
 		msg += " ÃÑ ÁÖ¹® ¾×: " + sum + "¿ø";
 		orderViewTextArea.append(msg);
+		add(orderViewTextArea);
 	}
 }

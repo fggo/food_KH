@@ -72,7 +72,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private JSplitPane splitMenuCenterPane;
 
 	private JPanel cards;
-	private JPanel card1, card2, card3, card4, card5, card6;
+	private JPanel card1, card2, card3, card4, card5;
 
 	private JPanel menuCards;
 	private JPanel noodleCard, soupCard, riceCard;
@@ -101,6 +101,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	
 	private JPanel menuCategoryPanel, menuChoicePanel, menuQtyPanel, payMethodPanel, addMenuPanel;
 	
+	private JLabel orderViewLabel;
+	private JPanel orderViewPanel;
+	private JButton orderViewHomeBtn;
+	private JTextArea orderViewTextArea;
+
 	private JButton noodleBtn, soupBtn, riceBtn;
 	
 	private DefaultTableModel modelN, modelS, modelR;
@@ -392,6 +397,21 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		splitPane2.setEnabled(false);
 		splitPane3.setEnabled(false);
 		splitMenuCenterPane.setEnabled(false);
+		
+		orderViewLabel = new JLabel("주문 내역");
+		orderViewHomeBtn = new JButton("뒤로 가기");
+		orderViewHomeBtn.setName(INIT_PAGE);
+		orderViewTextArea = new JTextArea(400, 400);
+		
+
+		orderViewPanel = new JPanel(new GridLayout(3,1));
+		orderViewPanel.add(orderViewHomeBtn);
+		orderViewPanel.add(orderViewLabel);
+		orderViewPanel.add(orderViewTextArea);
+
+
+		orderViewHomeBtn.addMouseListener(this);
+
 
 		CardLayout cl = new CardLayout();
 		cards = new JPanel(cl);
@@ -401,22 +421,18 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		card3 = new JPanel(new BorderLayout());
 		card4 = new JPanel(new BorderLayout());
 		card5 = new JPanel(new BorderLayout());
-		card6 = new JPanel(new BorderLayout());
 
 		card1.add(splitPane3);
 		card2.add(new FoodMenuPageFrame(cl, cards));
-		card3.add(new OrderViewPageFrame(cl, cards, phoneTextField, userRepo), 
-				BorderLayout.CENTER);
+		card3.add(orderViewPanel);
 		card4.add(new MyPageFrame(cl, cards));
-		card5.add(new OrderPageFrame(cl, cards));
-		card6.add(new SignUpPageFrame(cl, cards, userRepo));
+		card5.add(new SignUpPageFrame(cl, cards, userRepo));
 
 		cards.add(card1, INIT_PAGE);
 		cards.add(card2, FOOD_MENU_PAGE);
 		cards.add(card3, ORDER_VIEW_PAGE);
 		cards.add(card4, MY_PAGE);
-//		cards.add(card5, ORDER_PAGE);
-		cards.add(card6, SIGN_UP_PAGE);
+		cards.add(card5, SIGN_UP_PAGE);
 
 		getContentPane().add(cards);
 		
@@ -748,6 +764,31 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private void createOrderViewPage() {
 		System.out.println("주문 조회페이지로 이동합니다."); 
 		CardLayout cl = (CardLayout)(cards.getLayout());
+
+		/* 주문내역 출력 */
+//		Iterator<User> itr = userRepo.getUsers().iterator();
+//
+//		Map<Food, Integer> orderList = new TreeMap<Food, Integer>();
+//
+//		User user = null;
+//		while(itr.hasNext()) {
+//			user = itr.next();
+//			if(user.getPhone().equals(phoneTextField.getText()))
+//				orderList = user.getOrderList();
+//		}
+//
+//		String msg = "";
+//		Food food0 = null;
+//		int qty = 0;
+//		int sum = 0;
+//		for(Map.Entry<Food, Integer> entry : orderList.entrySet()) {
+//			food0 = entry.getKey();
+//			qty = entry.getValue();
+//			msg += food0 + " - - -  " + qty + " 개.\n";
+//			sum += food0.getMenuPrice() * qty;
+//		}
+//		msg += " 총 주문 액: " + sum + "원";
+//		orderViewTextArea.append(msg);
         cl.show(cards, ORDER_VIEW_PAGE);
 	}
 	private void createMyPage() {
