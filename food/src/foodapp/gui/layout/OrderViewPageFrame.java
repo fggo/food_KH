@@ -49,8 +49,6 @@ public class OrderViewPageFrame extends JPanel implements ActionListener {
 	private void initialize() {
 		setLayout(new BorderLayout());
 
-		JSplitPane split1 = new JSplitPane();
-
 		homeBtn = new JButton("뒤로가기");
 		homeBtn.addActionListener(this);
 		add(homeBtn);
@@ -91,5 +89,6 @@ public class OrderViewPageFrame extends JPanel implements ActionListener {
 			sum += food.getMenuPrice() * qty;
 		}
 		msg += " 총 주문 액: " + sum + "원";
+		orderViewTextArea.append(msg);
 	}
 }
