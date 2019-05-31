@@ -31,23 +31,6 @@ public final class Constants {
 	public static final String 		SIGN_UP_PAGE 		= "Card - Sign Up";
 	public static final String 		MY_PAGE 			= "Card - My Page";
 
-	/* 음식 메뉴 정보 */
-	//음식 메뉴번호
-//	public static final int			MENU_BURGER			= 1;
-//	public static final int			MENU_CHICKEN		= 2;
-//	public static final int			MENU_COKE			= 3;
-//	public static final int			MENU_MILK			= 4;
-//	//음식 이름
-//	public static final String		BURGER				= "햄버거";
-//	public static final String		CHICKEN				= "치킨";
-//	public static final String		COKE				= "콜라";
-//	public static final String		MILK				= "우유";
-//	//음식 가격
-//	public static final int			PRICE_BURGER		= 2000;
-//	public static final int			PRICE_CHICKEN		= 9000;
-//	public static final int			PRICE_COKE			= 1000;
-//	public static final int			PRICE_MILK			= 500;
-
 
 	/* User 로그인 상태 */
 	public static final boolean		OFF					= false;

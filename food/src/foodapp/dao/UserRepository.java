@@ -51,7 +51,6 @@ public class UserRepository {
 		this.loadDefaultFoodMenu();
 	}
 
-
 	public void readFromFile() {
 		if(dataFile.exists()==false)
 			return;
