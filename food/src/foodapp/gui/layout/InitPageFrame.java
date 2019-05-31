@@ -3,7 +3,6 @@ package foodapp.gui.layout;
 import static foodapp.dao.Constants.FOOD_MENU_PAGE;
 import static foodapp.dao.Constants.INIT_PAGE;
 import static foodapp.dao.Constants.MY_PAGE;
-import static foodapp.dao.Constants.ORDER_PAGE;
 import static foodapp.dao.Constants.ORDER_VIEW_PAGE;
 import static foodapp.dao.Constants.SIGN_UP_PAGE;
 import static foodapp.dao.Constants.WINDOW_HEIGHT;
@@ -11,6 +10,7 @@ import static foodapp.dao.Constants.WINDOW_WIDTH;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -36,6 +37,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JPopupMenu;
@@ -45,6 +47,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
@@ -54,7 +57,6 @@ import org.openide.awt.DropDownButtonFactory;
 import foodapp.dao.UserRepository;
 import foodapp.gui.event.HomeBtnEventHandler;
 import foodapp.gui.event.MenuPageBtnEventHandler;
-import foodapp.gui.event.OrderBtnEventHandler;
 import foodapp.gui.event.SignInEventHandler;
 import foodapp.gui.event.SignOffEventHandler;
 import foodapp.model.vo.Admin;
@@ -91,7 +93,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private JLabel menuCategoryLabel, menuChoiceLabel, menuQtyLabel;
 	private JTextField menuCategoryTxt;
 	private JTextField subMenuTxt;
-	private JButton payCardBtn, payCashBtn;
+	private JToggleButton payCardBtn, payCashBtn;
+	private ButtonGroup payMethodBtnGrp;
 	
 	private JLabel addMenuLabel;
 	private JButton addMenuBtn;
@@ -136,15 +139,17 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		splitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		splitPane1.setDividerLocation(300 + splitPane1.getInsets().top);
 		splitPane1.setDividerSize(1);
+		
 
 		phoneTextField = new JTextField("", 11); //핸드폰 11자리
 		passwordField = new JPasswordField(11);
 		signInBtn1 = new JButton("로그인");
 		signUpBtn1 = new JButton("회원가입");
 		logOffBtn1 = new JButton("로그아웃");
-		orderBtn = new JButton("주문하기");
-		orderBtn.setName(ORDER_PAGE);
 		signUpBtn1.setName(SIGN_UP_PAGE);
+
+		orderBtn = new JButton("주문 하기");
+		orderBtn.setName("ORDER");
 
 
 		leftPanel = new JPanel(new GridLayout(3,2));
@@ -200,8 +205,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		/* 음식메뉴 패널 */
 		CardLayout menuCl = new CardLayout();
-		menuCards = new JPanel(menuCl);
 
+		menuCards = new JPanel(menuCl);
 
 		noodleCard = new JPanel(new BorderLayout());
 		soupCard = new JPanel(new BorderLayout());
@@ -286,10 +291,16 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		addMenuBtn.setName("ADD_FOOD");
 
 		
-		payCardBtn = new JButton("카드 주문");
+		payCardBtn = new JToggleButton("카드 주문");
 		payCardBtn.setName("CARD");
-		payCashBtn = new JButton("현금 주문");
+		payCardBtn.setBackground(Color.WHITE);
+		payCashBtn = new JToggleButton("현금 주문");
 		payCashBtn.setName("CASH");
+		payCashBtn.setBackground(Color.WHITE);
+
+		payMethodBtnGrp = new ButtonGroup();
+		payMethodBtnGrp.add(payCardBtn);
+		payMethodBtnGrp.add(payCashBtn);
 		
 		payCardBtn.addMouseListener(this);
 		payCashBtn.addMouseListener(this);
@@ -394,7 +405,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		card1.add(splitPane3);
 		card2.add(new FoodMenuPageFrame(cl, cards));
-		card3.add(new OrderViewPageFrame(cl, cards));
+		card3.add(new OrderViewPageFrame(cl, cards, phoneTextField, userRepo), 
+				BorderLayout.CENTER);
 		card4.add(new MyPageFrame(cl, cards));
 		card5.add(new OrderPageFrame(cl, cards));
 		card6.add(new SignUpPageFrame(cl, cards, userRepo));
@@ -422,20 +434,18 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		signUpBtn2.addMouseListener(this);
 		
 		menuDropDownBtn.addActionListener(new MenuPageBtnEventHandler());
-		orderBtn.addActionListener(new OrderBtnEventHandler(userRepo));
+		orderBtn.addMouseListener(this);
 
 		/* 새로운 페이지 이동 */
 		logoBtn.addMouseListener(this);
 		signUpBtn1.addMouseListener(this);
 		signUpBtn2.addMouseListener(this);
 		menuDropDownBtn.addMouseListener(this);
-		orderBtn.addMouseListener(this);
 		orderViewBtn.addMouseListener(this);
 		myPageBtn.addMouseListener(this);
 		
 		/* window closing */
 		this.addWindowListener(new WindowAdapter() {
-
 			@Override
 			public void windowOpened(WindowEvent e) {
 			}
@@ -588,7 +598,15 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				case "SOUP": showSoupMenu(); break;
 				case "RICE": showRiceMenu(); break;
 				case "ADD_FOOD": saveOrderList(name); break;
-				case "CARD": case "CASH": completeOrder(name);break;
+				case "CARD": 
+					payCardBtn.setText("카드 주문 (선택됨)");
+					payCashBtn.setText("현금 주문");
+					break;
+				case "CASH": 
+					payCashBtn.setText("현금 주문 (선택됨)");
+					payCardBtn.setText("카드 주문");
+					break;
+				case "ORDER": completeOrder(); break;
 				default:
 					break;
 			}
@@ -611,7 +629,27 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			this.subMenuTxt.setText(model.getValueAt(row, 1).toString() + ". " + (String)model.getValueAt(row, 2).toString());
 		}
 	}
-	public void completeOrder(String name) {
+
+	public void completeOrder() {
+		if(this.phoneTextField.getText() == "") {
+			JOptionPane.showMessageDialog(null, "로그인이 필요합니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		if(!payCardBtn.isSelected() && !payCashBtn.isSelected()) {
+			System.out.println("결재수단을 선택해 주세요.");
+			return;
+		}
+
+		int result = JOptionPane.showConfirmDialog(null, "주문을 완료하시겠습니까?", "주문 확인",
+				JOptionPane.OK_CANCEL_OPTION);
+
+		if(result!= JOptionPane.OK_OPTION) {
+			System.out.println("주문을 취소합니다.");
+			return;
+		}
+
+		String payMethod = this.payCardBtn.isSelected()? "CARD" : "CASH";
+
 		User user = userRepo.getUserByPhone(this.phoneTextField.getText());
 		if(user == null)
 			return;
@@ -638,7 +676,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				salesResult.put(food, qty);
 		}
 		((Admin)admin).setSalesResult(salesResult);
-		user.setRecentPayMethod(name);
+		user.setRecentPayMethod(payMethod);
 		user.setOrdering(false);
 		user.setOrderCreated(new GregorianCalendar());
 		userRepo.showUsers();

@@ -23,11 +23,10 @@ public final class Constants {
 	
 
 	public static final int 		WINDOW_WIDTH 		= 900;
-	public static final int 		WINDOW_HEIGHT 		= 900;
+	public static final int 		WINDOW_HEIGHT 		= 650;
 
 	public static final String 		INIT_PAGE 			= "Card - Home Page";
 	public static final String 		FOOD_MENU_PAGE 		= "Card - Food Menu";
-	public static final String 		ORDER_PAGE 			= "Card - Order";
 	public static final String 		ORDER_VIEW_PAGE 	= "Card - View Order";
 	public static final String 		SIGN_UP_PAGE 		= "Card - Sign Up";
 	public static final String 		MY_PAGE 			= "Card - My Page";
