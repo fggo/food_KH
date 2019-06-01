@@ -29,7 +29,7 @@ public final class Constants {
 	public static final String 		FOOD_MENU_PAGE 		= "Card - Food Menu";
 	public static final String 		ORDER_VIEW_PAGE 	= "Card - View Order";
 	public static final String 		SIGN_UP_PAGE 		= "Card - Sign Up";
-	public static final String 		MY_PAGE 			= "Card - My Page";
+	public static final String 		ADMIN_PAGE 			= "Card - Admin Page";
 
 
 	/* User 로그인 상태 */

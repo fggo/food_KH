@@ -55,9 +55,7 @@ public class Food implements Serializable, Comparable<Food> {
 	}
 
 	public String toCurrency(int price) {
-		NumberFormat n = NumberFormat.getCurrencyInstance(Locale.KOREA); 
-		String s = n.format(price);
-		return s;
+		return NumberFormat.getCurrencyInstance(Locale.KOREA).format(price);
 	}
 
 	public String getMenuCategory() { return menuCategory; }

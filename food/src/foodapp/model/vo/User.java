@@ -40,7 +40,7 @@ public class User implements Serializable, Comparable<User> {
 	}
 
 	public void showUserInfo() {
-		String date = null;
+		String date = "";
 		if(orderCreated !=null) {
 			Date temp = new Date(orderCreated.getTimeInMillis());
 			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss yy-MM-dd");
@@ -77,12 +77,6 @@ public class User implements Serializable, Comparable<User> {
 		return this.getUsername().compareTo(o.getUsername());
 	}
 
-	private String toCurrency(int price) {
-		NumberFormat n = NumberFormat.getCurrencyInstance(Locale.KOREA); 
-		String s = n.format(price);
-		return s;
-	}
-	
 
 	//getter setter
 	public String getUsername() { return username; }

@@ -26,7 +26,7 @@ public class Admin extends User{
 				System.out.println("\t" + entry.getKey() + "  :  ÃÑ " + entry.getValue() + " °³ ÆÇ¸Å.");
 		}
 	}
-
+	
 	public Map<Food, Integer> getSalesResult() { return salesResult; } 
 	public void setSalesResult(Map<Food, Integer> salesResult) { this.salesResult = salesResult; }
 }
