@@ -7,21 +7,7 @@ public final class Constants {
 		//restrict initialization
 	}
 
-	/* 콘솔 입력 */
-	public static final Scanner		CONSOLE		= new Scanner(System.in);
-
-
 	/* 홈페이지 메뉴번호 */
-	public static final int			SIGNUP				= 1;
-	public static final int			SIGNIN				= 2;
-	public static final int			LOGOFF				= 3;
-	public static final int			ORDER				= 4;
-	public static final int			VIEW_ORDER			= 5;
-	public static final int			SHOW_USERS			= 6;
-	
-	public static final int			MENU_EXIT			= 0;
-	
-
 	public static final int 		WINDOW_WIDTH 		= 900;
 	public static final int 		WINDOW_HEIGHT 		= 650;
 

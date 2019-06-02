@@ -19,11 +19,13 @@ import java.util.TreeMap;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
@@ -31,8 +33,9 @@ import javax.swing.table.DefaultTableModel;
 import foodapp.dao.UserRepository;
 import foodapp.model.vo.Admin;
 import foodapp.model.vo.Food;
+import foodapp.model.vo.FoodMenu;
 
-public class AdminFrame extends JFrame implements MouseListener {
+public class AdminPageFrame extends JFrame implements MouseListener {
 	/**
 	 * 
 	 */
@@ -69,9 +72,8 @@ public class AdminFrame extends JFrame implements MouseListener {
 	private JPanel panel3;
 		
 	private JButton addBtn;
-	private JButton modifyBtn;
+	private JToggleButton modifyBtn;
 	private JButton deleteBtn;
-
 
 
 	private DefaultTableModel tableModel;
@@ -85,13 +87,12 @@ public class AdminFrame extends JFrame implements MouseListener {
 
 	private UserRepository userRepo;
 
-	public AdminFrame(UserRepository userRepo) {
+	public AdminPageFrame(UserRepository userRepo) {
 		this.userRepo = userRepo;
 
 		initialize();
 	}
 
-	
 	private void initialize(){
 		adminLeftPanel = new JPanel();
 		adminCenterSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -129,20 +130,21 @@ public class AdminFrame extends JFrame implements MouseListener {
 			newEntry = itr.next();
 			food = newEntry.getValue();
 			qty = newEntry.getKey();
-			msg += "    " + food.toString() + " - - - 총 " + qty + " 개.";
+			msg += "    " + food + " - - - 총 " + qty + " 개.";
 			if(++count < salesResult.size()) msg+="\n";
 		}
 		salesResultTextArea.setText(msg);
 		Font font = new Font("맑은고딕", Font.BOLD, 11);
         salesResultTextArea.setFont(font);
         salesResultTextArea.setForeground(Color.BLUE);
-		scrollTextArea = new JScrollPane(salesResultTextArea,
-					JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-					JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPanePanel1 = new JPanel(new BorderLayout());
-		scrollPanePanel1.add(scrollTextArea);
-		adminCenterSplitPane.setTopComponent(salesLabelPanel);
-		adminCenterSplitPane.setBottomComponent(scrollPanePanel1);
+//		scrollTextArea = new JScrollPane(salesResultTextArea,
+//				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+//				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        topPanel = salesLabelPanel;
+        bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(salesResultTextArea);
+		adminCenterSplitPane.setTopComponent(topPanel);
+		adminCenterSplitPane.setBottomComponent(bottomPanel);
 
 		adminSplitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		adminSplitPane1.setLeftComponent(adminLeftPanel);
@@ -172,7 +174,7 @@ public class AdminFrame extends JFrame implements MouseListener {
 		
 		addBtn = new JButton("추 가");
 		addBtn.setName("ADD");
-		modifyBtn = new JButton("수 정");
+		modifyBtn = new JToggleButton("수 정");
 		modifyBtn.setName("MODIFY");
 		deleteBtn = new JButton("삭 제");
 		deleteBtn.setName("DELETE");
@@ -210,7 +212,7 @@ public class AdminFrame extends JFrame implements MouseListener {
 			String[] row = new String[] { food.getMenuCategory(), 
 						String.valueOf(food.getMenuNo()), 
 						food.getMenuName(), 
-						food.toCurrency(food.getMenuPrice()),
+						String.valueOf(food.getMenuPrice()),
 					};
 			menuTableContents[count++] = row;
 		}
@@ -219,6 +221,25 @@ public class AdminFrame extends JFrame implements MouseListener {
 			tableModel.addRow(menuTableContents[i]);
 
 		menuTable = new JTable(tableModel);
+
+//		tableModel = new DefaultTableModel() {
+//			private static final long serialVersionUID = 1L;
+//
+//			@Override
+//            public boolean isCellEditable(int row, int column) {
+//                return false;
+//            }
+//		};
+
+//		new JTable() {
+//	        private static final long serialVersionUID = 1L;
+//
+//	        @Override
+//	        public boolean isCellEditable(int row, int column) {                
+//	                return false;               
+//	        };
+//	    };
+
 		menuTable.setName("MENU_TABLE");
 		menuTable.setAutoCreateRowSorter(true);
 		menuTable.addMouseListener(this);
@@ -233,7 +254,6 @@ public class AdminFrame extends JFrame implements MouseListener {
 		menuSplitPane1.setBottomComponent(scrollPanePanel2);
 		menuSplitPane1.setDividerLocation(50 + menuSplitPane1.getInsets().top);
 		menuSplitPane1.setDividerSize(1);
-
 
 		
 		backBtn = new JButton("뒤로가기");
@@ -264,7 +284,6 @@ public class AdminFrame extends JFrame implements MouseListener {
 
 		cards.add(cardSalesResult, "SALES_RESULT");
 		cards.add(cardManageMenu, "MANAGE_MENU");
-		
 		
 
 		add(cards);
@@ -315,12 +334,23 @@ public class AdminFrame extends JFrame implements MouseListener {
 			switch(name) {
 				case "MANAGE_MENU": showManageMenu(); break;
 				case "SALES_RESULT": showSalesResult(); break;
+				case "ADD": addMenu(); break;
+				case "DELETE": deleteMenu(); break;
 				default:
 					break;
 			}
 		}
+		else if(source instanceof JToggleButton) {
+			String name = ((JToggleButton) e.getSource()).getName();
+			switch(name) {
+				case "MODIFY": modifyMenu(); break;
+				default:
+					break;
+			}
+			
+		}
 	}
-
+	
 	private void showManageMenu() {
 		System.out.println("메뉴 관리 창으로 넘어갑니다.");
 		CardLayout cl = (CardLayout)(cards.getLayout());
@@ -333,7 +363,46 @@ public class AdminFrame extends JFrame implements MouseListener {
         cl.show(cards, "SALES_RESULT");
 		
 	}
+	
+	private void addMenu() {
+		
+	}
+	
+	private void modifyMenu() {
+		if(modifyBtn.isSelected()) {
+			addBtn.setEnabled(false);
+			deleteBtn.setEnabled(false);
 
+		}
+		else {
+			FoodMenu menu = (FoodMenu)userRepo.getFoodMenu();
+
+			//dialog
+			int result = JOptionPane.showConfirmDialog(null, "수정을 완료 하시겠습니까?", "메뉴 수정 확인",
+					JOptionPane.OK_CANCEL_OPTION);
+
+			if(result!= JOptionPane.OK_OPTION) {
+				System.out.println("메뉴 수정을 취소합니다.");
+				return;
+			}
+			
+			addBtn.setEnabled(true);
+			deleteBtn.setEnabled(true);
+
+			int row = menuTable.getSelectedRow();
+
+			String menuCategory = (String)tableModel.getValueAt(row, 0);
+			int menuNo = Integer.valueOf((String)tableModel.getValueAt(row, 1));
+			String menuName=  (String)tableModel.getValueAt(row, 2);
+			int menuPrice = Integer.valueOf((String)tableModel.getValueAt(row, 3));
+
+			Food food = new Food(menuCategory, menuNo, menuName, menuPrice);
+		}
+	}
+	
+	private void deleteMenu() {
+		
+	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {}

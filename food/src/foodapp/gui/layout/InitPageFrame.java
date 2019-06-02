@@ -1,8 +1,8 @@
 package foodapp.gui.layout;
 
+import static foodapp.dao.Constants.ADMIN_PAGE;
 import static foodapp.dao.Constants.FOOD_MENU_PAGE;
 import static foodapp.dao.Constants.INIT_PAGE;
-import static foodapp.dao.Constants.ADMIN_PAGE;
 import static foodapp.dao.Constants.ORDER_VIEW_PAGE;
 import static foodapp.dao.Constants.SIGN_UP_PAGE;
 import static foodapp.dao.Constants.WINDOW_HEIGHT;
@@ -34,6 +34,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -61,7 +63,6 @@ import javax.swing.table.DefaultTableModel;
 import org.openide.awt.DropDownButtonFactory;
 
 import foodapp.dao.UserRepository;
-import foodapp.gui.event.HomeBtnEventHandler;
 import foodapp.gui.event.MenuPageBtnEventHandler;
 import foodapp.gui.event.SignInEventHandler;
 import foodapp.gui.event.SignOffEventHandler;
@@ -308,7 +309,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		subMenuTxt.setEditable(false);
 
 		menuQtyLabel = new JLabel("수 량");
-		menuQtyComboBox = new JComboBox<Integer>(new Integer[] {1,2,3,4,5});
+		ComboBoxModel<Integer> comboBoxModel = new DefaultComboBoxModel<Integer>(new Integer[] {1,2,3,4,5});
+		menuQtyComboBox = new JComboBox<Integer>(comboBoxModel);
 		
 		addMenuLabel = new JLabel("메뉴 추가");
 		addMenuBtn = new JButton("PUSH 추가");
@@ -386,8 +388,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		JToolBar navBar = this.createNavBar();
 
 		splitPane2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		splitPane2.setDividerLocation(58 + splitPane2.getInsets().top);
-		splitPane2.setDividerSize(1);
 
 		topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		topPanel.add(navBar);
@@ -480,7 +480,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		
 		/* 각 component에 이벤트 추가 */
 		/* 클릭이벤트 */
-		logoBtn.addMouseListener(new HomeBtnEventHandler());
+//		logoBtn.addMouseListener(new HomeBtnEventHandler());
 
 		signInBtn1.addMouseListener(new SignInEventHandler(phoneTextField, passwordField, userRepo));
 		signInBtn2.addMouseListener(new SignInEventHandler(phoneTextField, passwordField, userRepo));
@@ -636,6 +636,9 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
             @Override
             public void run() {
+				splitPane2.setDividerLocation(53 + splitPane2.getInsets().top);
+				splitPane2.setDividerSize(1);
+
 				bottomSplitPane.setDividerLocation(93+ bottomSplitPane.getInsets().top);
 				bottomSplitPane.setEnabled(false);
 				bottomSplitPane.setDividerSize(1);
@@ -826,7 +829,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	}
 	
 	private void createAdminPage() {
-		JFrame frame = new AdminFrame(userRepo);
+		JFrame frame = new AdminPageFrame(userRepo);
 
 		frame.setSize(500, 500);
 		frame.setLocation(this.getX() +600, this.getY() + 90);

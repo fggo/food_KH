@@ -1,0 +1,62 @@
+기획안 초안제출 (6.3 월)
+주제 기획의도 역할분담 화면설계 클래스 설계
+
+발표제출(6.5 수) 베타 테스트
+
+발표 (6.7 금)
+
+1. 로그인&회원가입 = 윤원택
+2. 주문하기 (2명) = 문준석, 최호준
+3. 관리자메뉴 = 오건철
+4. 주문조회 = 최장원
+5. 주문취소, 남은좌석확인, 메인화면과 객체간 연결 = 이준호
+	
+[com.kh.model.vo.BlockedUser]
+    -blockedDate: Date
+    -blockedReason: String
+
+[com.kh.model.vo.User]
+    -username: String
+    -password: String
+    -email: String
+    -memberID: String
+    -createdDate: Date
+    -accountNumber: String
+    -userPoint: int
+    -userMoney: int
+    -gambleRecord: List<String>
+
+    +removeUser() : boolean
+    +playGame(int i): int 게임별로 한자리 수(i)가 정해져있음
+    +updateAccountNum(): void
+    +updateUserInfo(): void
+    +showUserInfo()
+    +pointToMoney(int amount)
+    +moneyToPoint(int amount)
+    
+[com.kh.model.vo.Admin]
+    +blockUser(int memberID): void
+    +releaseUser(int memberID): void
+    +showUser(int memberID): boolean
+
+[com.kh.controller.RegisterController]
+    -users: User[]
+    
+    +update()
+    +delete()
+    +search()
+
+
+1. 윈도우용 git 다운로드/설치
+https://github.com/git-for-windows/git/releases/download/v2.21.0.windows.1/Git-2.21.0-64-bit.exe
+
+2. 설치된 git bash (커멘드라인 창) 실행
+
+3. 소스코드 저장하려는 디렉토리로 이동하여 다음 커멘드 실행
+  git clone https://github.com/fggo/food_KH.git
+
+4. 이클립스 workspace를 받은 food_KH로 설정
+ package explorer 마우스 오른쪽 클릭-> import>existing java project>'food_KH' 디렉토리 선택.
+
+5. Main.java 실행 및 테스트.
+
