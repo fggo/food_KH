@@ -2,6 +2,7 @@ package foodapp.model.vo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class FoodMenu implements Serializable{
@@ -20,6 +21,22 @@ public class FoodMenu implements Serializable{
 
 	public boolean removeFood(Food food) {
 		return foodMenuList.remove(food);
+	}
+	
+	public boolean contains(Food newFood) {
+		Food food = null;
+		if(newFood == null) return false;
+		if (foodMenuList != null) {
+			Iterator<Food> itr = foodMenuList.iterator();
+			while(itr.hasNext()) {
+				food = itr.next();
+				if (food.equals(newFood))
+					return true;
+			}
+			return false;
+		}
+		else
+			return false;
 	}
 
 	public List<Food> getFoodMenuList() { return foodMenuList; }

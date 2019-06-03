@@ -239,6 +239,12 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		riceCard = new JPanel(new BorderLayout());
 		
 		List<Food> foodMenuList = userRepo.getFoodMenu().getFoodMenuList();
+
+		Collections.sort(foodMenuList, (i,j)->{
+			return i.getMenuCategory().compareTo(j.getMenuCategory()) == 0 ? 
+						i.getMenuNo() - j.getMenuNo(): i.getMenuCategory().compareTo(j.getMenuCategory());
+		});
+
 		Iterator<Food> itr = foodMenuList.iterator();
 		Food food = null;
 
@@ -247,9 +253,9 @@ public class InitPageFrame extends JFrame implements MouseListener {
         modelS = new DefaultTableModel(colNames, 0);
         modelR = new DefaultTableModel(colNames, 0);
 
-		String[][] noodleList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
-		String[][] soupList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
-		String[][] riceList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
+		String[][] tempNoodleList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
+		String[][] tempSoupList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
+		String[][] tempRiceList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
 
 		int countN =0, countS=0, countR=0;
 
@@ -261,10 +267,37 @@ public class InitPageFrame extends JFrame implements MouseListener {
 					food.getMenuName(), 
 					food.toCurrency(food.getMenuPrice()) };
 			switch(food.getMenuCategory()) {
-				case "NOODLE": noodleList[countN++] = temp;break;
-				case "SOUP": soupList[countS++] = temp; break;
-				case "RICE": riceList[countR++] = temp; break;
+				case "NOODLE": tempNoodleList[countN++] = temp;break;
+				case "SOUP": tempSoupList[countS++] = temp; break;
+				case "RICE": tempRiceList[countR++] = temp; break;
 			}
+		}
+		
+		String[][] noodleList = new String[countN][colNames.length];
+		String[][] soupList = new String[countS][colNames.length];
+		String[][] riceList = new String[countR][colNames.length];
+		
+		
+//		for(int i =0; i<noodleList.length; i++)
+//			System.arraycopy(tempNoodleList[i], 0, noodleList[i], 0, noodleList.length);
+//		
+//		for(int i =0; i<soupList.length; i++)
+//			System.arraycopy(tempSoupList[i], 0, soupList[i], 0, soupList.length);
+//		ERROR!
+//		for(int i =0; i<riceList.length; i++)
+//			System.arraycopy(tempRiceList[i], 0, riceList[i], 0, riceList.length);
+		
+		for(int i =0; i<noodleList.length; i++) {
+			for(int j =0; j<noodleList[i].length; j++)
+				noodleList[i][j] = tempNoodleList[i][j];
+		}
+		for(int i =0; i<soupList.length; i++) {
+			for(int j =0; j<soupList[i].length; j++)
+				soupList[i][j] = tempSoupList[i][j];
+		}
+		for(int i =0; i<riceList.length; i++) {
+			for(int j =0; j<riceList[i].length; j++)
+				riceList[i][j] = tempRiceList[i][j];
 		}
 		
 		for(int i =0;  i<noodleList.length; i++)  modelN.addRow(noodleList[i]);
@@ -665,7 +698,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
         });
     }
 	@Override
-	public void mousePressed(MouseEvent e) {}
+	public void mouseClicked(MouseEvent e) {}
 	@Override
 	public void mouseReleased(MouseEvent e) {}
 	@Override
@@ -674,7 +707,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	public void mouseExited(MouseEvent e) {}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mousePressed(MouseEvent e) {
 		Object source = e.getSource();
 		System.out.println(source);
 		if (source instanceof JButton) {
@@ -851,7 +884,14 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			return;
 		}
 
-		JFrame frame = new AdminPageFrame(userRepo);
+		JFrame frame = new AdminPageFrame(modelN, modelS, modelR, userRepo);
+		
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+
+			}
+		});
 
 		frame.setSize(500, 500);
 		frame.setLocation(this.getX() + 50 , this.getY() + 90);

@@ -28,12 +28,12 @@ public class Food implements Serializable, Comparable<Food> {
 		Food food = (Food)obj;
 		return this.menuCategory.equals(food.getMenuCategory())
 				&& this.menuNo == food.getMenuNo()
-				&& this.menuName == food.getMenuName();
+				&& this.menuName.equals(food.getMenuName());
 	}
 	
 	@Override
 	public int hashCode() {
-		return menuCategory.length() + menuNo + menuName.length() + menuPrice;
+		return menuCategory.length() + menuNo + menuName.length();
 	}
 	
 	@Override
