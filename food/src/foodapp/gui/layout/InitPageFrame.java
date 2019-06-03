@@ -63,11 +63,11 @@ import javax.swing.table.DefaultTableModel;
 import org.openide.awt.DropDownButtonFactory;
 
 import foodapp.dao.UserRepository;
-import foodapp.gui.event.MenuPageBtnEventHandler;
 import foodapp.gui.event.SignInEventHandler;
 import foodapp.gui.event.SignOffEventHandler;
 import foodapp.model.vo.Admin;
 import foodapp.model.vo.Food;
+import foodapp.model.vo.FoodMenu;
 import foodapp.model.vo.User;
 
 
@@ -238,72 +238,82 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		soupCard = new JPanel(new BorderLayout());
 		riceCard = new JPanel(new BorderLayout());
 		
-		List<Food> foodMenuList = userRepo.getFoodMenu().getFoodMenuList();
-
-		Collections.sort(foodMenuList, (i,j)->{
-			return i.getMenuCategory().compareTo(j.getMenuCategory()) == 0 ? 
-						i.getMenuNo() - j.getMenuNo(): i.getMenuCategory().compareTo(j.getMenuCategory());
-		});
-
-		Iterator<Food> itr = foodMenuList.iterator();
-		Food food = null;
-
-		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"};
-        modelN = new DefaultTableModel(colNames, 0);
-        modelS = new DefaultTableModel(colNames, 0);
-        modelR = new DefaultTableModel(colNames, 0);
-
-		String[][] tempNoodleList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
-		String[][] tempSoupList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
-		String[][] tempRiceList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
-
-		int countN =0, countS=0, countR=0;
-
-		while(itr.hasNext()) {
-			food = itr.next();
-
-			String[] temp = new String[] { food.getMenuCategory(), 
-					String.valueOf(food.getMenuNo()), 
-					food.getMenuName(), 
-					food.toCurrency(food.getMenuPrice()) };
-			switch(food.getMenuCategory()) {
-				case "NOODLE": tempNoodleList[countN++] = temp;break;
-				case "SOUP": tempSoupList[countS++] = temp; break;
-				case "RICE": tempRiceList[countR++] = temp; break;
-			}
-		}
-		
-		String[][] noodleList = new String[countN][colNames.length];
-		String[][] soupList = new String[countS][colNames.length];
-		String[][] riceList = new String[countR][colNames.length];
-		
-		
-//		for(int i =0; i<noodleList.length; i++)
-//			System.arraycopy(tempNoodleList[i], 0, noodleList[i], 0, noodleList.length);
+//		FoodMenu menu = userRepo.getFoodMenu();
+//		List<Food> foodMenuList = null;
+//		if(menu!= null)
+//			foodMenuList = menu.getFoodMenuList();
+//
+//		if(foodMenuList != null) {
+//			Collections.sort(foodMenuList, (i,j)->{
+//				return i.getMenuCategory().compareTo(j.getMenuCategory()) == 0 ? 
+//							i.getMenuNo() - j.getMenuNo(): i.getMenuCategory().compareTo(j.getMenuCategory());
+//			});
+//		}
+//
+//		Iterator<Food> itr = foodMenuList.iterator();
+//		Food food = null;
+//
+//		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"};
+//        modelN = new DefaultTableModel(colNames, 0);
+//        modelS = new DefaultTableModel(colNames, 0);
+//        modelR = new DefaultTableModel(colNames, 0);
+//
+//		String[][] tempNoodleList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
+//		String[][] tempSoupList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
+//		String[][] tempRiceList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
+//
+//		int countN =0, countS=0, countR=0;
+//
+//		while(itr.hasNext()) {
+//			food = itr.next();
+//
+//			String[] temp = new String[] { food.getMenuCategory(), 
+//					String.valueOf(food.getMenuNo()), 
+//					food.getMenuName(), 
+//					food.toCurrency(food.getMenuPrice()) };
+//			switch(food.getMenuCategory()) {
+//				case "NOODLE": tempNoodleList[countN++] = temp;break;
+//				case "SOUP": tempSoupList[countS++] = temp; break;
+//				case "RICE": tempRiceList[countR++] = temp; break;
+//			}
+//		}
 //		
-//		for(int i =0; i<soupList.length; i++)
-//			System.arraycopy(tempSoupList[i], 0, soupList[i], 0, soupList.length);
-//		ERROR!
-//		for(int i =0; i<riceList.length; i++)
-//			System.arraycopy(tempRiceList[i], 0, riceList[i], 0, riceList.length);
-		
-		for(int i =0; i<noodleList.length; i++) {
-			for(int j =0; j<noodleList[i].length; j++)
-				noodleList[i][j] = tempNoodleList[i][j];
-		}
-		for(int i =0; i<soupList.length; i++) {
-			for(int j =0; j<soupList[i].length; j++)
-				soupList[i][j] = tempSoupList[i][j];
-		}
-		for(int i =0; i<riceList.length; i++) {
-			for(int j =0; j<riceList[i].length; j++)
-				riceList[i][j] = tempRiceList[i][j];
-		}
-		
-		for(int i =0;  i<noodleList.length; i++)  modelN.addRow(noodleList[i]);
-		for(int i =0;  i<soupList.length; i++)  modelS.addRow(soupList[i]);
-		for(int i =0;  i<riceList.length; i++)  modelR.addRow(riceList[i]);
+//		String[][] noodleList = new String[countN][colNames.length];
+//		String[][] soupList = new String[countS][colNames.length];
+//		String[][] riceList = new String[countR][colNames.length];
+//		
+//		
+////		for(int i =0; i<noodleList.length; i++)
+////			System.arraycopy(tempNoodleList[i], 0, noodleList[i], 0, noodleList.length);
+////		
+////		for(int i =0; i<soupList.length; i++)
+////			System.arraycopy(tempSoupList[i], 0, soupList[i], 0, soupList.length);
+////		ERROR!
+////		for(int i =0; i<riceList.length; i++)
+////			System.arraycopy(tempRiceList[i], 0, riceList[i], 0, riceList.length);
+//		
+//		for(int i =0; i<noodleList.length; i++) {
+//			for(int j =0; j<noodleList[i].length; j++)
+//				noodleList[i][j] = tempNoodleList[i][j];
+//		}
+//		for(int i =0; i<soupList.length; i++) {
+//			for(int j =0; j<soupList[i].length; j++)
+//				soupList[i][j] = tempSoupList[i][j];
+//		}
+//		for(int i =0; i<riceList.length; i++) {
+//			for(int j =0; j<riceList[i].length; j++)
+//				riceList[i][j] = tempRiceList[i][j];
+//		}
+//		
+//		for(int i =0;  i<noodleList.length; i++)  modelN.addRow(noodleList[i]);
+//		for(int i =0;  i<soupList.length; i++)  modelS.addRow(soupList[i]);
+//		for(int i =0;  i<riceList.length; i++)  modelR.addRow(riceList[i]);
+		Map<String, DefaultTableModel> tableModels = (TreeMap<String, DefaultTableModel>)constructTableModels();
 
+		modelN = tableModels.get("NOODLE");
+		modelS = tableModels.get("SOUP");
+		modelR = tableModels.get("RICE");
+		
 		menuNoodleTable = new JTable(modelN);
 		menuNoodleTable.setName("NOODLE_TABLE");
 		menuSoupTable = new JTable(modelS);
@@ -563,6 +573,88 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		setResizable(false);
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+	private Map<String, DefaultTableModel> constructTableModels() {
+		Map<String, DefaultTableModel> map = new TreeMap<String, DefaultTableModel>();
+		
+		FoodMenu menu = userRepo.getFoodMenu();
+		List<Food> foodMenuList = null;
+		Iterator<Food> itr = null;
+		if(menu!= null)
+			foodMenuList = menu.getFoodMenuList();
+
+		if(foodMenuList != null) {
+			Collections.sort(foodMenuList, (i,j)->{
+				return i.getMenuCategory().compareTo(j.getMenuCategory()) == 0 ? 
+							i.getMenuNo() - j.getMenuNo(): i.getMenuCategory().compareTo(j.getMenuCategory());
+			});
+
+			itr = foodMenuList.iterator();
+		}
+
+		Food food = null;
+		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"};
+        modelN = new DefaultTableModel(colNames, 0);
+        modelS = new DefaultTableModel(colNames, 0);
+        modelR = new DefaultTableModel(colNames, 0);
+
+		String[][] tempNoodleList = new String[foodMenuList ==null? 0: foodMenuList.size()][colNames.length];
+		String[][] tempSoupList = new String[foodMenuList ==null? 0: foodMenuList.size()][colNames.length];
+		String[][] tempRiceList = new String[foodMenuList ==null? 0: foodMenuList.size()][colNames.length];
+
+		int countN =0, countS=0, countR=0;
+
+		while(itr!= null && itr.hasNext()) {
+			food = itr.next();
+
+			String[] temp = new String[] { food.getMenuCategory(), 
+					String.valueOf(food.getMenuNo()), 
+					food.getMenuName(), 
+					food.toCurrency(food.getMenuPrice()) };
+			switch(food.getMenuCategory()) {
+				case "NOODLE": tempNoodleList[countN++] = temp;break;
+				case "SOUP": tempSoupList[countS++] = temp; break;
+				case "RICE": tempRiceList[countR++] = temp; break;
+			}
+		}
+		
+		String[][] noodleList = new String[countN][colNames.length];
+		String[][] soupList = new String[countS][colNames.length];
+		String[][] riceList = new String[countR][colNames.length];
+		
+		
+//		for(int i =0; i<noodleList.length; i++)
+//			System.arraycopy(tempNoodleList[i], 0, noodleList[i], 0, noodleList.length);
+//		
+//		for(int i =0; i<soupList.length; i++)
+//			System.arraycopy(tempSoupList[i], 0, soupList[i], 0, soupList.length);
+//		ERROR!
+//		for(int i =0; i<riceList.length; i++)
+//			System.arraycopy(tempRiceList[i], 0, riceList[i], 0, riceList.length);
+		
+		for(int i =0; i<noodleList.length; i++) {
+			for(int j =0; j<noodleList[i].length; j++)
+				noodleList[i][j] = tempNoodleList[i][j];
+		}
+		for(int i =0; i<soupList.length; i++) {
+			for(int j =0; j<soupList[i].length; j++)
+				soupList[i][j] = tempSoupList[i][j];
+		}
+		for(int i =0; i<riceList.length; i++) {
+			for(int j =0; j<riceList[i].length; j++)
+				riceList[i][j] = tempRiceList[i][j];
+		}
+		
+		for(int i =0;  i<noodleList.length; i++)  modelN.addRow(noodleList[i]);
+		for(int i =0;  i<soupList.length; i++)  modelS.addRow(soupList[i]);
+		for(int i =0;  i<riceList.length; i++)  modelR.addRow(riceList[i]);
+		
+		map.put("NOODLE", modelN);
+		map.put("SOUP", modelS);
+		map.put("RICE", modelR);
+
+		return map;
 	}
 
 	private void createTopMenuBar() {
@@ -946,6 +1038,10 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			return;
 		}
 		User user = userRepo.getUserByPhone(this.phoneTextField.getText());
+		if(user ==null) {
+			JOptionPane.showMessageDialog(null, "로그인이 필요합니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
 		Map<Food, Integer> orderList = user.getOrderList();
 
 		if(orderList == null || orderList.size() < 1) {

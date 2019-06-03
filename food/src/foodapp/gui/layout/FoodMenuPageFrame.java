@@ -28,6 +28,7 @@ import javax.swing.text.StyleContext;
 
 import foodapp.dao.UserRepository;
 import foodapp.model.vo.Food;
+import foodapp.model.vo.FoodMenu;
 
 public class FoodMenuPageFrame extends JPanel implements MouseListener {
 	/**
@@ -110,6 +111,11 @@ public class FoodMenuPageFrame extends JPanel implements MouseListener {
 	}
 
 	private void showMenuList() {
+		FoodMenu menu = userRepo.getFoodMenu();
+
+		if(menu ==null || menu.getFoodMenuList() == null)
+			return;
+
 		List<Food> foodMenuList = (ArrayList<Food>)userRepo.getFoodMenu().getFoodMenuList();
 		Collections.sort(foodMenuList, (i,j)->{
 			return i.getMenuCategory().compareTo(j.getMenuCategory()) == 0 ?

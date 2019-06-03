@@ -19,9 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.TreeSet;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -559,6 +557,12 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	private void initMenuList() {
 		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"}; 
 		tableModel = new DefaultTableModel(colNames, 0);
+		
+		FoodMenu menu = userRepo.getFoodMenu();
+		if(menu == null || menu.getFoodMenuList() == null) {
+			menuTable = new JTable(tableModel);
+			return;
+		}
 
 		String[][] menuTableContents = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
 
@@ -594,9 +598,21 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		String[] colNames = {"카테고리"};
 		categoryTableModel = new DefaultTableModel(colNames, 0);
 
-		List<Food> foodMenuList = (ArrayList<Food>)userRepo.getFoodMenu().getFoodMenuList();
-		Iterator<Food> itr = foodMenuList.iterator();
-		Set<String> set = new HashSet<String>();
+		List<Food> foodMenuList = null;
+		Iterator<Food> itr = null;
+		Set<String> set = null;
+
+		FoodMenu menu = userRepo.getFoodMenu();
+		if(menu ==null || menu.getFoodMenuList() == null) {
+			categoryTable = new JTable(categoryTableModel);
+			foodMenuList = new ArrayList<Food>();
+			set = new TreeSet<String>();
+			return;
+		}
+
+		foodMenuList = (ArrayList<Food>)userRepo.getFoodMenu().getFoodMenuList();
+		itr = foodMenuList.iterator();
+		set = new HashSet<String>();
 		Food food = null;
 		while(itr.hasNext()) {
 			set.add(itr.next().getMenuCategory());
