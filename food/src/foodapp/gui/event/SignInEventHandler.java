@@ -3,6 +3,7 @@ package foodapp.gui.event;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
@@ -29,6 +30,7 @@ public class SignInEventHandler extends MouseAdapter {
 		}
 		if(!phoneTextField.isEditable()) {
 			System.out.println("이미 로그인 되어 있습니다.");
+			JOptionPane.showMessageDialog(null, "이미 로그인 되어 있습니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
@@ -42,9 +44,11 @@ public class SignInEventHandler extends MouseAdapter {
 			phoneTextField.setEditable(false);
 			passwordField.setText("");
 			passwordField.setEditable(false);
+			JOptionPane.showMessageDialog(null, "로그인을 성공했습니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
 		}
 		else {
 			System.out.println("로그인에 실패하였습니다.");
+			JOptionPane.showMessageDialog(null, "로그인에 실패 하였습니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
 			phoneTextField.setText("");
 			passwordField.setText("");
 		}

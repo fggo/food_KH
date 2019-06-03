@@ -14,12 +14,12 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import foodapp.dao.UserRepository;
 import foodapp.model.vo.User;
@@ -200,6 +200,8 @@ public class SignUpPageFrame extends JPanel implements ActionListener {
 				address.setText("");
 
 				userRepo.showUsers();
+
+				JOptionPane.showMessageDialog(null, "회원가입에 성공했습니다.", "회원가입 확인", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 

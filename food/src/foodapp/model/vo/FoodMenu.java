@@ -14,12 +14,12 @@ public class FoodMenu implements Serializable{
 			foodMenuList = new ArrayList<Food>();
 	}
 	
-	public void addFood(Food food) {
-		foodMenuList.add(food);
+	public boolean addFood(Food food) {
+		return foodMenuList.add(food);
 	}
 
-	public void removeFood(Food food) {
-		foodMenuList.remove(food);
+	public boolean removeFood(Food food) {
+		return foodMenuList.remove(food);
 	}
 
 	public List<Food> getFoodMenuList() { return foodMenuList; }

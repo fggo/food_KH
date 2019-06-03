@@ -143,6 +143,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	
 	private UserRepository userRepo = null;
 	
+	private Map<Food, Integer> tempOrderList;
 
 	public InitPageFrame(UserRepository userRepo) throws Exception {
 		this.userRepo = userRepo;
@@ -513,10 +514,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				User user = null;
 				if (userRepo.getPhone() != null) {
 					user = (User)userRepo.getUserByPhone(userRepo.getPhone());
-					if(user.getOrderCreated() == null) {
-						user.setOrderList(null);
+					if (user == null)
+						return;
+					if(user.isOrdering())
 						user.setOrdering(false);
-					}
+
 					user.setLogged(false);
 				}
 				userRepo.storeToFile();
@@ -749,7 +751,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		if(!user.isOrdering())
 			return;
 
-		Map<Food, Integer> orderList = user.getOrderList();
+		Map<Food, Integer> orderList = tempOrderList;
 
 		User admin = userRepo.getAdmin();
 
@@ -769,27 +771,40 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				salesResult.put(food, qty);
 		}
 		((Admin)admin).setSalesResult(salesResult);
+		user.setOrderList(tempOrderList);
 		user.setRecentPayMethod(payMethod);
 		user.setOrdering(false);
 		user.setOrderCreated(new GregorianCalendar());
 		userRepo.showUsers();
 		setPopularMenuList();
 
+		JOptionPane.showMessageDialog(null, "주문이 완료 되었습니다.", "주문결제 완료 확인", JOptionPane.WARNING_MESSAGE);
 	}
 
 	public void saveOrderList(String name) {
-		User user = userRepo.getUserByPhone(this.phoneTextField.getText());
-
-		if(!name.equals("ADD_FOOD"))
-			return;
-
-		if (user == null) {
-			System.out.println("로그인이 필요합니다.");
+		if(this.phoneTextField.getText() == ""
+				|| (this.phoneTextField.isEditable()
+						&& this.passwordField.isEditable())) {
+			JOptionPane.showMessageDialog(null, "로그인이 필요합니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
+		User user = userRepo.getUserByPhone(this.phoneTextField.getText());
+
+		if (user == null) {
+			JOptionPane.showMessageDialog(null, "핸드폰정보 유저 없음", "로그인 확인", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
+		if(!name.equals("ADD_FOOD")) {
+			JOptionPane.showMessageDialog(null, "잘못된 메뉴입니다", "프로그램 버그 확인", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
+
 		if(!user.isOrdering()) {
-			user.setOrderList(new TreeMap<Food, Integer>());
+//			user.setOrderList(new TreeMap<Food, Integer>());
+			this.tempOrderList = new TreeMap<Food, Integer>();
 			user.setOrdering(true);
 		}
 
@@ -822,17 +837,24 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		Food food = new Food(menuCategory, menuNo, menuName, menuPrice);
 		
-		Map<Food, Integer> orderList = user.getOrderList();
-		orderList.put(food, (int)this.menuQtyComboBox.getSelectedItem());
+		tempOrderList.put(food, (int)this.menuQtyComboBox.getSelectedItem());
 
-		user.setOrderList(orderList);
+
+		JOptionPane.showMessageDialog(null, "주문이 추가되었습니다.", "주문 추가 확인", JOptionPane.WARNING_MESSAGE);
+		return;
 	}
 	
 	private void createAdminPage() {
+		if(phoneTextField.getText() == null
+				|| !phoneTextField.getText().equals("admin")) {
+			JOptionPane.showMessageDialog(null, "관리자로 먼저 로그인 해주세요.", "관리자 권한 에러", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
 		JFrame frame = new AdminPageFrame(userRepo);
 
 		frame.setSize(500, 500);
-		frame.setLocation(this.getX() +600, this.getY() + 90);
+		frame.setLocation(this.getX() + 50 , this.getY() + 90);
 
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
