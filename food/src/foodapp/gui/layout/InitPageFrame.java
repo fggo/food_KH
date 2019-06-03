@@ -47,7 +47,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
@@ -60,8 +59,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
-import org.openide.awt.DropDownButtonFactory;
-
 import foodapp.dao.UserRepository;
 import foodapp.gui.event.SignInEventHandler;
 import foodapp.gui.event.SignOffEventHandler;
@@ -72,9 +69,11 @@ import foodapp.model.vo.User;
 
 
 public class InitPageFrame extends JFrame implements MouseListener {
-
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private JSplitPane splitPane1, splitPane2, splitPane3;
 	private JSplitPane splitMenuCenterPane;
 
@@ -125,7 +124,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 	private JSplitPane bottomSplitPane;
 
-
 	private JButton noodleBtn, soupBtn, riceBtn;
 	
 	private DefaultTableModel modelN, modelS, modelR;
@@ -165,7 +163,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		splitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		splitPane1.setDividerLocation(300 + splitPane1.getInsets().top);
 		splitPane1.setDividerSize(1);
-		
 
 		phoneTextField = new JTextField("", 11); //핸드폰 11자리
 		passwordField = new JPasswordField(11);
@@ -732,34 +729,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		toolbar.add(panel);
 
 		return toolbar;
-	}
-
-	private JButton createDropDownButton() {
-		JPopupMenu popupMenu = createDropDownMenu();
-		
-		ImageIcon icon = new ImageIcon(getClass().getResource("../images/menu2.png"));
-		icon = new ImageIcon(icon.getImage()
-								.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-		
-		JButton menuDropDownBtn = DropDownButtonFactory.createDropDownButton(icon, popupMenu);
-//		menuDropDownBtn.addActionListener(this);
-		
-		return menuDropDownBtn;
-	}
-
-	private JPopupMenu createDropDownMenu() {
-		JPopupMenu popupMenu = new JPopupMenu();
-
-		List<Food> foodMenuList = userRepo.getFoodMenu().getFoodMenuList();
-		Iterator<Food> itr = foodMenuList.iterator();
-		Food food = null;
-		while(itr.hasNext()) {
-			food = itr.next();
-			JMenuItem menuItem = new JMenuItem(food.toString());
-			popupMenu.add(menuItem);
-		}
-		
-		return popupMenu;
 	}
 
 	private void invokeSplitPane() {

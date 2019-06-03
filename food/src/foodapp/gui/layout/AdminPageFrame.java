@@ -48,6 +48,8 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	//CARD: sales result 
 	private JPanel adminLeftPanel;
 	private JSplitPane adminCenterSplitPane;
 	private JPanel salesLabelPanel;
@@ -84,6 +86,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	private JButton deleteBtn;
 
 
+	//CARD: menu page
 	private DefaultTableModel tableModel, categoryTableModel;
 	
 	private JTable menuTable, categoryTable;
@@ -96,13 +99,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	private UserRepository userRepo;
 
 
-	//for admin page
 	private JFrame categoryFrame;
-	private JRadioButton noodle;
-    private JRadioButton soup;
-    private JRadioButton rice;
- 
-    private ButtonGroup buttonGroup;
 	private JPanel categoryPanel;
 	private JButton okBtn;
 	private JSplitPane splitPane;
@@ -120,6 +117,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	private JTextField menuNameTxtField;
 	private JTextField menuPriceTxtField;
 	
+	//메인화면에 있는 메뉴정보(테이블)도 함께 변경하기 위함
 	private DefaultTableModel modelN, modelS, modelR;
 
 	public AdminPageFrame(DefaultTableModel modelN, DefaultTableModel modelS, DefaultTableModel modelR,
@@ -233,50 +231,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		
 		initMenuList();
 
-//		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"};
-//        tableModel = new DefaultTableModel(colNames, 0);
-//
-//		String[][] menuTableContents = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
-//
-//		List<Food> foodMenuList = (ArrayList<Food>)userRepo.getFoodMenu().getFoodMenuList();
-//
-//		Iterator<Food> it = foodMenuList.iterator();
-//
-//		food = null;
-//		count =0;
-//		while(it.hasNext()) {
-//			food = it.next();
-//			
-//			String[] row = new String[] { food.getMenuCategory(), 
-//						String.valueOf(food.getMenuNo()), 
-//						food.getMenuName(), 
-//						String.valueOf(food.getMenuPrice()),
-//					};
-//			menuTableContents[count++] = row;
-//		}
-//		
-//		for(int i =0;  i<menuTableContents.length; i++)
-//			tableModel.addRow(menuTableContents[i]);
-//
-//		menuTable = new JTable(tableModel);
-
-//		tableModel = new DefaultTableModel() {
-//			private static final long serialVersionUID = 1L;
-//
-//			@Override
-//            public boolean isCellEditable(int row, int column) {
-//                return false;
-//            }
-//		};
-
-//		new JTable() {
-//	        private static final long serialVersionUID = 1L;
-//
-//	        @Override
-//	        public boolean isCellEditable(int row, int column) {                
-//	                return false;               
-//	        };
-//	    };
 
 		menuTable.setName("MENU_TABLE");
 		menuTable.setAutoCreateRowSorter(true);
@@ -334,12 +288,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		this.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-
-			}
-		});
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
@@ -415,17 +363,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		menuNameTxtField = new JTextField("", 15);
 		menuPriceTxtField = new JTextField("", 15);
 
-//		noodle = new JRadioButton("면 요리");
-//        soup = new JRadioButton("탕 요리");
-//        rice = new JRadioButton("밥 요리");
-//        noodle.setSelected(true);
-//        buttonGroup = new ButtonGroup();
-//        buttonGroup.add(noodle);
-//        buttonGroup.add(soup);
-//        buttonGroup.add(rice);
-//        categoryPanel.add(noodle);
-//        categoryPanel.add(soup);
-//        categoryPanel.add(rice);
 
 		this.createCategoryTable();
 		this.updateNextMenuNo();
@@ -592,7 +529,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 
 		menuTable = new JTable(tableModel);
 	}
-
 	
 	private void createCategoryTable() {
 		String[] colNames = {"카테고리"};
