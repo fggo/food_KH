@@ -1,10 +1,14 @@
 package foodapp.model.vo;
 
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Map;
 
-public class Admin extends User{
+public class Admin extends User {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	//메뉴, 판매량
 	private Map<Food, Integer> salesResult;
 

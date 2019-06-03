@@ -86,7 +86,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	
 	private JPanel topPanel, bottomPanel, rightPanel, leftPanel, subPanel1, subPanel2, centerPanel;
 	
-	private JButton logoBtn, menuDropDownBtn, adminPageBtn, orderViewBtn;
+	private JButton logoBtn, foodMenuBtn, adminPageBtn, orderViewBtn;
 	private JButton signInBtn1, signInBtn2, signUpBtn1, signUpBtn2;
 	private JButton logOffBtn1, logOffBtn2;
 	private JButton orderBtn;
@@ -500,7 +500,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		card4 = new JPanel(new BorderLayout());
 
 		card1.add(splitPane3);
-		card2.add(new FoodMenuPageFrame(cl, cards));
+		card2.add(new FoodMenuPageFrame(cl, cards, userRepo));
 		card3.add(orderViewSplitPane3);
 		card4.add(new SignUpPageFrame(cl, cards, userRepo));
 
@@ -525,14 +525,14 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		signUpBtn1.addMouseListener(this);
 		signUpBtn2.addMouseListener(this);
 		
-		menuDropDownBtn.addActionListener(new MenuPageBtnEventHandler());
+//		menuDropDownBtn.addActionListener(new MenuPageBtnEventHandler());
 		orderBtn.addMouseListener(this);
 
 		/* 새로운 페이지 이동 */
 		logoBtn.addMouseListener(this);
 		signUpBtn1.addMouseListener(this);
 		signUpBtn2.addMouseListener(this);
-		menuDropDownBtn.addMouseListener(this);
+		foodMenuBtn.addMouseListener(this);
 		orderViewBtn.addMouseListener(this);
 		adminPageBtn.addMouseListener(this);
 		
@@ -598,12 +598,16 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		toolbar.add(new JSeparator());
 
 		//menu dropdown
-		menuDropDownBtn = createDropDownButton();
-		menuDropDownBtn.setPreferredSize(new Dimension(70, 50));
-		menuDropDownBtn.setName(FOOD_MENU_PAGE);
+//		menuDropDownBtn = createDropDownButton();
+		icon = new ImageIcon(getClass().getResource("../images/menu2.png"));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+		foodMenuBtn = new JButton(icon);
+		
+		foodMenuBtn.setPreferredSize(new Dimension(70, 50));
+		foodMenuBtn.setName(FOOD_MENU_PAGE);
 		
 		panel = new JPanel();
-		panel.add(menuDropDownBtn);
+		panel.add(foodMenuBtn);
 
 		toolbar.add(panel);
 		toolbar.add(new JSeparator());
@@ -906,11 +910,32 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		CardLayout cl = (CardLayout)(cards.getLayout());
         cl.show(cards, INIT_PAGE);
 	}
+
 	private void createMenuPage() {
-		System.out.println("음식 메뉴페이지로 이동합니다."); 
 		CardLayout cl = (CardLayout)(cards.getLayout());
+		cards = new JPanel(cl);
+
+		card1 = new JPanel(new BorderLayout());
+		card2 = new JPanel(new BorderLayout());
+		card3 = new JPanel(new BorderLayout());
+		card4 = new JPanel(new BorderLayout());
+
+		card1.add(splitPane3);
+		card2.add(new FoodMenuPageFrame(cl, cards, userRepo));
+		card3.add(orderViewSplitPane3);
+		card4.add(new SignUpPageFrame(cl, cards, userRepo));
+
+		cards.add(card1, INIT_PAGE);
+		cards.add(card2, FOOD_MENU_PAGE);
+		cards.add(card3, ORDER_VIEW_PAGE);
+		cards.add(card4, SIGN_UP_PAGE);
+		
+		add(cards);
+
+		System.out.println("음식 메뉴페이지로 이동합니다."); 
         cl.show(cards, FOOD_MENU_PAGE);
 	}
+
 	private void createOrderViewPage() {
 		System.out.println("주문 조회페이지로 이동합니다."); 
 		CardLayout cl = (CardLayout)(cards.getLayout());
@@ -1021,8 +1046,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	public void setPhoneTextField(JTextField phoneTextField) { this.phoneTextField = phoneTextField; }
 	public JButton getLogoBtn() { return logoBtn; } 
 	public void setLogoBtn(JButton logoBtn) { this.logoBtn = logoBtn; } 
-	public JButton getMenuDropDownBtn() { return menuDropDownBtn; } 
-	public void setMenuDropDownBtn(JButton menuDropDownBtn) { this.menuDropDownBtn = menuDropDownBtn; } 
+	public JButton getFoodMenuBtn() { return foodMenuBtn; } 
+	public void setMenuDropDownBtn(JButton foodMenuBtn) { this.foodMenuBtn = foodMenuBtn; } 
 	public JButton getOrderViewBtn() { return orderViewBtn; } 
 	public void setOrderViewBtn(JButton orderViewBtn) { this.orderViewBtn = orderViewBtn; } 
 	public JButton getSignInBtn1() { return signInBtn1; } 
