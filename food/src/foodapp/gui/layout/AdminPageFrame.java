@@ -8,12 +8,14 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.NumberFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -29,7 +31,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
@@ -78,7 +79,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	private JPanel panel3;
 		
 	private JButton addBtn;
-	private JToggleButton modifyBtn;
+	private JButton modifyBtn;
 	private JButton deleteBtn;
 
 
@@ -112,6 +113,24 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	private JTextField menuNoTxtField;
 	private JTextField menuNameTxtField;
 	private JTextField menuPriceTxtField;
+	
+	//modifyMenu Component
+	private JFrame modifyFrame;
+
+	private JSplitPane modifySplitPane;
+	private JPanel modifyPanel;
+
+	private JLabel mCategoryLabel, mNoLabel, mNameLabel, mPriceLabel;
+	
+	private JTextField mCategoryTxtField, mNoTxtField, mNameTxtField, mPriceTxtField;
+
+	private JPanel ml1, ml2, ml3, ml4;
+	private JPanel mr1, mr2, mr3, mr4;
+
+
+	private JButton modifyOkBtn;
+
+	
 	
 	//메인화면에 있는 메뉴정보(테이블)도 함께 변경하기 위함
 	private DefaultTableModel modelN, modelS, modelR;
@@ -208,7 +227,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		
 		addBtn = new JButton("추 가");
 		addBtn.setName("ADD");
-		modifyBtn = new JToggleButton("수 정");
+		modifyBtn = new JButton("수 정");
 		modifyBtn.setName("MODIFY");
 		deleteBtn = new JButton("삭 제");
 		deleteBtn.setName("DELETE");
@@ -391,35 +410,82 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	}
 	
 	private void modifyMenu() {
-		if(modifyBtn.isSelected()) {
-			addBtn.setEnabled(false);
-			deleteBtn.setEnabled(false);
+		modifyFrame = new JFrame("메뉴 수정");
+		modifyFrame.setSize(300, 300);
+		modifyFrame.setLocation(this.getX() , this.getY());
+		modifyFrame.setLayout(new BorderLayout());
 
-		}
-		else {
-			FoodMenu menu = (FoodMenu)userRepo.getFoodMenu();
+		modifySplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		modifySplitPane.setDividerLocation(230 + modifySplitPane.getInsets().top);
+		modifySplitPane.setDividerSize(1);
+		modifySplitPane.setEnabled(false);
 
-			//dialog
-			int result = JOptionPane.showConfirmDialog(null, "수정을 완료 하시겠습니까?", "메뉴 수정 확인",
-					JOptionPane.OK_CANCEL_OPTION);
+		modifyPanel = new JPanel(new GridLayout(4,2));
 
-			if(result!= JOptionPane.OK_OPTION) {
-				System.out.println("메뉴 수정을 취소합니다.");
-				return;
-			}
-			
-			addBtn.setEnabled(true);
-			deleteBtn.setEnabled(true);
+		ml1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		ml2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		ml3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		ml4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-			int row = menuTable.getSelectedRow();
+		mr1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		mr2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		mr3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		mr4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		
+		mCategoryLabel = new JLabel("카테고리");
+		mNoLabel = new JLabel("메뉴번호");
+		mNameLabel = new JLabel("메뉴이름");
+		mPriceLabel = new JLabel("음식 가격");
 
-			String menuCategory = (String)tableModel.getValueAt(row, 0);
-			int menuNo = Integer.valueOf((String)tableModel.getValueAt(row, 1));
-			String menuName=  (String)tableModel.getValueAt(row, 2);
-			int menuPrice = Integer.valueOf((String)tableModel.getValueAt(row, 3));
+		mCategoryTxtField = new JTextField("", 15);
+		mCategoryTxtField.setEditable(false);
+		mNoTxtField = new JTextField("", 15);
+		mNoTxtField.setEditable(false);
+		mNameTxtField = new JTextField("", 15);
+		mPriceTxtField = new JTextField("", 15);
 
-			Food food = new Food(menuCategory, menuNo, menuName, menuPrice);
-		}
+		//this.createcategoryTxtField();
+		//this.updateNextMenuNo();
+
+		ml1.add(mCategoryLabel); 	mr1.add(mCategoryTxtField);
+		ml2.add(mNoLabel); 		mr2.add(mNoTxtField);
+		ml3.add(mNameLabel); 		mr3.add(mNameTxtField);
+		ml4.add(mPriceLabel); 	mr4.add(mPriceTxtField);
+ 
+		modifyPanel.add(ml1); modifyPanel.add(mr1);
+		modifyPanel.add(ml2); modifyPanel.add(mr2);
+		modifyPanel.add(ml3); modifyPanel.add(mr3);
+		modifyPanel.add(ml4); modifyPanel.add(mr4);
+
+		modifyOkBtn = new JButton("확인");
+		modifyOkBtn.setName("MODIFY_CONFIRM");
+		modifyOkBtn.addMouseListener(this);
+		
+		//categoryTxtField.setName("MENU_CATEGORY");
+		//categoryTxtField.addMouseListener(this);
+
+		modifySplitPane.setTopComponent(modifyPanel);
+		modifySplitPane.setBottomComponent(modifyOkBtn);
+		
+		modifyFrame.add(modifySplitPane);
+
+		modifyFrame.setResizable(false);
+		modifyFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		modifyFrame.setVisible(true); 
+
+
+		int row = menuTable.getSelectedRow();
+
+		String menuCategory = (String)tableModel.getValueAt(row, 0);
+		int menuNo = Integer.valueOf((String)tableModel.getValueAt(row, 1));
+		String menuName=  (String)tableModel.getValueAt(row, 2);
+		int menuPrice = Integer.valueOf((String)tableModel.getValueAt(row, 3));
+		
+		this.mCategoryTxtField.setText(menuCategory);
+		this.mNoTxtField.setText(String.valueOf(menuNo));
+		this.mNameTxtField.setText(menuName);
+		this.mPriceTxtField.setText(String.valueOf(menuPrice));
+
 	}
 	
 	private void deleteMenu() {
@@ -494,7 +560,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 			foodToDelete = new Food(deleteRow[0], 
 					Integer.valueOf(deleteRow[1]), 
 					deleteRow[2], 
-					Integer.valueOf(deleteRow[3]));
+					price);
 
 			if(food.equals(foodToDelete))
 				model.removeRow(i);
@@ -503,7 +569,18 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 
 	private void initMenuList() {
 		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"}; 
-		tableModel = new DefaultTableModel(colNames, 0);
+		tableModel = new DefaultTableModel(colNames, 0) {
+			private static final long serialVersionUID = 1L;
+			String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"}; 
+			@Override
+			public String getColumnName(int column) {
+				return colNames[column];
+			}
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       return false;
+		    }
+		};
 		
 		FoodMenu menu = userRepo.getFoodMenu();
 		if(menu == null || menu.getFoodMenuList() == null) {
@@ -542,7 +619,19 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	
 	private void createCategoryTable() {
 		String[] colNames = {"카테고리"};
-		categoryTableModel = new DefaultTableModel(colNames, 0);
+		categoryTableModel = new DefaultTableModel(colNames, 0) {
+			private static final long serialVersionUID = 1L;
+			String[] colNames = {"카테고리"};
+			@Override
+			public String getColumnName(int column) {
+				return colNames[column];
+			}
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       return false;
+		    }
+			
+		};
 
 		List<Food> foodMenuList = null;
 		Iterator<Food> itr = null;
@@ -627,14 +716,8 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 				case "ADD": addMenu(); break;
 				case "ADD_CONFIRM": addConfirm(); break;
 				case "DELETE": deleteMenu(); break;
-				default:
-					break;
-			}
-		}
-		else if(source instanceof JToggleButton) {
-			String name = ((JToggleButton) e.getSource()).getName();
-			switch(name) {
 				case "MODIFY": modifyMenu(); break;
+				case "MODIFY_CONFIRM": modifyConfirm(); break;
 				default:
 					break;
 			}
@@ -719,6 +802,98 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 			System.out.println(food);
 			
 		}
+	}
 
+	private void modifyConfirm() {
+		if(mCategoryTxtField.getText().equals("")
+				|| mNoTxtField.getText().equals("")
+				|| mNameTxtField.getText().equals("")
+				|| mPriceTxtField.getText().equals("")) {
+			JOptionPane.showMessageDialog(null, "입력하지  않은 데이터가 있습니다.", "수정 데이터 미입력", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		try {
+		     Integer.parseInt(mPriceTxtField.getText());
+		} catch (NumberFormatException e) {
+			JOptionPane.showMessageDialog(null, "메뉴 가격은 숫자만 가능합니다.", "가격 정보 에러", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
+		
+		
+		int row = menuTable.getSelectedRow();
+
+		String menuCategory = (String)tableModel.getValueAt(row, 0);
+		int menuNo = Integer.valueOf((String)tableModel.getValueAt(row, 1));
+
+		String oldMenuName=  (String)tableModel.getValueAt(row, 2);
+		int oldMenuPrice = Integer.valueOf((String)tableModel.getValueAt(row, 3));
+
+		String newMenuName = mNameTxtField.getText();
+		int newMenuPrice = Integer.valueOf(mPriceTxtField.getText());
+
+		String[] deleteRow = {
+				menuCategory,
+				String.valueOf(menuNo),
+				(String)tableModel.getValueAt(row, 2),
+				NumberFormat.getCurrencyInstance(Locale.KOREA)
+				.format(Integer.valueOf((String)tableModel.getValueAt(row, 3))),
+		};
+		String[] newRow = {
+				menuCategory,
+				String.valueOf(menuNo),
+				newMenuName,
+				NumberFormat.getCurrencyInstance(Locale.KOREA)
+				.format(newMenuPrice),
+		};
+
+		Food deleteFood = new Food(menuCategory, menuNo, oldMenuName, oldMenuPrice);
+		Food newFood = new Food(menuCategory, menuNo, newMenuName, newMenuPrice);
+
+		FoodMenu menu = userRepo.getFoodMenu();
+		menu.removeFood(deleteFood);
+		menu.addFood(newFood);
+
+		tableModel.removeRow(row);
+		tableModel.addRow(new String[] { 
+				menuCategory,
+				String.valueOf(menuNo),
+				newMenuName,
+				String.valueOf(newMenuPrice),
+					});
+		
+		tableModel.fireTableDataChanged();
+
+
+		//Update Table : Add food 
+		switch(menuCategory) {
+			case "NOODLE": removeRow(modelN, deleteRow); modelN.fireTableDataChanged(); break;
+			case "SOUP": removeRow(modelS, deleteRow); modelS.fireTableDataChanged(); break;
+			case "RICE": removeRow(modelR, deleteRow); modelR.fireTableDataChanged(); break;
+		}
+		
+	
+		Map<Food, Integer> salesResult = 
+				(TreeMap<Food, Integer>)((Admin)userRepo.getAdmin()).getSalesResult();
+
+		if(salesResult != null)
+			salesResult.remove(deleteFood);
+
+		((Admin)userRepo.getAdmin()).setSalesResult(salesResult);
+
+		switch(menuCategory) {
+			case "NOODLE": modelN.addRow(newRow); modelN.fireTableDataChanged(); break;
+			case "SOUP": modelS.addRow(newRow); modelS.fireTableDataChanged(); break;
+			case "RICE": modelR.addRow(newRow); modelR.fireTableDataChanged(); break;
+		}
+
+		List<Food> foodMenuList = userRepo.getFoodMenu().getFoodMenuList();
+		Collections.sort(foodMenuList, (i,j)->{
+			return i.getMenuCategory().compareTo(j.getMenuCategory()) == 0 ? 
+						i.getMenuNo() - j.getMenuNo(): i.getMenuCategory().compareTo(j.getMenuCategory());
+		});
+		userRepo.getFoodMenu().setFoodMenuList(foodMenuList);
+
+		JOptionPane.showMessageDialog(null, "메뉴수정이 완료되었습니다.", "메뉴수정 완료", JOptionPane.WARNING_MESSAGE);
 	}
 }
