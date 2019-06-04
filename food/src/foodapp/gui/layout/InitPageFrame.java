@@ -235,77 +235,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		soupCard = new JPanel(new BorderLayout());
 		riceCard = new JPanel(new BorderLayout());
 		
-//		FoodMenu menu = userRepo.getFoodMenu();
-//		List<Food> foodMenuList = null;
-//		if(menu!= null)
-//			foodMenuList = menu.getFoodMenuList();
-//
-//		if(foodMenuList != null) {
-//			Collections.sort(foodMenuList, (i,j)->{
-//				return i.getMenuCategory().compareTo(j.getMenuCategory()) == 0 ? 
-//							i.getMenuNo() - j.getMenuNo(): i.getMenuCategory().compareTo(j.getMenuCategory());
-//			});
-//		}
-//
-//		Iterator<Food> itr = foodMenuList.iterator();
-//		Food food = null;
-//
-//		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"};
-//        modelN = new DefaultTableModel(colNames, 0);
-//        modelS = new DefaultTableModel(colNames, 0);
-//        modelR = new DefaultTableModel(colNames, 0);
-//
-//		String[][] tempNoodleList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
-//		String[][] tempSoupList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
-//		String[][] tempRiceList = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
-//
-//		int countN =0, countS=0, countR=0;
-//
-//		while(itr.hasNext()) {
-//			food = itr.next();
-//
-//			String[] temp = new String[] { food.getMenuCategory(), 
-//					String.valueOf(food.getMenuNo()), 
-//					food.getMenuName(), 
-//					food.toCurrency(food.getMenuPrice()) };
-//			switch(food.getMenuCategory()) {
-//				case "NOODLE": tempNoodleList[countN++] = temp;break;
-//				case "SOUP": tempSoupList[countS++] = temp; break;
-//				case "RICE": tempRiceList[countR++] = temp; break;
-//			}
-//		}
-//		
-//		String[][] noodleList = new String[countN][colNames.length];
-//		String[][] soupList = new String[countS][colNames.length];
-//		String[][] riceList = new String[countR][colNames.length];
-//		
-//		
-////		for(int i =0; i<noodleList.length; i++)
-////			System.arraycopy(tempNoodleList[i], 0, noodleList[i], 0, noodleList.length);
-////		
-////		for(int i =0; i<soupList.length; i++)
-////			System.arraycopy(tempSoupList[i], 0, soupList[i], 0, soupList.length);
-////		ERROR!
-////		for(int i =0; i<riceList.length; i++)
-////			System.arraycopy(tempRiceList[i], 0, riceList[i], 0, riceList.length);
-//		
-//		for(int i =0; i<noodleList.length; i++) {
-//			for(int j =0; j<noodleList[i].length; j++)
-//				noodleList[i][j] = tempNoodleList[i][j];
-//		}
-//		for(int i =0; i<soupList.length; i++) {
-//			for(int j =0; j<soupList[i].length; j++)
-//				soupList[i][j] = tempSoupList[i][j];
-//		}
-//		for(int i =0; i<riceList.length; i++) {
-//			for(int j =0; j<riceList[i].length; j++)
-//				riceList[i][j] = tempRiceList[i][j];
-//		}
-//		
-//		for(int i =0;  i<noodleList.length; i++)  modelN.addRow(noodleList[i]);
-//		for(int i =0;  i<soupList.length; i++)  modelS.addRow(soupList[i]);
-//		for(int i =0;  i<riceList.length; i++)  modelR.addRow(riceList[i]);
-		Map<String, DefaultTableModel> tableModels = (TreeMap<String, DefaultTableModel>)constructTableModels();
+		Map<String, DefaultTableModel> tableModels = 
+				(TreeMap<String, DefaultTableModel>)constructTableModels();
 
 		modelN = tableModels.get("NOODLE");
 		modelS = tableModels.get("SOUP");
@@ -334,7 +265,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		soupCard.add(scrollSoupPane);
 		riceCard.add(scrollRicePane);
 
-
 		menuCards.add(noodleCard, "NOODLE");
 		menuCards.add(soupCard,"SOUP");
 		menuCards.add(riceCard, "RICE");
@@ -350,14 +280,14 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		subMenuTxt.setEditable(false);
 
 		menuQtyLabel = new JLabel("수 량");
-		ComboBoxModel<Integer> comboBoxModel = new DefaultComboBoxModel<Integer>(new Integer[] {1,2,3,4,5});
+		ComboBoxModel<Integer> comboBoxModel = 
+				new DefaultComboBoxModel<Integer>(new Integer[] {1,2,3,4,5});
 		menuQtyComboBox = new JComboBox<Integer>(comboBoxModel);
 		
 		addMenuLabel = new JLabel("메뉴 추가");
 		addMenuBtn = new JButton("PUSH 추가");
 		addMenuBtn.setName("ADD_FOOD");
 
-		
 		payCardBtn = new JToggleButton("카드 주문");
 		payCardBtn.setName("CARD");
 		payCardBtn.setBackground(Color.WHITE);
@@ -516,12 +446,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		cards.add(card3, ORDER_VIEW_PAGE);
 		cards.add(card4, SIGN_UP_PAGE);
 
-//		getContentPane().add(cards);
 		add(cards);
-		
-		/* 각 component에 이벤트 추가 */
-		/* 클릭이벤트 */
-//		logoBtn.addMouseListener(new HomeBtnEventHandler());
 
 		signInBtn1.addMouseListener(new SignInEventHandler(phoneTextField, passwordField, userRepo));
 		signInBtn2.addMouseListener(new SignInEventHandler(phoneTextField, passwordField, userRepo));
@@ -619,16 +544,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		String[][] noodleList = new String[countN][colNames.length];
 		String[][] soupList = new String[countS][colNames.length];
 		String[][] riceList = new String[countR][colNames.length];
-		
-		
-//		for(int i =0; i<noodleList.length; i++)
-//			System.arraycopy(tempNoodleList[i], 0, noodleList[i], 0, noodleList.length);
-//		
-//		for(int i =0; i<soupList.length; i++)
-//			System.arraycopy(tempSoupList[i], 0, soupList[i], 0, soupList.length);
-//		ERROR!
-//		for(int i =0; i<riceList.length; i++)
-//			System.arraycopy(tempRiceList[i], 0, riceList[i], 0, riceList.length);
 		
 		for(int i =0; i<noodleList.length; i++) {
 			for(int j =0; j<noodleList[i].length; j++)
@@ -1116,28 +1031,5 @@ public class InitPageFrame extends JFrame implements MouseListener {
         popularMenuTextArea.setFont(font);
         popularMenuTextArea.setForeground(Color.BLUE);
 	}
-
-	public JTextField getPhoneTextField() { return phoneTextField; }
-	public void setPhoneTextField(JTextField phoneTextField) { this.phoneTextField = phoneTextField; }
-	public JButton getLogoBtn() { return logoBtn; } 
-	public void setLogoBtn(JButton logoBtn) { this.logoBtn = logoBtn; } 
-	public JButton getFoodMenuBtn() { return foodMenuBtn; } 
-	public void setMenuDropDownBtn(JButton foodMenuBtn) { this.foodMenuBtn = foodMenuBtn; } 
-	public JButton getOrderViewBtn() { return orderViewBtn; } 
-	public void setOrderViewBtn(JButton orderViewBtn) { this.orderViewBtn = orderViewBtn; } 
-	public JButton getSignInBtn1() { return signInBtn1; } 
-	public void setSignInBtn1(JButton signInBtn1) { this.signInBtn1 = signInBtn1; } 
-	public JButton getSignInBtn2() { return signInBtn2; } 
-	public void setSignInBtn2(JButton signInBtn2) { this.signInBtn2 = signInBtn2; } 
-	public JButton getSignUpBtn1() { return signUpBtn1; } 
-	public void setSignUpBtn1(JButton signUpBtn1) { this.signUpBtn1 = signUpBtn1; } 
-	public JButton getSignUpBtn2() { return signUpBtn2; } 
-	public void setSignUpBtn2(JButton signUpBtn2) { this.signUpBtn2 = signUpBtn2; } 
-	public JButton getLogOffBtn1() { return logOffBtn1; } 
-	public void setLogOffBtn1(JButton logOffBtn1) { this.logOffBtn1 = logOffBtn1; } 
-	public JButton getLogOffBtn2() { return logOffBtn2; } 
-	public void setLogOffBtn2(JButton logOffBtn2) { this.logOffBtn2 = logOffBtn2; } 
-	public JButton getOrderBtn() { return orderBtn; } 
-	public void setOrderBtn(JButton orderBtn) { this.orderBtn = orderBtn; }
 
 }

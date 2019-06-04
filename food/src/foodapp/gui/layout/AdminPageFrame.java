@@ -130,8 +130,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 
 	private JButton modifyOkBtn;
 
-	
-	
 	//메인화면에 있는 메뉴정보(테이블)도 함께 변경하기 위함
 	private DefaultTableModel modelN, modelS, modelR;
 
