@@ -137,37 +137,22 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		/* 첫번째 JSplitPane */
 		createFirstTop();
 		createFirstBottom();
-
-		mainSplitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		mainSplitPane1.setDividerLocation(300 + mainSplitPane1.getInsets().top);
-		mainSplitPane1.setDividerSize(1);
-
-		mainSplitPane1.setTopComponent(topPanel);
-		mainSplitPane1.setBottomComponent(bottomPanel);
-		mainSplitPane1.setEnabled(false);
+		createFirstSP();
 
 		/* 두번째 JSplitPane */
 		createSecondTop();
 		createSecondBottom();
-
-		mainSplitPane2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		mainSplitPane2.setTopComponent(topPanel);
-		mainSplitPane2.setBottomComponent(bottomPanel);
-		mainSplitPane2.setEnabled(false);
+		createSecondSP();
 
 		/* 세번째 JSplitPane */
 		createThirdTop();
 		createThirdBottom();
+		createThirdSP();
 
-		mainSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		mainSplitPane3.setDividerLocation(30 + mainSplitPane3.getInsets().top);
-		mainSplitPane3.setDividerSize(1);
-		mainSplitPane3.setTopComponent(topPanel);
-		mainSplitPane3.setBottomComponent(bottomPanel);
-		mainSplitPane3.setEnabled(false);
-	
+		/* 생성한 JSplitPane의 border 설정 */
 		invokeSplitPane();
 
+		/* CardLayout 만들기 */
 		updateCards();
 
 		/* window closing */
@@ -196,6 +181,16 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		setResizable(false);
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	private void createFirstSP() {
+		mainSplitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		mainSplitPane1.setDividerLocation(300 + mainSplitPane1.getInsets().top);
+		mainSplitPane1.setDividerSize(1);
+
+		mainSplitPane1.setTopComponent(topPanel);
+		mainSplitPane1.setBottomComponent(bottomPanel);
+		mainSplitPane1.setEnabled(false);
 	}
 
 	private void createFirstTop() {
@@ -400,6 +395,14 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		orderBtn.addMouseListener(this);
 	}
 	
+	private void createSecondSP() {
+		mainSplitPane2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		mainSplitPane2.setTopComponent(topPanel);
+		mainSplitPane2.setBottomComponent(bottomPanel);
+		mainSplitPane2.setEnabled(false);
+
+	}
+	
 	private void createSecondTop() {
 		/* 네비게이션 메뉴 */
 		JToolBar navBar = this.createNavBar();
@@ -417,6 +420,15 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private void createSecondBottom() {
 		bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.add(mainSplitPane1);
+	}
+	
+	private void createThirdSP() {
+		mainSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		mainSplitPane3.setDividerLocation(30 + mainSplitPane3.getInsets().top);
+		mainSplitPane3.setDividerSize(1);
+		mainSplitPane3.setTopComponent(topPanel);
+		mainSplitPane3.setBottomComponent(bottomPanel);
+		mainSplitPane3.setEnabled(false);
 	}
 
 	private void createThirdTop() {
