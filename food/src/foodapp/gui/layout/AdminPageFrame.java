@@ -41,9 +41,7 @@ import foodapp.model.vo.Food;
 import foodapp.model.vo.FoodMenu;
 
 public class AdminPageFrame extends JFrame implements MouseListener {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	
 	//CARD: sales result 
@@ -52,18 +50,13 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	private JPanel salesLabelPanel;
 	private JLabel salesLabel;
 	private JTextArea salesResultTextArea;
-	private JScrollPane scrollTextArea;
 
-	private JPanel scrollPanePanel1, scrollPanePanel2;
+	private JPanel scrollPanePanel2;
 
-	private JSplitPane adminSplitPane1;
-	private JSplitPane adminSplitPane2;
+	private JSplitPane adminSplitPane1, adminSplitPane2, adminSplitPane3;
 	private JPanel adminRightPanel;
-
-	private JSplitPane adminSplitPane3;
 	private JPanel openMenuManagePanel;
 	private JButton openManuManageBtn;
-
 	
 	private JPanel backButtonPanel;
 	private JButton backBtn;
@@ -71,17 +64,9 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	private JPanel cards;
 	private JPanel cardSalesResult, cardManageMenu;
 
-
 	private JPanel buttonPanel;
-		
-	private JPanel panel1;
-	private JPanel panel2;
-	private JPanel panel3;
-		
-	private JButton addBtn;
-	private JButton modifyBtn;
-	private JButton deleteBtn;
-
+	private JPanel panel1, panel2, panel3;
+	private JButton addBtn, modifyBtn, deleteBtn;
 
 	//CARD: menu page
 	private DefaultTableModel tableModel, categoryTableModel;
@@ -90,11 +75,9 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	private JScrollPane scrollPane;
 
 	private JSplitPane menuSplitPane1, menuSplitPane2;
-	private JPanel topPanel;
-	private JPanel bottomPanel;
+	private JPanel topPanel, bottomPanel;
 
 	private UserRepository userRepo;
-
 
 	private JFrame categoryFrame;
 	private JPanel categoryPanel;
@@ -108,7 +91,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	private JLabel menuNoLabel;
 	private JLabel menuNameLabel;
 	private JLabel menuPriceLabel;
-
 
 	private JTextField menuNoTxtField;
 	private JTextField menuNameTxtField;
@@ -127,11 +109,9 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	private JPanel ml1, ml2, ml3, ml4;
 	private JPanel mr1, mr2, mr3, mr4;
 
-
 	private JButton modifyOkBtn;
 
-	//메인화면에 있는 메뉴정보(테이블)도 함께 변경하기 위함
-	private DefaultTableModel modelN, modelS, modelR;
+	private DefaultTableModel modelN, modelS, modelR;  //메인화면에 있는 메뉴정보(테이블)도 함께 변경하기 위함
 
 	public AdminPageFrame(DefaultTableModel modelN, DefaultTableModel modelS, DefaultTableModel modelR,
 			UserRepository userRepo) {
@@ -145,6 +125,38 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	}
 
 	private void initialize(){
+		/* Card 만들기 */
+		createSalesResultCard();
+		createManageMenuCard();
+
+		invokeSplitPane();
+
+		/* CardLayout 세팅 */
+		CardLayout cl = new CardLayout();
+		cards = new JPanel(cl);
+
+		cardSalesResult = new JPanel(new BorderLayout());
+		cardManageMenu = new JPanel(new BorderLayout());
+
+		cardSalesResult.add(adminSplitPane3);
+		cardManageMenu.add(menuSplitPane2);
+
+		cards.add(cardSalesResult, "SALES_RESULT");
+		cards.add(cardManageMenu, "MANAGE_MENU");
+		
+		add(cards);
+
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		setResizable(false);
+		setVisible(true);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	}
+	
+	private void createSalesResultCard() {
 		adminLeftPanel = new JPanel();
 		adminCenterSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		salesLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -153,6 +165,37 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		salesResultTextArea = new JTextArea(300, 400);
 		salesResultTextArea.setEditable(false);
 
+		initSalesResult();
+
+		Font font = new Font("맑은고딕", Font.BOLD, 11);
+        salesResultTextArea.setFont(font);
+        salesResultTextArea.setForeground(Color.BLUE);
+        topPanel = salesLabelPanel;
+        bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(salesResultTextArea);
+		adminCenterSplitPane.setTopComponent(topPanel);
+		adminCenterSplitPane.setBottomComponent(bottomPanel);
+
+		adminSplitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		adminSplitPane1.setLeftComponent(adminLeftPanel);
+		adminSplitPane1.setRightComponent(adminCenterSplitPane);
+
+		adminSplitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		adminRightPanel = new JPanel();
+		adminSplitPane2.setLeftComponent(adminSplitPane1);
+		adminSplitPane2.setRightComponent(adminRightPanel);
+		
+		adminSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		openMenuManagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		openManuManageBtn = new JButton("메뉴 관리");
+		openManuManageBtn.setName("MANAGE_MENU");
+		openManuManageBtn.addMouseListener(this);
+		openMenuManagePanel.add(openManuManageBtn);
+		adminSplitPane3.setTopComponent(openMenuManagePanel);
+		adminSplitPane3.setBottomComponent(adminSplitPane2);
+	}
+
+	private void initSalesResult() {
 		Map<Food, Integer> salesResult = (TreeMap<Food, Integer>)((Admin)userRepo.getAdmin()).getSalesResult();				
 		if (salesResult == null)
 			salesResult = new TreeMap<Food, Integer>();
@@ -185,38 +228,9 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 			if(++count < salesResult.size()) msg+="\n";
 		}
 		salesResultTextArea.setText(msg);
-		Font font = new Font("맑은고딕", Font.BOLD, 11);
-        salesResultTextArea.setFont(font);
-        salesResultTextArea.setForeground(Color.BLUE);
-//		scrollTextArea = new JScrollPane(salesResultTextArea,
-//				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-//				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        topPanel = salesLabelPanel;
-        bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.add(salesResultTextArea);
-		adminCenterSplitPane.setTopComponent(topPanel);
-		adminCenterSplitPane.setBottomComponent(bottomPanel);
-
-		adminSplitPane1 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		adminSplitPane1.setLeftComponent(adminLeftPanel);
-		adminSplitPane1.setRightComponent(adminCenterSplitPane);
-
-		adminSplitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		adminRightPanel = new JPanel();
-		adminSplitPane2.setLeftComponent(adminSplitPane1);
-		adminSplitPane2.setRightComponent(adminRightPanel);
-		
-		adminSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		openMenuManagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		openManuManageBtn = new JButton("메뉴 관리");
-		openManuManageBtn.setName("MANAGE_MENU");
-		openManuManageBtn.addMouseListener(this);
-		openMenuManagePanel.add(openManuManageBtn);
-		adminSplitPane3.setTopComponent(openMenuManagePanel);
-		adminSplitPane3.setBottomComponent(adminSplitPane2);
-		
-		
-
+	}
+	
+	private void createManageMenuCard() {
 		buttonPanel = new JPanel(new GridLayout(1,3));
 		
 		panel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -242,8 +256,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		buttonPanel.add(panel2);
 		buttonPanel.add(panel3);
 		
-		initMenuList();
-
+		initMenuTable();
 
 		menuTable.setName("MENU_TABLE");
 		menuTable.setAutoCreateRowSorter(true);
@@ -259,7 +272,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		menuSplitPane1.setBottomComponent(scrollPanePanel2);
 		menuSplitPane1.setDividerLocation(50 + menuSplitPane1.getInsets().top);
 		menuSplitPane1.setDividerSize(1);
-
 		
 		backBtn = new JButton("뒤로가기");
 		backBtn.setName("SALES_RESULT");
@@ -275,33 +287,56 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		menuSplitPane2.setBottomComponent(bottomPanel);
 		menuSplitPane2.setDividerLocation(30 + menuSplitPane2.getInsets().top);
 		menuSplitPane2.setDividerSize(1);
-
-
-
-		CardLayout cl = new CardLayout();
-		cards = new JPanel(cl);
-
-		cardSalesResult = new JPanel(new BorderLayout());
-		cardManageMenu = new JPanel(new BorderLayout());
-
-		cardSalesResult.add(adminSplitPane3);
-		cardManageMenu.add(menuSplitPane2);
-
-		cards.add(cardSalesResult, "SALES_RESULT");
-		cards.add(cardManageMenu, "MANAGE_MENU");
+	}
+	
+	private void initMenuTable() {
+		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"}; 
+		tableModel = new DefaultTableModel(colNames, 0) {
+			private static final long serialVersionUID = 1L;
+			String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"}; 
+			@Override
+			public String getColumnName(int column) {
+				return colNames[column];
+			}
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       return false;
+		    }
+		};
 		
-
-		add(cards);
-		invokeSplitPane();
-
-		setVisible(true);
-		setResizable(false);
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch(Exception e) {
-			e.printStackTrace();
+		FoodMenu menu = userRepo.getFoodMenu();
+		if(menu == null || menu.getFoodMenuList() == null) {
+			menuTable = new JTable(tableModel);
+			return;
 		}
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+		String[][] menuTableContents = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
+
+		List<Food> foodMenuList = (ArrayList<Food>)userRepo.getFoodMenu().getFoodMenuList();
+
+		Collections.sort(foodMenuList, (i,j)->{
+			return i.getMenuCategory().compareTo(j.getMenuCategory()) == 0 ? 
+						i.getMenuNo() - j.getMenuNo(): i.getMenuCategory().compareTo(j.getMenuCategory());
+		});
+
+		Iterator<Food> it = foodMenuList.iterator();
+		Food food = null;
+		int count =0;
+		while(it.hasNext()) {
+			food = it.next();
+			
+			String[] row = new String[] { food.getMenuCategory(), 
+						String.valueOf(food.getMenuNo()), 
+						food.getMenuName(), 
+						String.valueOf(food.getMenuPrice()),
+					};
+			menuTableContents[count++] = row;
+		}
+		
+		for(int i =0;  i<menuTableContents.length; i++)
+			tableModel.addRow(menuTableContents[i]);
+
+		menuTable = new JTable(tableModel);
 	}
 	
 	private void invokeSplitPane() {
@@ -330,20 +365,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
         });
 	}
 
-	private void showManageMenu() {
-		System.out.println("메뉴 관리 창으로 넘어갑니다.");
-		CardLayout cl = (CardLayout)(cards.getLayout());
-        cl.show(cards, "MANAGE_MENU");
-	}
-	
-	private void showSalesResult() {
-		System.out.println("매출 결과로 되돌아 갑니다.");
-		CardLayout cl = (CardLayout)(cards.getLayout());
-        cl.show(cards, "SALES_RESULT");
-		
-	}
-	
-	private void addMenu() {
+	private void createAddMenuFrame() {
 		categoryFrame = new JFrame("음식 카테고리 선택");
 		categoryFrame.setSize(300, 300);
 		categoryFrame.setLocation(this.getX() , this.getY());
@@ -376,7 +398,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		menuNameTxtField = new JTextField("", 15);
 		menuPriceTxtField = new JTextField("", 15);
 
-
 		this.createCategoryTable();
 		this.updateNextMenuNo();
 
@@ -407,7 +428,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		categoryFrame.setVisible(true); 
 	}
 	
-	private void modifyMenu() {
+	private void createModifyMenuFrame() {
 		modifyFrame = new JFrame("메뉴 수정");
 		modifyFrame.setSize(300, 300);
 		modifyFrame.setLocation(this.getX() , this.getY());
@@ -442,9 +463,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		mNameTxtField = new JTextField("", 15);
 		mPriceTxtField = new JTextField("", 15);
 
-		//this.createcategoryTxtField();
-		//this.updateNextMenuNo();
-
 		ml1.add(mCategoryLabel); 	mr1.add(mCategoryTxtField);
 		ml2.add(mNoLabel); 		mr2.add(mNoTxtField);
 		ml3.add(mNameLabel); 		mr3.add(mNameTxtField);
@@ -459,9 +477,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		modifyOkBtn.setName("MODIFY_CONFIRM");
 		modifyOkBtn.addMouseListener(this);
 		
-		//categoryTxtField.setName("MENU_CATEGORY");
-		//categoryTxtField.addMouseListener(this);
-
 		modifySplitPane.setTopComponent(modifyPanel);
 		modifySplitPane.setBottomComponent(modifyOkBtn);
 		
@@ -473,6 +488,10 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 
 
 		int row = menuTable.getSelectedRow();
+		if(row==-1) {
+			JOptionPane.showMessageDialog(null, "테이블 행이 선택되지 않았습니다.", "테이블 행 미선택", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
 
 		String menuCategory = (String)tableModel.getValueAt(row, 0);
 		int menuNo = Integer.valueOf((String)tableModel.getValueAt(row, 1));
@@ -483,7 +502,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		this.mNoTxtField.setText(String.valueOf(menuNo));
 		this.mNameTxtField.setText(menuName);
 		this.mPriceTxtField.setText(String.valueOf(menuPrice));
-
 	}
 	
 	private void deleteMenu() {
@@ -565,56 +583,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		}
 	}
 
-	private void initMenuList() {
-		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"}; 
-		tableModel = new DefaultTableModel(colNames, 0) {
-			private static final long serialVersionUID = 1L;
-			String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"}; 
-			@Override
-			public String getColumnName(int column) {
-				return colNames[column];
-			}
-		    @Override
-		    public boolean isCellEditable(int row, int column) {
-		       return false;
-		    }
-		};
-		
-		FoodMenu menu = userRepo.getFoodMenu();
-		if(menu == null || menu.getFoodMenuList() == null) {
-			menuTable = new JTable(tableModel);
-			return;
-		}
-
-		String[][] menuTableContents = new String[userRepo.getFoodMenu().getFoodMenuList().size()][colNames.length];
-
-		List<Food> foodMenuList = (ArrayList<Food>)userRepo.getFoodMenu().getFoodMenuList();
-
-		Collections.sort(foodMenuList, (i,j)->{
-			return i.getMenuCategory().compareTo(j.getMenuCategory()) == 0 ? 
-						i.getMenuNo() - j.getMenuNo(): i.getMenuCategory().compareTo(j.getMenuCategory());
-		});
-
-		Iterator<Food> it = foodMenuList.iterator();
-		Food food = null;
-		int count =0;
-		while(it.hasNext()) {
-			food = it.next();
-			
-			String[] row = new String[] { food.getMenuCategory(), 
-						String.valueOf(food.getMenuNo()), 
-						food.getMenuName(), 
-						String.valueOf(food.getMenuPrice()),
-					};
-			menuTableContents[count++] = row;
-		}
-		
-		for(int i =0;  i<menuTableContents.length; i++)
-			tableModel.addRow(menuTableContents[i]);
-
-		menuTable = new JTable(tableModel);
-	}
-	
 	private void createCategoryTable() {
 		String[] colNames = {"카테고리"};
 		categoryTableModel = new DefaultTableModel(colNames, 0) {
@@ -646,7 +614,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		foodMenuList = (ArrayList<Food>)userRepo.getFoodMenu().getFoodMenuList();
 		itr = foodMenuList.iterator();
 		set = new HashSet<String>();
-		Food food = null;
+
 		while(itr.hasNext()) {
 			set.add(itr.next().getMenuCategory());
 		}
@@ -670,6 +638,51 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		categoryTable = new JTable(categoryTableModel);
 	}
 
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
+	@Override
+	public void mouseClicked(MouseEvent e) {}
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		Object source = e.getSource();
+		System.out.println(source);
+		if (source instanceof JButton) {
+			String name = ((JButton) e.getSource()).getName();
+			switch(name) {
+				case "MANAGE_MENU": showManageMenu(); break;
+				case "SALES_RESULT": showSalesResult(); break;
+				case "ADD": createAddMenuFrame(); break;
+				case "MODIFY": createModifyMenuFrame(); break;
+				case "ADD_CONFIRM": addConfirm(); break;
+				case "MODIFY_CONFIRM": modifyConfirm(); break;
+				case "DELETE": deleteMenu(); break;
+				default:
+					break;
+			}
+		}
+		else if(source instanceof JTable) {
+			String name = ((JTable)e.getSource()).getName();
+			switch(name) {
+				case "MENU_CATEGORY": updateNextMenuNo(); break;
+			}
+		}
+	}
+	
+	private void showManageMenu() {
+		CardLayout cl = (CardLayout)(cards.getLayout());
+        cl.show(cards, "MANAGE_MENU");
+	}
+	
+	private void showSalesResult() {
+		CardLayout cl = (CardLayout)(cards.getLayout());
+        cl.show(cards, "SALES_RESULT");
+		
+	}
+	
 	private void updateNextMenuNo() {
 		int row = categoryTable.getSelectedRow();
 		if(row == -1)
@@ -701,42 +714,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 
 		this.menuNoTxtField.setText(String.valueOf(newMenuNo));
 	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		Object source = e.getSource();
-		System.out.println(source);
-		if (source instanceof JButton) {
-			String name = ((JButton) e.getSource()).getName();
-			switch(name) {
-				case "MANAGE_MENU": showManageMenu(); break;
-				case "SALES_RESULT": showSalesResult(); break;
-				case "ADD": addMenu(); break;
-				case "ADD_CONFIRM": addConfirm(); break;
-				case "DELETE": deleteMenu(); break;
-				case "MODIFY": modifyMenu(); break;
-				case "MODIFY_CONFIRM": modifyConfirm(); break;
-				default:
-					break;
-			}
-		}
-		else if(source instanceof JTable) {
-			String name = ((JTable)e.getSource()).getName();
-			switch(name) {
-				case "MENU_CATEGORY": updateNextMenuNo(); break;
-			}
-		}
-	}
-	
-	@Override
-	public void mouseEntered(MouseEvent e) {}
-	@Override
-	public void mouseExited(MouseEvent e) {}
-	@Override
-	public void mouseClicked(MouseEvent e) {}
-	@Override
-	public void mouseReleased(MouseEvent e) {}
-	
 
 	private void addConfirm() {
 		int row = categoryTable.getSelectedRow();
@@ -817,8 +794,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 			return;
 		}
 
-		
-		
 		int row = menuTable.getSelectedRow();
 
 		String menuCategory = (String)tableModel.getValueAt(row, 0);
@@ -862,7 +837,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		
 		tableModel.fireTableDataChanged();
 
-
 		//Update Table : Add food 
 		switch(menuCategory) {
 			case "NOODLE": removeRow(modelN, deleteRow); modelN.fireTableDataChanged(); break;
@@ -870,7 +844,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 			case "RICE": removeRow(modelR, deleteRow); modelR.fireTableDataChanged(); break;
 		}
 		
-	
 		Map<Food, Integer> salesResult = 
 				(TreeMap<Food, Integer>)((Admin)userRepo.getAdmin()).getSalesResult();
 

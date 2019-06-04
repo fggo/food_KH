@@ -1,13 +1,10 @@
 package foodapp.model.vo;
 
 import java.io.Serializable;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 import java.util.Map;
-
 
 @SuppressWarnings("serial")
 public class User implements Serializable, Comparable<User> {

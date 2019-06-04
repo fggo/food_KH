@@ -1,7 +1,5 @@
 package foodapp.dao;
 
-import java.util.Scanner;
-
 public final class Constants {
 	private Constants() {
 		//restrict initialization

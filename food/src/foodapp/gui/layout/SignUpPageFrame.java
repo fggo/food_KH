@@ -20,15 +20,14 @@ import javax.swing.JPasswordField;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import foodapp.dao.UserRepository;
 import foodapp.model.vo.User;
 
 
 public class SignUpPageFrame extends JPanel implements ActionListener {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	private CardLayout cl;
@@ -36,7 +35,7 @@ public class SignUpPageFrame extends JPanel implements ActionListener {
 
 	private JTextField username, phone, email, address;
 	private JPasswordField password;
-	private JLabel usernameLabel, passwordLabel1, passwordLabel2, sub1, sub2, phoneLabel, emailLabel, addressLabel;
+	private JLabel usernameLabel, passwordLabel1, passwordLabel2, phoneLabel, emailLabel, addressLabel;
 	private JButton confirmBtn;
 	
 	private JPanel l1,l2,l3,l4,l5;
@@ -71,7 +70,6 @@ public class SignUpPageFrame extends JPanel implements ActionListener {
 	}
 
 	private void initialize() {
-
 		setLayout(new BorderLayout());
 
 		signUpLeftPanel = new JPanel();
@@ -208,6 +206,13 @@ public class SignUpPageFrame extends JPanel implements ActionListener {
 		c6.add(confirmBtn);
 		
 		add(signUpSplitPane3);
+		
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		setVisible(true);
 	}
 
 	private void invokeSplitPane() {

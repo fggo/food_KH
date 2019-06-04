@@ -11,6 +11,15 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws Exception {
-		new InitPageFrame(userRepo);
+
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+            	try {
+					new InitPageFrame(userRepo);
+            	} catch(Exception e) {
+            		e.printStackTrace();
+            	}
+            }
+        });
 	}
 }
