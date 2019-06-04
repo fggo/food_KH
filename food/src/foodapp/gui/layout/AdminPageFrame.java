@@ -8,8 +8,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,13 +19,11 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
@@ -460,6 +456,8 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		tableModel.removeRow(row);
 		tableModel.fireTableDataChanged();
 
+		
+		//update table contents
 		String[] deleteRow = new String[] { food.getMenuCategory(), 
 					String.valueOf(food.getMenuNo()), 
 					food.getMenuName(), 
@@ -469,6 +467,18 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 			case "SOUP": removeRow(modelS, deleteRow); modelS.fireTableDataChanged(); break;
 			case "RICE": removeRow(modelR, deleteRow); modelR.fireTableDataChanged(); break;
 		}
+		
+		//update SalesResult
+		Food deleteFood = new Food(deleteRow[0], Integer.valueOf(deleteRow[1]),
+						deleteRow[2], Integer.valueOf(deleteRow[3]));
+
+		Map<Food, Integer> salesResult = 
+				(TreeMap<Food, Integer>)((Admin)userRepo.getAdmin()).getSalesResult();
+
+		if(salesResult != null)
+			salesResult.remove(deleteFood);
+
+		((Admin)userRepo.getAdmin()).setSalesResult(salesResult);
 	}
 	
 	private void removeRow(DefaultTableModel model, String[] deleteRow) {
@@ -701,6 +711,14 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 //			return i.getMenuCategory().compareTo(j.getMenuCategory()) == 0 ? 
 //						i.getMenuNo() - j.getMenuNo(): i.getMenuCategory().compareTo(j.getMenuCategory());
 //		});
+		
+		List<Food> list = (ArrayList<Food>)menu.getFoodMenuList();
+		Iterator<Food> itr = list.iterator();
+		while(itr.hasNext()) {
+			food = itr.next();
+			System.out.println(food);
+			
+		}
 
 	}
 }

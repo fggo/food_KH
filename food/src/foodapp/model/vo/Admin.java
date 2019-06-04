@@ -2,6 +2,7 @@ package foodapp.model.vo;
 
 import java.util.GregorianCalendar;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Admin extends User {
 	/**
@@ -31,6 +32,6 @@ public class Admin extends User {
 		}
 	}
 	
-	public Map<Food, Integer> getSalesResult() { return salesResult; } 
+	public Map<Food, Integer> getSalesResult() { return (TreeMap<Food, Integer>)salesResult; } 
 	public void setSalesResult(Map<Food, Integer> salesResult) { this.salesResult = salesResult; }
 }

@@ -863,8 +863,17 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			food = entry.getKey();
 			qty = entry.getValue();
 
-			if(salesResult.get(food) != null)
+			for(Map.Entry<Food, Integer> e: salesResult.entrySet()) {
+				System.out.println(e.getKey());
+				System.out.println(e.getValue());
+				System.out.println(food.equals(e.getKey()));
+			}
+			if(salesResult.get(food) != null) {
+				System.out.println(food);
+				System.out.println(salesResult.get(food));
 				salesResult.put(food, salesResult.get(food) + qty);
+				System.out.println(salesResult.get(food));
+			}
 			else
 				salesResult.put(food, qty);
 		}
@@ -960,6 +969,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		frame.setSize(500, 500);
 		frame.setLocation(this.getX() + 50 , this.getY() + 90);
+		frame.setLocationRelativeTo(null);
 
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
