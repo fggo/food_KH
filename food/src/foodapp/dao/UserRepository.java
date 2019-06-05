@@ -60,8 +60,7 @@ public class UserRepository {
 			
 			this.users = (ArrayList<User>)in.readObject();
 			this.foodMenu = (FoodMenu)in.readObject();
-			
-			
+
 		} catch(WriteAbortedException e) {
 			e.printStackTrace();
 		} catch(Exception e) {
@@ -306,7 +305,6 @@ public class UserRepository {
 
 		User user = null;
 		Iterator<User> itr = users.iterator();
-		boolean valid= false;
 
 		while(itr.hasNext()) {
 			user = itr.next();
@@ -327,7 +325,7 @@ public class UserRepository {
 	 * source : 
 	 * https://howtodoinjava.com/security/how-to-generate-secure-password-hash-md5-sha-pbkdf2-bcrypt-examples/
 	 * */
-	private static String generateStorngPasswordHash(String password) 
+	private String generateStorngPasswordHash(String password) 
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
         int iterations = 1000;
         char[] chars = password.toCharArray();
@@ -339,14 +337,14 @@ public class UserRepository {
         return iterations + ":" + toHex(salt) + ":" + toHex(hash);
     }
      
-    private static byte[] getSalt() throws NoSuchAlgorithmException {
+    private byte[] getSalt() throws NoSuchAlgorithmException {
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
         byte[] salt = new byte[16];
         sr.nextBytes(salt);
         return salt;
     }
      
-    private static String toHex(byte[] array) throws NoSuchAlgorithmException {
+    private String toHex(byte[] array) throws NoSuchAlgorithmException {
         BigInteger bi = new BigInteger(1, array);
         String hex = bi.toString(16);
         int paddingLength = (array.length * 2) - hex.length();

@@ -6,8 +6,8 @@ public final class Constants {
 	}
 
 	/* 홈페이지 메뉴번호 */
-	public static final int 		WINDOW_WIDTH 		= 900;
-	public static final int 		WINDOW_HEIGHT 		= 650;
+	public static final int 		WINDOW_WIDTH 		= 800;
+	public static final int 		WINDOW_HEIGHT 		= 600;
 
 	public static final String 		INIT_PAGE 			= "Card - Home Page";
 	public static final String 		FOOD_MENU_PAGE 		= "Card - Food Menu";

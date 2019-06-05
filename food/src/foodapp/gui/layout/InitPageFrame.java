@@ -205,29 +205,20 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	}
 	
 	private void createFirstTopLeft() {
-		leftPanel = new JPanel(new GridLayout(3,2));
+		leftPanel = new JPanel(new GridLayout(3,1));
 		ImageIcon icon = null;
-		icon = new ImageIcon(getClass().getResource("../images/noodle_char.jpg"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(130, 100, Image.SCALE_SMOOTH));
-		leftPanel.add(new JLabel(icon));
-		icon = new ImageIcon(getClass().getResource("../images/noodle.png"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(150, 100, Image.SCALE_SMOOTH));
+		icon = new ImageIcon(getClass().getResource("../images/noodle.jpg"));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(260, 117, Image.SCALE_SMOOTH));
 		noodleBtn = new JButton(icon); noodleBtn.setName("NOODLE");
 		leftPanel.add(noodleBtn);
 
-		icon = new ImageIcon(getClass().getResource("../images/soup_char.jpg"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(130, 100, Image.SCALE_SMOOTH));
-		leftPanel.add(new JLabel(icon));
 		icon = new ImageIcon(getClass().getResource("../images/soup.png"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(150, 100, Image.SCALE_SMOOTH));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(260, 117, Image.SCALE_SMOOTH));
 		soupBtn = new JButton(icon); soupBtn.setName("SOUP");
 		leftPanel.add(soupBtn);
 
-		icon = new ImageIcon(getClass().getResource("../images/rice_char.jpg"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(130, 100, Image.SCALE_SMOOTH));
-		leftPanel.add(new JLabel(icon));
 		icon = new ImageIcon(getClass().getResource("../images/rice.png"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(150, 100, Image.SCALE_SMOOTH));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(260, 117, Image.SCALE_SMOOTH));
 		riceBtn = new JButton(icon); riceBtn.setName("RICE");
 		leftPanel.add(riceBtn);
 	}
@@ -325,7 +316,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		subSplitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		subSplitPane1.setTopComponent(menuCards);
 		subSplitPane1.setBottomComponent(orderSelectionPanel);
-		subSplitPane1.setDividerLocation(210 + subSplitPane1.getInsets().top);
+		subSplitPane1.setDividerLocation(150 + subSplitPane1.getInsets().top);
 		subSplitPane1.setDividerSize(1);
 		subSplitPane1.setEnabled(false);
 
@@ -399,7 +390,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		mainSplitPane2.setTopComponent(topPanel);
 		mainSplitPane2.setBottomComponent(bottomPanel);
 		mainSplitPane2.setEnabled(false);
-
 	}
 	
 	private void createSecondTop() {
@@ -470,10 +460,10 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		//logo메뉴버튼
 		ImageIcon icon = new ImageIcon(getClass().getResource("../images/burger.png"));
 		icon = new ImageIcon(icon.getImage()
-								.getScaledInstance(100, 50, Image.SCALE_SMOOTH));
+								.getScaledInstance(100, 40, Image.SCALE_SMOOTH));
 
 		logoBtn = new JButton(icon);
-		logoBtn.setPreferredSize(new Dimension(100, 50));
+		logoBtn.setPreferredSize(new Dimension(80, 40));
 		logoBtn.setName(INIT_PAGE);
 
 		JPanel panel = new JPanel();
@@ -484,11 +474,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		//menu dropdown
 //		menuDropDownBtn = createDropDownButton();
-		icon = new ImageIcon(getClass().getResource("../images/menu2.png"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+		icon = new ImageIcon(getClass().getResource("../images/menu.png"));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH));
 		foodMenuBtn = new JButton(icon);
 		
-		foodMenuBtn.setPreferredSize(new Dimension(70, 50));
+		foodMenuBtn.setPreferredSize(new Dimension(80, 40));
 		foodMenuBtn.setName(FOOD_MENU_PAGE);
 		
 		panel = new JPanel();
@@ -500,9 +490,9 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		//order view
 		icon = new ImageIcon(getClass().getResource("../images/orderView.png"));
 		icon = new ImageIcon(icon.getImage()
-								.getScaledInstance(65, 45, Image.SCALE_SMOOTH));
+								.getScaledInstance(62, 47, Image.SCALE_SMOOTH));
 		orderViewBtn = new JButton(icon);
-		orderViewBtn.setPreferredSize(new Dimension(100, 50));
+		orderViewBtn.setPreferredSize(new Dimension(80, 40));
 		orderViewBtn.setName(ORDER_VIEW_PAGE);
 
 		panel = new JPanel();
@@ -512,11 +502,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		toolbar.add(new JSeparator());
 		
         //mypage
-		icon = new ImageIcon(getClass().getResource("../images/mypage.png"));
+		icon = new ImageIcon(getClass().getResource("../images/admin.png"));
 		icon = new ImageIcon(icon.getImage()
-								.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+								.getScaledInstance(45, 45, Image.SCALE_SMOOTH));
 		adminPageBtn = new JButton(icon);
-		adminPageBtn.setPreferredSize(new Dimension(100, 50));
+		adminPageBtn.setPreferredSize(new Dimension(80, 40));
 		adminPageBtn.setName(ADMIN_PAGE);
 
 		panel = new JPanel();
@@ -525,6 +515,23 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		toolbar.add(panel);
 
 		return toolbar;
+	}
+	
+	private TableModel createDefaultTableModel() {
+		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"};
+
+        return new DefaultTableModel(colNames, 0) {
+			private static final long serialVersionUID = 1L;
+			String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"};
+			@Override
+			public String getColumnName(int column) {
+				return colNames[column];
+			}
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       return false;
+		    }
+        };
 	}
 
 	private Map<String, DefaultTableModel> constructTableModels() {
@@ -547,9 +554,9 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		Food food = null;
 		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"};
-        modelN = new DefaultTableModel(colNames, 0);
-        modelS = new DefaultTableModel(colNames, 0);
-        modelR = new DefaultTableModel(colNames, 0);
+        modelN = (DefaultTableModel)createDefaultTableModel();
+        modelS = (DefaultTableModel)createDefaultTableModel();
+        modelR = (DefaultTableModel)createDefaultTableModel();
 
 		String[][] tempNoodleList = new String[foodMenuList ==null? 0: foodMenuList.size()][colNames.length];
 		String[][] tempSoupList = new String[foodMenuList ==null? 0: foodMenuList.size()][colNames.length];
@@ -607,7 +614,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				mainSplitPane2.setDividerLocation(53 + mainSplitPane2.getInsets().top);
 				mainSplitPane2.setDividerSize(1);
 
-				subSplitPane2.setDividerLocation(93+ subSplitPane2.getInsets().top);
+				subSplitPane2.setDividerLocation(110+ subSplitPane2.getInsets().top);
 				subSplitPane2.setEnabled(false);
 				subSplitPane2.setDividerSize(1);
             }
@@ -680,7 +687,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			return;
 		}
 		if(!payCardBtn.isSelected() && !payCashBtn.isSelected()) {
-			System.out.println("결재수단을 선택해 주세요.");
+			JOptionPane.showMessageDialog(null, "결제수단을 선택해 주세요.", "결제 수단 선택", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
@@ -826,7 +833,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			return;
 		}
 
-		JFrame frame = new AdminPageFrame(modelN, modelS, modelR, userRepo);
+		JFrame frame = new AdminPageCard(modelN, modelS, modelR, userRepo);
 		
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
@@ -865,9 +872,9 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		card4 = new JPanel(new BorderLayout());
 
 		card1.add(mainSplitPane3);
-		card2.add(new FoodMenuPageFrame(cl, cards, userRepo));
-		card3.add(new OrderViewPageFrame(cl, cards, phoneTextField, userRepo));
-		card4.add(new SignUpPageFrame(cl, cards, userRepo));
+		card2.add(new FoodMenuPageCard(cl, cards, userRepo));
+		card3.add(new OrderViewPageCard(cl, cards, phoneTextField, userRepo));
+		card4.add(new SignUpPageCard(cl, cards, userRepo));
 
 		cards.add(card1, INIT_PAGE);
 		cards.add(card2, FOOD_MENU_PAGE);
