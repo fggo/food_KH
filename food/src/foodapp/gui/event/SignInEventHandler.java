@@ -28,7 +28,7 @@ public class SignInEventHandler extends MouseAdapter {
 		if (phoneTextField == null) {
 			return;
 		}
-		if(!phoneTextField.isEditable()) {
+		if(!phoneTextField.isEditable() || !passwordField.isEditable()) {
 			System.out.println("이미 로그인 되어 있습니다.");
 			JOptionPane.showMessageDialog(null, "이미 로그인 되어 있습니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
 			return;
@@ -47,8 +47,7 @@ public class SignInEventHandler extends MouseAdapter {
 			JOptionPane.showMessageDialog(null, "로그인을 성공했습니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
 		}
 		else {
-			System.out.println("로그인에 실패하였습니다.");
-			JOptionPane.showMessageDialog(null, "로그인에 실패 하였습니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "로그인 정보가 불일치 합니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
 			phoneTextField.setText("");
 			passwordField.setText("");
 		}

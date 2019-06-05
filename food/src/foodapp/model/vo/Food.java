@@ -43,13 +43,6 @@ public class Food implements Serializable, Comparable<Food> {
 	
 	@Override
 	public int compareTo(Food o) {
-//		if(this.menuCategory.compareTo(o.getMenuCategory()) == 0) {
-//			return this.getMenuNo() - o.getMenuNo();
-//		}
-//		else {
-//			return this.menuCategory.compareTo(o.getMenuCategory());
-//		}
-
 		return this.menuCategory.compareTo(o.getMenuCategory()) == 0 ? 
 					this.menuNo - o.getMenuNo(): this.menuCategory.compareTo(o.getMenuCategory());
 	}

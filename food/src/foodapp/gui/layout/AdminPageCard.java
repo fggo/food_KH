@@ -235,7 +235,7 @@ public class AdminPageCard extends JFrame implements MouseListener {
 			newEntry = itr.next();
 			food = newEntry.getValue();
 			qty = newEntry.getKey();
-			msg += "    " + food + " - - - ÃÑ " + qty + " °³.";
+			msg += "\t" + food + " - - - ÃÑ " + qty + " °³.";
 			if(++count < salesResult.size()) msg+="\n";
 		}
 		salesResultTextArea.setText(msg);

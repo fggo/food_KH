@@ -212,7 +212,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		noodleBtn = new JButton(icon); noodleBtn.setName("NOODLE");
 		leftPanel.add(noodleBtn);
 
-		icon = new ImageIcon(getClass().getResource("../images/soup.png"));
+		icon = new ImageIcon(getClass().getResource("../images/soup.jpg"));
 		icon = new ImageIcon(icon.getImage().getScaledInstance(260, 117, Image.SCALE_SMOOTH));
 		soupBtn = new JButton(icon); soupBtn.setName("SOUP");
 		leftPanel.add(soupBtn);
@@ -545,8 +545,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		if(foodMenuList != null) {
 			Collections.sort(foodMenuList, (i,j)->{
-				return i.getMenuCategory().compareTo(j.getMenuCategory()) == 0 ? 
-							i.getMenuNo() - j.getMenuNo(): i.getMenuCategory().compareTo(j.getMenuCategory());
+				return i.compareTo(j);
 			});
 
 			itr = foodMenuList.iterator();

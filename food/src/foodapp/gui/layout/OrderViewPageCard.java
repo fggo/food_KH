@@ -121,7 +121,7 @@ public class OrderViewPageCard extends JPanel implements MouseListener{
 
             @Override
             public void run() {
-                orderViewSplitPane1.setDividerLocation(200 + orderViewSplitPane1.getInsets().left);
+                orderViewSplitPane1.setDividerLocation(150 + orderViewSplitPane1.getInsets().left);
                 orderViewSplitPane2.setDividerLocation(675+orderViewSplitPane2.getInsets().left);
                 orderViewSplitPane3.setDividerLocation(40+orderViewSplitPane3.getInsets().top);
                 centerReceipt.setDividerLocation(30+centerReceipt.getInsets().top);

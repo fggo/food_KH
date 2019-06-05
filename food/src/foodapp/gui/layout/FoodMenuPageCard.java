@@ -117,8 +117,7 @@ public class FoodMenuPageCard extends JPanel implements MouseListener {
 
 		List<Food> foodMenuList = (ArrayList<Food>)userRepo.getFoodMenu().getFoodMenuList();
 		Collections.sort(foodMenuList, (i,j)->{
-			return i.getMenuCategory().compareTo(j.getMenuCategory()) == 0 ?
-					i.getMenuNo() - j.getMenuNo() : i.getMenuCategory().compareTo(j.getMenuCategory());
+			return i.compareTo(j);
 		});
 
 		Iterator<Food> itr = foodMenuList.iterator();

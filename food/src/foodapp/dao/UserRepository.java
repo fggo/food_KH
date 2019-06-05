@@ -118,23 +118,6 @@ public class UserRepository {
 		}
 
 	}
-
-
-//	public void signIn() {
-//		String phoneInput = menu.signInView();
-//		if(phoneInput.equals(this.phone) || phone != null)
-//			System.out.println("이미 로그인 되어 있습니다.");
-//
-//		User user = getUserByPhone(phoneInput);
-//		if(user==null) {
-//			System.out.println("로그인에 실패 하였습니다.");
-//		}
-//		else {
-//			user.setLogged(true);
-//			setPhone(phoneInput);
-//			System.out.println("로그인 됐슨니다.");
-//		}
-//	}
 	
 	public boolean signIn(String phoneTextField, String passwordField) {
 		if(phoneTextField.equals(this.phone)) {
@@ -181,50 +164,6 @@ public class UserRepository {
 		}
 	}
 
-//	public void order() {
-//		if (phone==null) {
-//			System.out.println("로그인 후 이용할 수 있습니다.");
-//			return;
-//		}
-//		
-//		//주문
-//		User user = getUserByPhone(this.phone);
-//		Map<Food, Integer> orderList = menu.orderView();
-//		user.setOrderList(orderList);
-//
-//		//좌석
-//		if(orderList.size() > 0) {
-//			this.reserveSeat();
-//		
-//			//주문총액 및 주문내역 출력
-//			int total = 0;
-//			for(Map.Entry<Food, Integer> entry : orderList.entrySet()) {
-//				total += (entry.getValue() * entry.getKey().getMenuPrice());
-//				System.out.println("\t" + entry.getKey().getMenuName() + " ----- "
-//						+ entry.getKey().getMenuPrice() + " * " + entry.getValue() + "개");
-//			}
-//
-//			System.out.println("주문하신 총액은 : " + total + "원 입니다.");
-//		}
-//		else
-//			System.out.println("주문을 취소하셨습니다.");
-//	}
-//
-//	public void viewOrder() {
-//		if (phone==null) {
-//			System.out.println("로그인 후 이용할 수 있습니다.");
-//			return;
-//		}
-//		else {
-//			User user = getUserByPhone(phone);
-//			if(user!= null)
-//				user.showOrderList();
-//			else{
-//				System.out.println("해당하는 유저가 없습니다.");
-//			}
-//		}
-//	}
-//
 //	public void reserveSeat() {
 //		int seatNo = menu.reserveSeatView();
 //		User user = getUserByPhone(this.phone);
@@ -243,8 +182,6 @@ public class UserRepository {
 		while(itr.hasNext()) {
 			user = itr.next();
 			user.showUserInfo();
-
-//			if(user instanceof Admin)
 		}
 	}
 
@@ -267,10 +204,6 @@ public class UserRepository {
 		foodMenu.addFood(new Food("RICE", 5, "회덮밥", 8000));
 
 		List<Food> menu = foodMenu.getFoodMenuList();
-//		Collections.sort(menu, (i,j)->{
-//			return i.getMenuCategory().compareTo(j.getMenuCategory()) ==0? 
-//						i.getMenuNo() - j.getMenuNo(): i.getMenuCategory().compareTo(j.getMenuCategory());
-//		});
 		foodMenu.setFoodMenuList(menu);
 	}
 
@@ -298,7 +231,6 @@ public class UserRepository {
 		
 		return null;
 	}
-	
 
 	public User getUserByPhone(String phoneNum) {
 		if (phoneNum == null) return null;
@@ -327,7 +259,7 @@ public class UserRepository {
 	 * */
 	private String generateStorngPasswordHash(String password) 
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
-        int iterations = 1000;
+        int iterations = 500;
         char[] chars = password.toCharArray();
         byte[] salt = getSalt();
          

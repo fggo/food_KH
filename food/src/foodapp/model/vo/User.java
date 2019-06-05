@@ -74,7 +74,6 @@ public class User implements Serializable, Comparable<User> {
 		return this.getUsername().compareTo(o.getUsername());
 	}
 
-
 	//getter setter
 	public String getUsername() { return username; }
 	public void setUsername(String username) { this.username = username; }
