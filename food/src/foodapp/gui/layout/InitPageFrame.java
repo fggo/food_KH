@@ -766,6 +766,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		user.setOrderCreated(new GregorianCalendar());
 		userRepo.showUsers();
 		setPopularMenuList();
+		orderListTextArea.setText("");
+		
 
 		JOptionPane.showMessageDialog(null, "주문이 완료 되었습니다.", "주문결제 완료 확인", JOptionPane.WARNING_MESSAGE);
 	}
