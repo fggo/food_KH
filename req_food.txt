@@ -1,86 +1,62 @@
+--- model.vo패키지 설명
+1. 데이터 정렬 방법
+    User 클래스는 Comparable<User> 인터페이스를 상속
+    Food 클래스는 Comparable<Food> 인터페이스를 상속하여, 이들을 각각 key값으로 하는
+        TreeMap<User, ?> 혹은 TreeMap<Food, ?> 컬렉션 사용 시, User, Food 클래스 에서 정의한 
+        오버라이드 메소드 compareTo 에 의해 key값(User, Food)으로 TreeMap의 데이터가 자동 정렬 되도록 했습니다.
 
---- 객체 및 필드 컬럭션
-User는 Comparable<User> 인터페이스 상속
-Food는 Comparable<Food> 인터페이스 상속하여
-TreeMap 컬렉션 key값을 User 혹은 Food를 사용 시,
-User/Food에 정의한 오버라이드 함수 compareTo에 의해 
-데이터가 key값에 의해 자동 정렬 되기 위해 사용했습니다.
+    FoodMenu클래스에 있는 음식메뉴는 Collections의 sort를 이용하여 정렬
+    List<Food> foodMenuList;
 
-User, Food, FoodMenu는 Object input/output  스트림으로 파일 저장시
-직렬화를 위해 Serializable 인터페이스를 상속했습니다.
+    User클래스에 있는 주문내역은 Food에 정의된 compareTo를 기반으로 자동정렬
+    Map<Food, Integer> orderList;
 
+    Admin클래스에 있는 메뉴별 매출(salesResult)은 TreeMap의 자동정렬 특성과, Food의 compareTo에 정의된 
+    규칙에 따라, 메뉴 알파벳 순 정렬 하였습니다. 다만 매출량을 조회시에 가장 많이 팔린 개수(Integer) 기준으로
+    정렬은, Map의 Value값을 기준으로 정렬할 수 없기 때문에, List<Map.Entry<Integer, Food>> sortedSales;에 
+    데이터를 넣고, Collections.sort으로 내림차순 정렬 했습니다.
+    Map<Food,Integer> salesResult;
 
-//음식메뉴는 Collections의 sort를 이용하여 정렬
-List<Food> foodMenuList;
+2. 직렬화
+    User, Food, FoodMenu는 Object input/output 스트림으로 파일에 저장시
+    직렬화를 위해 Serializable 인터페이스를 상속했습니다.
 
-//주문내역은 Food에 정의된 compareTo를 기반으로 자동정렬
-Map<Food, Integer> orderList;
-
-//메뉴별메출은 List<Map.Entry<Integer, Food>> sortedSales; 로 변환하여, Collections.sort 사용
-Map<Food, Integer> salesResult; 
-
+--- dao 패키지 설명
+    Constants클래스에 각종 상수 (public final static) 정의하여 다른 클래스에서
+        static import로 접근
+        
+    UserRepository클래스는 User객체 리스트, Food 메뉴 리스트, 읽기/쓰기용 User.dat 파일 객체, 
+        그리고 화면에서 로그인, 음식주문, 메뉴관리 등을 현재 사용하고 있는 User의 핸드폰번호 등을
+        저장하는 field를 정의하고 있습니다. 이 데이터를 각 화면에서 일어나는 event에 따라 변경되는
+        데이터 값을 저장하고, 어플리케이션 시작시  User.dat 파일에 데이터를 read하고, 종료시 write합니다 
+        또한 회원가입시 User의 입력 비밀번호를 암호화 해서 저장하고, 로그인시, Hash 알고리즘으로 
+        검증(validate)하는 방법을 사용합니다.
+        
+        
 -- 디자인 component
-메인화면의 디자인 component 및 이벤트는 InitPageFrame에 생성하였으며,
-로그인과 로그오프 이벤트는 SignInEventHandler와 SignOffEventHandler로 
-event 패키지에 정의 하였습니다.
+    InitPageFrame에 메인화면의 디자인 component 생성 및 이벤트 추가,
+    로그인과 로그오프 이벤트는 event패키지의 SignInEventHandler와 SignOffEventHandler로 
+    정의 하였습니다.
 
-메인화면에서 네비게이션 버튼 및 회원가입 버튼 클릭시, 
-해당 메뉴로 넘어가기 위해 CardLayout에 4장의 카드를 정의하였고,
-메인화면에서 음식카테고리 선택시, 세부 음식 메뉴를 
-CardLayout의 3장의 카드 패널로 보여주게 했습니다
+    메인화면에서 네비게이션 버튼 및 회원가입 버튼 클릭시, 
+    해당 메뉴로 넘어가기 위해 CardLayout에 4장의 카드를 정의하였고,
+    메인화면에서 음식카테고리 선택시, 세부 음식 메뉴를 
+    CardLayout의 3장의 카드 패널로 보여주게 했습니다
 
 
-gui설명
-메인화면
 
-기획안 초안제출 (6.3 월)
-주제 기획의도 역할분담 화면설계 클래스 설계
 
-발표제출(6.5 수) 베타 테스트
 
-발표 (6.7 금)
 
+
+기획안 초안제출 (6.3 월) 주제 기획의도 역할분담 화면설계 클래스 설계
+발표제출(6.7 금) 베타 테스트
+발표 (6.10 월)
 1. 로그인&회원가입 = 윤원택
 2. 주문하기 (2명) = 문준석, 최호준
 3. 관리자메뉴 = 오건철
 4. 주문조회 = 최장원
 5. 주문취소, 남은좌석확인, 메인화면과 객체간 연결 = 이준호
-	
-[com.kh.model.vo.BlockedUser]
-    -blockedDate: Date
-    -blockedReason: String
-
-[com.kh.model.vo.User]
-    -username: String
-    -password: String
-    -email: String
-    -memberID: String
-    -createdDate: Date
-    -accountNumber: String
-    -userPoint: int
-    -userMoney: int
-    -gambleRecord: List<String>
-
-    +removeUser() : boolean
-    +playGame(int i): int 게임별로 한자리 수(i)가 정해져있음
-    +updateAccountNum(): void
-    +updateUserInfo(): void
-    +showUserInfo()
-    +pointToMoney(int amount)
-    +moneyToPoint(int amount)
-    
-[com.kh.model.vo.Admin]
-    +blockUser(int memberID): void
-    +releaseUser(int memberID): void
-    +showUser(int memberID): boolean
-
-[com.kh.controller.RegisterController]
-    -users: User[]
-    
-    +update()
-    +delete()
-    +search()
-
 
 1. 윈도우용 git 다운로드/설치
 https://github.com/git-for-windows/git/releases/download/v2.21.0.windows.1/Git-2.21.0-64-bit.exe
@@ -94,4 +70,10 @@ https://github.com/git-for-windows/git/releases/download/v2.21.0.windows.1/Git-2
  package explorer 마우스 오른쪽 클릭-> import>existing java project>'food_KH' 디렉토리 선택.
 
 5. Main.java 실행 및 테스트.
+
+6. github에 소스 변경시 업데이트 받으려면
+이 소스코드를 내려받고(fetch) 내용을 합칠려면(merge) :
+    git pull
+내려받기만 하려면 :
+    git fetch
 

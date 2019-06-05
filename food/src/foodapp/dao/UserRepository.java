@@ -160,6 +160,7 @@ public class UserRepository {
 				}
 				this.phone = null;
 				System.out.println("·Î±×¾Æ¿ô µÆ½À´Ï´Ù.");
+				break;
 			}
 		}
 	}
