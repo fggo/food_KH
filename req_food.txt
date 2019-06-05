@@ -9,15 +9,6 @@ User/Food에 정의한 오버라이드 함수 compareTo에 의해
 User, Food, FoodMenu는 Object input/output  스트림으로 파일 저장시
 직렬화를 위해 Serializable 인터페이스를 상속했습니다.
 
--- 디자인 component
-메인화면의 디자인 component 및 이벤트는 InitPageFrame에 생성하였으며,
-로그인과 로그오프 이벤트는 SignInEventHandler와 SignOffEventHandler로 
-event 패키지에 정의 하였습니다.
-
-메인화면에서 네비게이션 버튼 및 회원가입 버튼 클릭시, 
-해당 메뉴로 넘어가기 위해 CardLayout에 4장의 카드를 정의하였고,
-메인화면에서 음식카테고리 선택시, 세부 음식 메뉴를 
-CardLayout의 3장의 카드 패널로 보여주게 했습니다
 
 //음식메뉴는 Collections의 sort를 이용하여 정렬
 List<Food> foodMenuList;
@@ -28,7 +19,15 @@ Map<Food, Integer> orderList;
 //메뉴별메출은 List<Map.Entry<Integer, Food>> sortedSales; 로 변환하여, Collections.sort 사용
 Map<Food, Integer> salesResult; 
 
+-- 디자인 component
+메인화면의 디자인 component 및 이벤트는 InitPageFrame에 생성하였으며,
+로그인과 로그오프 이벤트는 SignInEventHandler와 SignOffEventHandler로 
+event 패키지에 정의 하였습니다.
 
+메인화면에서 네비게이션 버튼 및 회원가입 버튼 클릭시, 
+해당 메뉴로 넘어가기 위해 CardLayout에 4장의 카드를 정의하였고,
+메인화면에서 음식카테고리 선택시, 세부 음식 메뉴를 
+CardLayout의 3장의 카드 패널로 보여주게 했습니다
 
 
 gui설명
