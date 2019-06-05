@@ -54,6 +54,7 @@ import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import foodapp.dao.UserRepository;
 import foodapp.gui.event.SignInEventHandler;
@@ -158,8 +159,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		/* window closing */
 		this.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowOpened(WindowEvent e) {
-			}
+			public void windowOpened(WindowEvent e) {}
 
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -230,7 +230,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		icon = new ImageIcon(icon.getImage().getScaledInstance(150, 100, Image.SCALE_SMOOTH));
 		riceBtn = new JButton(icon); riceBtn.setName("RICE");
 		leftPanel.add(riceBtn);
-		
 	}
 
 	private void createFirstTopCenter() {
@@ -767,7 +766,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			user.setOrdering(true);
 		}
 
-		DefaultTableModel model = null;
+		TableModel model = null;
 		int row = 0;
 		if(this.menuCategoryTxt.getText().equals(""))
 			this.menuCategoryTxt.setText("¸é ¸Þ´º");
@@ -831,8 +830,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosing(WindowEvent e) {
-
+			public void windowClosing(WindowEvent e) { 
 			}
 		});
 
@@ -852,11 +850,12 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 	private void updateCards() {
 		CardLayout cl = null;
-
-		if(cards == null || cards.getLayout() == null)
+		if(cards == null
+				|| !(cards.getLayout() instanceof CardLayout)) 
 			cl = new CardLayout();
 		else
-			cl = (CardLayout)(cards.getLayout());
+			cl = (CardLayout)cards.getLayout();
+
 
 		cards = new JPanel(cl);
 

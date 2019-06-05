@@ -95,6 +95,7 @@ public class FoodMenuPageFrame extends JPanel implements MouseListener {
 		orderViewSplitPane3.setBottomComponent(orderViewSplitPane2);
 		
 		invokeSplitPane();
+
 		showMenuList();
 		
 		setLayout(new BorderLayout());

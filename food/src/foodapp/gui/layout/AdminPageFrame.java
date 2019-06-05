@@ -131,8 +131,28 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 
 		invokeSplitPane();
 
-		/* CardLayout 세팅 */
-		CardLayout cl = new CardLayout();
+		/* CardLayout -(카드: sales result, manage menu) 세팅 */
+		createCards();
+
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+
+		setResizable(false);
+		setVisible(true);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	}
+	
+	private void createCards() {
+		CardLayout cl = null;
+		if(cards == null
+				|| !(cards.getLayout() instanceof CardLayout)) 
+			cl = new CardLayout();
+		else
+			cl = (CardLayout)cards.getLayout();
+
 		cards = new JPanel(cl);
 
 		cardSalesResult = new JPanel(new BorderLayout());
@@ -145,15 +165,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		cards.add(cardManageMenu, "MANAGE_MENU");
 		
 		add(cards);
-
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		setResizable(false);
-		setVisible(true);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}
 	
 	private void createSalesResultCard() {
@@ -399,7 +410,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		menuPriceTxtField = new JTextField("", 15);
 
 		this.createCategoryTable();
-		this.updateNextMenuNo();
+		this.showNewMenuNo();
 
 		l1.add(menuCategoryLabel); 	r1.add(categoryTable);
 		l2.add(menuNoLabel); 		r2.add(menuNoTxtField);
@@ -602,7 +613,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		List<Food> foodMenuList = null;
 		Iterator<Food> itr = null;
 		Set<String> set = null;
-
 		FoodMenu menu = userRepo.getFoodMenu();
 		if(menu ==null || menu.getFoodMenuList() == null) {
 			categoryTable = new JTable(categoryTableModel);
@@ -667,7 +677,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		else if(source instanceof JTable) {
 			String name = ((JTable)e.getSource()).getName();
 			switch(name) {
-				case "MENU_CATEGORY": updateNextMenuNo(); break;
+				case "MENU_CATEGORY": showNewMenuNo(); break;
 			}
 		}
 	}
@@ -683,7 +693,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		
 	}
 	
-	private void updateNextMenuNo() {
+	private void showNewMenuNo() {
 		int row = categoryTable.getSelectedRow();
 		if(row == -1)
 			return;
