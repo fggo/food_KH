@@ -676,7 +676,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
             @Override
             public void run() {
-				mainSplitPane1.setDividerLocation(300 + mainSplitPane1.getInsets().top);
+				mainSplitPane1.setDividerLocation(330 + mainSplitPane1.getInsets().top);
 //				mainSplitPane1.setDividerLocation(mainSplitPane1.getSize().height/2);
 				mainSplitPane1.setDividerSize(1);
 				mainSplitPane1.setEnabled(false);
@@ -697,11 +697,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				subSplitPane2.setDividerSize(1);
 				subSplitPane2.setEnabled(false);
 
-				subSplitPane3.setDividerLocation(100+ subSplitPane3.getInsets().top);
+				subSplitPane3.setDividerLocation(125+ subSplitPane3.getInsets().top);
 				subSplitPane3.setDividerSize(1);
 				subSplitPane3.setEnabled(false);
 
-				subSplitPane4.setDividerLocation(135+ subSplitPane4.getInsets().top);
+				subSplitPane4.setDividerLocation(110+ subSplitPane4.getInsets().top);
 				subSplitPane4.setDividerSize(1);
 				subSplitPane4.setEnabled(false);
             }
