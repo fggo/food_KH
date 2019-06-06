@@ -21,11 +21,11 @@ import static foodapp.dao.Constants.WINDOW_WIDTH;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -80,7 +81,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private static final long serialVersionUID = 1L;
 
 	private JSplitPane mainSplitPane1, mainSplitPane2, mainSplitPane3;
-	private JSplitPane subSplitPane1, subSplitPane2;
+	private JSplitPane subSplitPane1, subSplitPane2, subSplitPane3;
 
 	private JPanel cards;
 	private JPanel card1, card2, card3, card4;
@@ -88,8 +89,9 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private JPanel menuCards;
 	private JPanel noodleCard, soupCard, riceCard;
 	
-	private JPanel topPanel, bottomPanel, rightPanel, leftPanel, subPanel1, subPanel2, centerPanel;
-	private JPanel p1, p2, p3, orderListPanel;
+	private JPanel topPanel, bottomPanel, rightPanel, centerAndRightPanel, leftPanel;
+	private JPanel subPanel1, subPanel2, centerPanel;
+	private JPanel p1, p2, p3;
 	private JTextArea orderListTextArea;
 	private JScrollPane orderListScrollPane;
 	
@@ -199,12 +201,9 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	
 	private void createFirstSP() {
 		mainSplitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		mainSplitPane1.setDividerLocation(300 + mainSplitPane1.getInsets().top);
-		mainSplitPane1.setDividerSize(1);
 
 		mainSplitPane1.setTopComponent(topPanel);
 		mainSplitPane1.setBottomComponent(bottomPanel);
-		mainSplitPane1.setEnabled(false);
 	}
 
 	private void createFirstTop() {
@@ -212,28 +211,42 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		createFirstTopCenter();
 		createFirstTopRight();
 
-		topPanel = new JPanel(new GridLayout(1,3));
-		topPanel.add(leftPanel);
-		topPanel.add(centerPanel);
-		topPanel.add(rightPanel);
+		subSplitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		subSplitPane2.setDividerLocation(.2);
+		subSplitPane2.setDividerSize(1);
+		centerAndRightPanel = new JPanel(new GridLayout(1,2));
+		subSplitPane2.setLeftComponent(leftPanel);
+		centerAndRightPanel.add(centerPanel);
+		centerAndRightPanel.add(rightPanel);
+		subSplitPane2.setRightComponent(centerAndRightPanel);
+
+		topPanel = new JPanel(new BorderLayout());
+		topPanel.add(subSplitPane2);
 	}
 	
 	private void createFirstTopLeft() {
 		leftPanel = new JPanel(new GridLayout(3,1));
 		ImageIcon icon = null;
 		icon = new ImageIcon(getClass().getResource("../images/noodle.jpg"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(260, 117, Image.SCALE_SMOOTH));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(180, 92, Image.SCALE_SMOOTH));
 		noodleBtn = new JButton(icon); noodleBtn.setName(NOODLE);
+//		noodleBtn.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+		noodleBtn.setMargin(new Insets(0, 0, 0, 0));
+		noodleBtn.setBackground(Color.LIGHT_GRAY);
 		leftPanel.add(noodleBtn);
 
 		icon = new ImageIcon(getClass().getResource("../images/soup.jpg"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(260, 117, Image.SCALE_SMOOTH));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(180, 92, Image.SCALE_SMOOTH));
 		soupBtn = new JButton(icon); soupBtn.setName(SOUP);
+		soupBtn.setMargin(new Insets(0, 0, 0, 0));
+		soupBtn.setBackground(Color.LIGHT_GRAY);
 		leftPanel.add(soupBtn);
 
 		icon = new ImageIcon(getClass().getResource("../images/rice.png"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(260, 117, Image.SCALE_SMOOTH));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(180, 92, Image.SCALE_SMOOTH));
 		riceBtn = new JButton(icon); riceBtn.setName(RICE);
+		riceBtn.setMargin(new Insets(0, 0, 0, 0));
+		riceBtn.setBackground(Color.LIGHT_GRAY);
 		leftPanel.add(riceBtn);
 	}
 
@@ -352,9 +365,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		subSplitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		subSplitPane1.setTopComponent(menuCards);
 		subSplitPane1.setBottomComponent(orderSelectionPanel);
-		subSplitPane1.setDividerLocation(150 + subSplitPane1.getInsets().top);
-		subSplitPane1.setDividerSize(1);
-		subSplitPane1.setEnabled(false);
 
 		centerPanel = new JPanel(new BorderLayout());
 		centerPanel.add(subSplitPane1, BorderLayout.CENTER);
@@ -396,7 +406,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		subPanel2.add(logOffBtn1);
 		p3.add(subPanel1);
 		p3.add(subPanel2);
-		orderListPanel = new JPanel(new BorderLayout());
 		orderListTextArea = new JTextArea("", 200, 200);
 		orderListTextArea.setEditable(false);
         orderListTextArea.setFont(new Font("맑은고딕", Font.BOLD, 11));
@@ -421,12 +430,12 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		orderBtn = new JButton("주문 하기");
 		orderBtn.setName(ORDER);
 		
-		subSplitPane2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		subSplitPane2.setTopComponent(popularMenuPanel);
-		subSplitPane2.setBottomComponent(orderBtn);
+		subSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		subSplitPane3.setTopComponent(popularMenuPanel);
+		subSplitPane3.setBottomComponent(orderBtn);
 
 		bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.add(subSplitPane2);
+		bottomPanel.add(subSplitPane3);
 
 		orderBtn.addMouseListener(this);
 	}
@@ -435,12 +444,12 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		mainSplitPane2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		mainSplitPane2.setTopComponent(topPanel);
 		mainSplitPane2.setBottomComponent(bottomPanel);
-		mainSplitPane2.setEnabled(false);
 	}
 	
 	private void createSecondTop() {
 		/* 네비게이션 메뉴 */
 		JToolBar navBar = this.createNavBar();
+		navBar.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 
 		topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		topPanel.add(navBar);
@@ -448,7 +457,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		foodMenuBtn.addMouseListener(this);
 		orderViewBtn.addMouseListener(this);
 		adminPageBtn.addMouseListener(this);
-		
 	}
 
 	private void createSecondBottom() {
@@ -458,11 +466,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	
 	private void createThirdSP() {
 		mainSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		mainSplitPane3.setDividerLocation(30 + mainSplitPane3.getInsets().top);
-		mainSplitPane3.setDividerSize(1);
 		mainSplitPane3.setTopComponent(topPanel);
 		mainSplitPane3.setBottomComponent(bottomPanel);
-		mainSplitPane3.setEnabled(false);
 	}
 
 	private void createThirdTop() {
@@ -506,10 +511,9 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		//food menu btn
 		icon = new ImageIcon(getClass().getResource("../images/menu.png"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(43, 43, Image.SCALE_SMOOTH));
 		foodMenuBtn = new JButton(icon);
-		
-		foodMenuBtn.setPreferredSize(new Dimension(80, 40));
+//		foodMenuBtn.setPreferredSize(new Dimension(75, 40));
 		foodMenuBtn.setName(FOOD_MENU_PAGE);
 		
 		JPanel panel = new JPanel();
@@ -521,9 +525,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		//order view
 		icon = new ImageIcon(getClass().getResource("../images/orderView.png"));
 		icon = new ImageIcon(icon.getImage()
-								.getScaledInstance(62, 47, Image.SCALE_SMOOTH));
+								.getScaledInstance(43, 43, Image.SCALE_SMOOTH));
 		orderViewBtn = new JButton(icon);
-		orderViewBtn.setPreferredSize(new Dimension(80, 40));
 		orderViewBtn.setName(ORDER_VIEW_PAGE);
 
 		panel = new JPanel();
@@ -535,9 +538,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
         //admin page
 		icon = new ImageIcon(getClass().getResource("../images/admin.png"));
 		icon = new ImageIcon(icon.getImage()
-								.getScaledInstance(45, 45, Image.SCALE_SMOOTH));
+								.getScaledInstance(43, 43, Image.SCALE_SMOOTH));
 		adminPageBtn = new JButton(icon);
-		adminPageBtn.setPreferredSize(new Dimension(80, 40));
 		adminPageBtn.setName(ADMIN_PAGE);
 
 		panel = new JPanel();
@@ -641,12 +643,30 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
             @Override
             public void run() {
-				mainSplitPane2.setDividerLocation(53 + mainSplitPane2.getInsets().top);
-				mainSplitPane2.setDividerSize(1);
+				mainSplitPane1.setDividerLocation(300 + mainSplitPane1.getInsets().top);
+//				mainSplitPane1.setDividerLocation(mainSplitPane1.getSize().height/2);
+				mainSplitPane1.setDividerSize(1);
+//				mainSplitPane1.setEnabled(false);
 
-				subSplitPane2.setDividerLocation(110+ subSplitPane2.getInsets().top);
-				subSplitPane2.setEnabled(false);
-				subSplitPane2.setDividerSize(1);
+				mainSplitPane2.setDividerLocation(53 + mainSplitPane2.getInsets().top);
+//				mainSplitPane1.setDividerLocation(mainSplitPane2.getSize().height/2);
+				mainSplitPane2.setDividerSize(1);
+//				mainSplitPane2.setEnabled(false);
+
+				mainSplitPane3.setDividerLocation(30 + mainSplitPane3.getInsets().top);
+//				mainSplitPane1.setDividerLocation(mainSplitPane3.getSize().height/2);
+				mainSplitPane3.setDividerSize(1);
+//				mainSplitPane3.setEnabled(false);
+
+				subSplitPane1.setDividerLocation(150 + subSplitPane1.getInsets().top);
+//				mainSplitPane1.setDividerLocation(subSplitPane1.getSize().height/2);
+				subSplitPane1.setDividerSize(1);
+//				subSplitPane1.setEnabled(false);
+
+				subSplitPane3.setDividerLocation(110+ subSplitPane3.getInsets().top);
+//				mainSplitPane1.setDividerLocation(subSplitPane3.getSize().height/2);
+				subSplitPane3.setDividerSize(1);
+//				subSplitPane3.setEnabled(false);
             }
         });
     }
@@ -877,7 +897,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			return;
 		}
 
-		JFrame frame = new AdminPageCard(modelN, modelS, modelR, userRepo);
+		JFrame frame = new AdminPageCard(modelN, modelS, modelR, popularMenuTextArea, userRepo);
 		
 		frame.addWindowListener(new WindowAdapter() {
 			@Override

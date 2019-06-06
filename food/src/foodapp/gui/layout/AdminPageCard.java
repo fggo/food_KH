@@ -77,8 +77,6 @@ public class AdminPageCard extends JFrame implements MouseListener {
 	private JSplitPane menuSplitPane1, menuSplitPane2;
 	private JPanel topPanel, bottomPanel;
 
-	private UserRepository userRepo;
-
 	private JFrame categoryFrame;
 	private JPanel categoryPanel;
 	private JButton okBtn;
@@ -112,12 +110,16 @@ public class AdminPageCard extends JFrame implements MouseListener {
 	private JButton modifyOkBtn;
 
 	private DefaultTableModel modelN, modelS, modelR;  //메인화면에 있는 메뉴정보(테이블)도 함께 변경하기 위함
+	private JTextArea popularMenuTextArea;
+	
+	private UserRepository userRepo;
 
 	public AdminPageCard(DefaultTableModel modelN, DefaultTableModel modelS, DefaultTableModel modelR,
-			UserRepository userRepo) {
+			JTextArea popularMenuTextArea, UserRepository userRepo) {
 		this.modelN = modelN;
 		this.modelS = modelS;
 		this.modelR = modelR;
+		this.popularMenuTextArea = popularMenuTextArea;
 
 		this.userRepo = userRepo;
 
@@ -572,6 +574,8 @@ public class AdminPageCard extends JFrame implements MouseListener {
 			salesResult.remove(deleteFood);
 
 		((Admin)userRepo.getAdmin()).setSalesResult(salesResult);
+
+		updatePopularMenuTextArea();
 	}
 	
 	private void removeRow(DefaultTableModel model, String[] deleteRow) {
@@ -774,19 +778,42 @@ public class AdminPageCard extends JFrame implements MouseListener {
 			case "SOUP": modelS.addRow(newRow); modelS.fireTableDataChanged(); break;
 			case "RICE": modelR.addRow(newRow); modelR.fireTableDataChanged(); break;
 		}
+	}
 
-//		Collections.sort(foodMenuList, (i,j)->{
-//			return i.getMenuCategory().compareTo(j.getMenuCategory()) == 0 ? 
-//						i.getMenuNo() - j.getMenuNo(): i.getMenuCategory().compareTo(j.getMenuCategory());
-//		});
-		
-		List<Food> list = (ArrayList<Food>)menu.getFoodMenuList();
-		Iterator<Food> itr = list.iterator();
-		while(itr.hasNext()) {
-			food = itr.next();
-			System.out.println(food);
-			
+	private void updatePopularMenuTextArea() {
+		Map<Food, Integer> salesResult = (TreeMap<Food, Integer>)((Admin)userRepo.getAdmin()).getSalesResult();				
+		if (salesResult == null)
+			return;
+
+		List<Map.Entry<Integer, Food>> sortedSales = new ArrayList<Map.Entry<Integer, Food>>();
+
+		Map.Entry<Integer, Food> newEntry = null;
+		for(Map.Entry<Food, Integer> entry : salesResult.entrySet()) {
+			newEntry = new AbstractMap.SimpleEntry<Integer, Food>(entry.getValue(), entry.getKey());
+			sortedSales.add(newEntry);
 		}
+		
+		Collections.sort(sortedSales, (i,j)->{
+			return j.getKey() - i.getKey();
+		});
+		int count = 0;
+		int qty = 0;
+		String msg = "    ★  인기 메뉴\n";
+		Food food = null;
+		Iterator<Map.Entry<Integer, Food>> itr = sortedSales.iterator();
+		this.popularMenuTextArea.setText("");
+
+		while(itr.hasNext() && count++ < 5) {
+			newEntry = itr.next();
+			food = newEntry.getValue();
+			qty = newEntry.getKey();
+			msg += "    " + count+ "등 메뉴:   " + food.toString() + " - - - 총 " + qty + " 개 팔렸어요.";
+			if(count <5) msg+="\n";
+		}
+		popularMenuTextArea.setText(msg);
+		Font font = new Font("맑은고딕", Font.BOLD, 11);
+        popularMenuTextArea.setFont(font);
+        popularMenuTextArea.setForeground(Color.BLUE);
 	}
 
 	private void modifyConfirm() {
@@ -876,5 +903,7 @@ public class AdminPageCard extends JFrame implements MouseListener {
 		userRepo.getFoodMenu().setFoodMenuList(foodMenuList);
 
 		JOptionPane.showMessageDialog(null, "메뉴수정이 완료되었습니다.", "메뉴수정 완료", JOptionPane.WARNING_MESSAGE);
+
+		updatePopularMenuTextArea();
 	}
 }

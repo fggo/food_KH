@@ -1,47 +1,49 @@
---- model.vo패키지 설명
+--- model.vo패키지
 1. 데이터 정렬 방법
-    User 클래스는 Comparable<User> 인터페이스를 상속
-    Food 클래스는 Comparable<Food> 인터페이스를 상속하여, 이들을 각각 key값으로 하는
+    User는 음식주문 사용자를 정의하는 클래스로 Comparable<User> 인터페이스를 상속
+
+    User클래스에 있는 주문내역은 Food에 정의된 compareTo를 기반으로 자동정렬
+        Map<Food, Integer> orderList;
+
+    Food는 음식메뉴를 정의하는 클래스로 Comparable<Food> 인터페이스를 상속하여, 이들을 각각 key값으로 하는
         TreeMap<User, ?> 혹은 TreeMap<Food, ?> 컬렉션 사용 시, User, Food 클래스 에서 정의한 
         오버라이드 메소드 compareTo 에 의해 key값(User, Food)으로 TreeMap의 데이터가 자동 정렬 되도록 했습니다.
 
-    FoodMenu클래스에 있는 음식메뉴는 Collections의 sort를 이용하여 정렬
-    List<Food> foodMenuList;
-
-    User클래스에 있는 주문내역은 Food에 정의된 compareTo를 기반으로 자동정렬
-    Map<Food, Integer> orderList;
+    FoodMenu는 음식메뉴 List를 정의하는 클래스로, 이 List는 Collections의 sort를 이용하여 정렬
+        List<Food> foodMenuList;
 
     Admin클래스에 있는 메뉴별 매출(salesResult)은 TreeMap의 자동정렬 특성과, Food의 compareTo에 정의된 
     규칙에 따라, 메뉴 알파벳 순 정렬 하였습니다. 다만 매출량을 조회시에 가장 많이 팔린 개수(Integer) 기준으로
     정렬은, Map의 Value값을 기준으로 정렬할 수 없기 때문에, List<Map.Entry<Integer, Food>> sortedSales;에 
     데이터를 넣고, Collections.sort으로 내림차순 정렬 했습니다.
-    Map<Food,Integer> salesResult;
+        Map<Food,Integer> salesResult;
 
-2. 직렬화
+2. 데이터 중복 여부
+    User, Food 클래스에 equals와 hashCode 오버라이드 함수로 데이터를 컬렉션에 저장시 중복 방지
+
+3. 직렬화
     User, Food, FoodMenu는 Object input/output 스트림으로 파일에 저장시
-    직렬화를 위해 Serializable 인터페이스를 상속했습니다.
+    직렬화를 위해 Serializable 인터페이스를 상속
 
---- dao 패키지 설명
-    Constants클래스에 각종 상수 (public final static) 정의하여 다른 클래스에서
-        static import로 접근
+--- dao 패키지
+    Constants클래스에 각종 상수 (public final static) 정의
         
-    UserRepository클래스는 User객체 리스트, Food 메뉴 리스트, 읽기/쓰기용 User.dat 파일 객체, 
-        그리고 화면에서 로그인, 음식주문, 메뉴관리 등을 현재 사용하고 있는 User의 핸드폰번호 등을
-        저장하는 field를 정의하고 있습니다. 이 데이터를 각 화면에서 일어나는 event에 따라 변경되는
-        데이터 값을 저장하고, 어플리케이션 시작시  User.dat 파일에 데이터를 read하고, 종료시 write합니다 
-        또한 회원가입시 User의 입력 비밀번호를 암호화 해서 저장하고, 로그인시, Hash 알고리즘으로 
-        검증(validate)하는 방법을 사용합니다.
+    UserRepository클래스는 
+        User객체 List, Food 메뉴 List, 읽기/쓰기용 User.dat 파일 객체, 
+        User의 핸드폰번호(화면에서 로그인,음식주문,메뉴관리 등을 사용 중인 User)등 field 정의.
+        이 데이터들을 화면에서 발생하는 event에 따라 변경합니다.
+        어플리케이션 시작시 User.dat 파일에 데이터를 read하고, 종료시 write합니다.
+        회원가입시 User의 입력 비밀번호를 암호화 해서 저장하고, 
+        로그인시, Hash 알고리즘으로 검증했습니다.
         
-        
--- 디자인 component
-    InitPageFrame에 메인화면의 디자인 component 생성 및 이벤트 추가,
-    로그인과 로그오프 이벤트는 event패키지의 SignInEventHandler와 SignOffEventHandler로 
-    정의 하였습니다.
+-- gui.layout 패키지
+    InitPageFrame 메인화면의 디자인 component 생성 및 이벤트 정의.
+    로그인과 로그오프 이벤트는 event패키지의 SignInEventHandler와 SignOffEventHandler로 정의
 
-    메인화면에서 네비게이션 버튼 및 회원가입 버튼 클릭시, 
-    해당 메뉴로 넘어가기 위해 CardLayout에 4장의 카드를 정의하였고,
-    메인화면에서 음식카테고리 선택시, 세부 음식 메뉴를 
-    CardLayout의 3장의 카드 패널로 보여주게 했습니다
+    메인화면에서 네비게이션 버튼 및 회원가입 버튼 클릭시,
+    해당 메뉴로 넘어가기 위해 CardLayout에 4장의 카드를 정의,
+    메인화면에서 음식카테고리 선택시, 세부 음식 메뉴를 CardLayout의 3장의 카드 패널로 보여줌
+    
 
 
 

@@ -53,7 +53,8 @@ public class OrderViewPageCard extends JPanel implements MouseListener{
 
 	private UserRepository userRepo;
 
-	public OrderViewPageCard(CardLayout cl, JPanel cards, JTextField phoneTextField, UserRepository userRepo) {
+	public OrderViewPageCard(CardLayout cl, JPanel cards, 
+			JTextField phoneTextField, UserRepository userRepo) {
 		this.cl = cl;
 		this.cards = cards;
 		this.phoneTextField = phoneTextField;
