@@ -226,7 +226,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		leftPanel = new JPanel(new GridLayout(3,1));
 		ImageIcon icon = null;
 		icon = new ImageIcon(getClass().getResource("../images/noodle.jpg"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(180, 92, Image.SCALE_SMOOTH));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(180, 106, Image.SCALE_SMOOTH));
 		noodleBtn = new JButton(icon); noodleBtn.setName(NOODLE);
 //		noodleBtn.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		noodleBtn.setMargin(new Insets(0, 0, 0, 0));
@@ -234,14 +234,14 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		leftPanel.add(noodleBtn);
 
 		icon = new ImageIcon(getClass().getResource("../images/soup.jpg"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(180, 92, Image.SCALE_SMOOTH));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(180, 106, Image.SCALE_SMOOTH));
 		soupBtn = new JButton(icon); soupBtn.setName(SOUP);
 		soupBtn.setMargin(new Insets(0, 0, 0, 0));
 		soupBtn.setBackground(Color.LIGHT_GRAY);
 		leftPanel.add(soupBtn);
 
 		icon = new ImageIcon(getClass().getResource("../images/rice.png"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(180, 92, Image.SCALE_SMOOTH));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(180, 106, Image.SCALE_SMOOTH));
 		riceBtn = new JButton(icon); riceBtn.setName(RICE);
 		riceBtn.setMargin(new Insets(0, 0, 0, 0));
 		riceBtn.setBackground(Color.LIGHT_GRAY);
@@ -689,7 +689,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				mainSplitPane3.setDividerSize(1);
 				mainSplitPane3.setEnabled(false);
 
-				subSplitPane1.setDividerLocation(170 + subSplitPane1.getInsets().top);
+				subSplitPane1.setDividerLocation(180 + subSplitPane1.getInsets().top);
 				subSplitPane1.setDividerSize(1);
 				subSplitPane1.setEnabled(false);
 
