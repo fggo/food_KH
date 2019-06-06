@@ -706,7 +706,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				subSplitPane4.setEnabled(false);
             }
         });
-    }
+   }
 
 	@Override
 	public void mouseClicked(MouseEvent e) {}
