@@ -19,7 +19,8 @@ public class SignInEventHandler extends MouseAdapter {
 
 	private UserRepository userRepo;
 
-	public SignInEventHandler(CardLayout cl, JPanel userCards, JTextField phoneTextField, JPasswordField passwordField, UserRepository userRepo) {
+	public SignInEventHandler(CardLayout cl, JPanel userCards, 
+			JTextField phoneTextField, JPasswordField passwordField, UserRepository userRepo) {
 		super();
 		this.cl = cl;
 		this.userCards = userCards;

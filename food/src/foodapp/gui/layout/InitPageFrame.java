@@ -21,6 +21,7 @@ import static foodapp.dao.Constants.WINDOW_WIDTH;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -253,8 +254,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		menuCards = new JPanel(layout);
 
 		noodleCard = new JPanel(new BorderLayout());
+		noodleCard.setName(NOODLE);
 		soupCard = new JPanel(new BorderLayout());
+		soupCard.setName(SOUP);
 		riceCard = new JPanel(new BorderLayout());
+		riceCard.setName(RICE);
 		
 		Map<String, DefaultTableModel> tableModels = constructTableModels();
 		modelN = tableModels.get(NOODLE);
@@ -293,17 +297,17 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		menuCategoryLabel = new JLabel("메뉴 카테고리");
 		menuCategoryTxt = new JTextField("", 10);
 		menuCategoryTxt.setEditable(false);
-		int row = 0;
-		Object obj = modelN.getValueAt(row, 0);
-		if(obj != null) {
-			switch(obj.toString()) {
-				case NOODLE: obj = "면 메뉴"; break;
-				case SOUP: obj = "탕 메뉴"; break;
-				case RICE: obj = "밥 메뉴"; break;
+
+		for(Component card : menuCards.getComponents()) {
+			if(card instanceof JPanel && card.isVisible()) {
+				switch(card.getName()){
+					case NOODLE: this.menuCategoryTxt.setText("면 메뉴"); break;
+					case SOUP: this.menuCategoryTxt.setText("탕 메뉴"); break;
+					case RICE: this.menuCategoryTxt.setText("밥 메뉴"); break;
+				}
 			}
-			this.menuCategoryTxt.setText(obj.toString());
 		}
-		
+
 		menuChoiceLabel = new JLabel("선택 메뉴");
 		subMenuTxt = new JTextField(10);
 		subMenuTxt.setEditable(false);
@@ -386,7 +390,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		signUpBtn1 = new JButton("회원가입");
 		signUpBtn1.setName(SIGN_UP_PAGE);
 		ImageIcon icon = new ImageIcon(getClass().getResource("../images/delete.png"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
 		cancelOrderBtn = new JButton(icon);
 		cancelOrderBtn.setName("CANCEL_ORDER");
 		cancelOrderBtn.setBorder(new EmptyBorder(0,0,0,0));
@@ -876,8 +880,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		TableModel model = null;
 		int row = 0;
-		if(this.menuCategoryTxt.getText().equals(""))
-			this.menuCategoryTxt.setText("면 메뉴");
 		
 		switch(this.menuCategoryTxt.getText().charAt(0)) {
 			case '면':
