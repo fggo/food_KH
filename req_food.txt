@@ -31,21 +31,31 @@
     UserRepository클래스는 
         User객체 List, Food 메뉴 List, 읽기/쓰기용 User.dat 파일 객체, 
         User의 핸드폰번호(화면에서 로그인,음식주문,메뉴관리 등을 사용 중인 User)등 field 정의.
-        이 데이터들을 화면에서 발생하는 event에 따라 변경합니다.
+        이 데이터들을 화면에서 발생하는 event에 따라 변경합니다. Event 발생시 UserRepository에
+        저장된 데이터를 직접 변경하거나 UserRepository가 정의하고있는 메소드를 통해 변경합니다.
         어플리케이션 시작시 User.dat 파일에 데이터를 read하고, 종료시 write합니다.
-        회원가입시 User의 입력 비밀번호를 암호화 해서 저장하고, 
-        로그인시, Hash 알고리즘으로 검증했습니다.
+        회원가입시 User의 입력 비밀번호를 Hash 알고리즘으로 암호화.
         
 -- gui.layout 패키지
     InitPageFrame 메인화면의 디자인 component 생성 및 이벤트 정의.
-    로그인과 로그오프 이벤트는 event패키지의 SignInEventHandler와 SignOffEventHandler로 정의
-
-    메인화면에서 네비게이션 버튼 및 회원가입 버튼 클릭시,
-    해당 메뉴로 넘어가기 위해 CardLayout에 4장의 카드를 정의,
-    메인화면에서 음식카테고리 선택시, 세부 음식 메뉴를 CardLayout의 3장의 카드 패널로 보여줌
+        로그인과 로그아웃 버튼 이벤트는 event패키지의 SignInEventHandler와 SignOffEventHandler로 정의
+        메인화면에서 메뉴 및 회원가입 버튼 클릭시,
+        해당 메뉴로 넘어가기 위해 CardLayout에 4장의 카드(메인화면, 전체메뉴화면, 주문내역화면,회원가입화면)를 
+        메인화면(JSplitPane)과 각각의 JPanel (FoodMenuPageCard, OrderViewPageCard, SignUpPageCard) 정의.
+        메인화면에서 음식카테고리(면,탕,밥) 선택시, 세부 음식 메뉴를 CardLayout의 3장의 카드 패널로 보여줌
+        음식 메뉴 정렬은 Food에 compareTo에 따라 정렬되어 테이블에 보여짐.
+        
+        
     
-
-
+    관리자화면은 버튼 클릭시, 새로운 창이 생성되고, 2장의 카드(총 매출내역, 메뉴관리-추가 수정 삭제)로 구성됨
+    
+    FoodMenuPageCard
+    
+-- gui.event 패키지
+    로그인 버튼 클릭시, SignInEventHandler가 이벤트를 처리. 버튼 이벤트 추가시에, UserRepository 및
+    폰번호, 비밀번호 텍스트를 매개변수로 넘겨 데이터 값이 변경되도록 함.
+    로그오프 버튼 클릭시에는 SignOffEventHandler로가 이벤트를 처리, 로그인과 동일하게 매개변수를 통해 데이터 변경.
+    
 
 
 

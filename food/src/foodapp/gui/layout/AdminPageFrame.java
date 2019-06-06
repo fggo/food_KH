@@ -40,7 +40,7 @@ import foodapp.model.vo.Admin;
 import foodapp.model.vo.Food;
 import foodapp.model.vo.FoodMenu;
 
-public class AdminPageCard extends JFrame implements MouseListener {
+public class AdminPageFrame extends JFrame implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -114,7 +114,7 @@ public class AdminPageCard extends JFrame implements MouseListener {
 	
 	private UserRepository userRepo;
 
-	public AdminPageCard(DefaultTableModel modelN, DefaultTableModel modelS, DefaultTableModel modelR,
+	public AdminPageFrame(DefaultTableModel modelN, DefaultTableModel modelS, DefaultTableModel modelR,
 			JTextArea popularMenuTextArea, UserRepository userRepo) {
 		this.modelN = modelN;
 		this.modelS = modelS;

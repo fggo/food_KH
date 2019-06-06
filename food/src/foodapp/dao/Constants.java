@@ -6,8 +6,8 @@ public final class Constants {
 	}
 
 	/* 메인화면 크기 */
-	public static final int 		WINDOW_WIDTH 		= 800;
-	public static final int 		WINDOW_HEIGHT 		= 600;
+	public static final int 		WINDOW_WIDTH 		= 830;
+	public static final int 		WINDOW_HEIGHT 		= 650;
 
 	/* 화면 이름 */
 	public static final String 		INIT_PAGE 			= "Card - Home Page";

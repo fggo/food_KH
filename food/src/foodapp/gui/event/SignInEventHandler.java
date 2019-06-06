@@ -1,21 +1,28 @@
 package foodapp.gui.event;
 
+import java.awt.CardLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import foodapp.dao.UserRepository;
 
 public class SignInEventHandler extends MouseAdapter {
+	private CardLayout cl;
+	private JPanel userCards;
 	private JTextField phoneTextField;
 	private JPasswordField passwordField;
+
 	private UserRepository userRepo;
 
-	public SignInEventHandler(JTextField phoneTextField, JPasswordField passwordField, UserRepository userRepo) {
+	public SignInEventHandler(CardLayout cl, JPanel userCards, JTextField phoneTextField, JPasswordField passwordField, UserRepository userRepo) {
 		super();
+		this.cl = cl;
+		this.userCards = userCards;
 		this.phoneTextField = phoneTextField;
 		this.passwordField = passwordField;
 		this.userRepo = userRepo;
@@ -45,6 +52,7 @@ public class SignInEventHandler extends MouseAdapter {
 			passwordField.setText("");
 			passwordField.setEditable(false);
 			JOptionPane.showMessageDialog(null, "로그인을 성공했습니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
+			cl.show(userCards, "USER_LOGGED");
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "로그인 정보가 불일치 합니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);

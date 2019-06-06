@@ -30,12 +30,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.NumberFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -64,6 +66,7 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -81,7 +84,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private static final long serialVersionUID = 1L;
 
 	private JSplitPane mainSplitPane1, mainSplitPane2, mainSplitPane3;
-	private JSplitPane subSplitPane1, subSplitPane2, subSplitPane3;
+	private JSplitPane subSplitPane1, subSplitPane2, subSplitPane3, subSplitPane4;
 
 	private JPanel cards;
 	private JPanel card1, card2, card3, card4;
@@ -89,16 +92,17 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private JPanel menuCards;
 	private JPanel noodleCard, soupCard, riceCard;
 	
+	private JPanel userCards;
+	private JPanel userLogOffCard, userLoggedCard;
+	
 	private JPanel topPanel, bottomPanel, rightPanel, centerAndRightPanel, leftPanel;
-	private JPanel subPanel1, subPanel2, centerPanel;
-	private JPanel p1, p2, p3;
-	private JTextArea orderListTextArea;
-	private JScrollPane orderListScrollPane;
+	private JPanel centerPanel;
+	private JPanel p1, p2, p3, p4;
 	
 	private JButton foodMenuBtn, adminPageBtn, orderViewBtn;
 	private JButton signInBtn1, signInBtn2, signUpBtn1, signUpBtn2;
 	private JButton logOffBtn1, logOffBtn2;
-	private JButton orderBtn;
+	private JButton orderBtn, cancelOrderBtn;
 	
 	private JTextArea popularMenuTextArea;
 	private JPanel popularMenuPanel;
@@ -118,18 +122,14 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	
 	private JButton noodleBtn, soupBtn, riceBtn;
 	
-	private DefaultTableModel modelN, modelS, modelR;
+	private DefaultTableModel modelN, modelS, modelR, modelOrdering;
 	
 	private JComboBox<Integer> menuQtyComboBox;
 	private JTextField phoneTextField;
 	private JPasswordField passwordField;
 	
-	private JTable menuNoodleTable;
-	private JTable menuSoupTable;
-	private JTable menuRiceTable;
-	private JScrollPane scrollNoodlePane;
-	private JScrollPane scrollSoupPane;
-	private JScrollPane scrollRicePane;
+	private JTable menuNoodleTable, menuSoupTable, menuRiceTable, orderingTable;
+	private JScrollPane scrollNoodlePane, scrollSoupPane, scrollRicePane, scrollOrderingPane;
 	
 	private UserRepository userRepo = null;
 	
@@ -193,10 +193,10 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			}
 		});
 
-		setVisible(true);
 		setResizable(false);
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
 	}
 	
 	private void createFirstSP() {
@@ -212,8 +212,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		createFirstTopRight();
 
 		subSplitPane2 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		subSplitPane2.setDividerLocation(.2);
-		subSplitPane2.setDividerSize(1);
 		centerAndRightPanel = new JPanel(new GridLayout(1,2));
 		subSplitPane2.setLeftComponent(leftPanel);
 		centerAndRightPanel.add(centerPanel);
@@ -259,16 +257,16 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		riceCard = new JPanel(new BorderLayout());
 		
 		Map<String, DefaultTableModel> tableModels = constructTableModels();
-		modelN = tableModels.get("NOODLE");
-		modelS = tableModels.get("SOUP");
-		modelR = tableModels.get("RICE");
-		
+		modelN = tableModels.get(NOODLE);
+		modelS = tableModels.get(SOUP);
+		modelR = tableModels.get(RICE);
+
 		menuNoodleTable = new JTable(modelN);
-		menuNoodleTable.setName("NOODLE_TABLE");
+		menuNoodleTable.setName(NOODLE_TABLE);
 		menuSoupTable = new JTable(modelS);
-		menuSoupTable.setName("SOUP_TABLE");
+		menuSoupTable.setName(SOUP_TABLE);
 		menuRiceTable = new JTable(modelR);
-		menuRiceTable.setName("RICE_TABLE");
+		menuRiceTable.setName(RICE_TABLE);
 
 		menuNoodleTable.setAutoCreateRowSorter(true);
 		menuSoupTable.setAutoCreateRowSorter(true);
@@ -289,7 +287,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		menuCards.add(noodleCard, NOODLE);
 		menuCards.add(soupCard,SOUP);
 		menuCards.add(riceCard, RICE);
-		
 		
 		orderSelectionPanel = new JPanel(new GridLayout(5,1));
 
@@ -388,36 +385,54 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		logOffBtn1 = new JButton("로그아웃");
 		signUpBtn1 = new JButton("회원가입");
 		signUpBtn1.setName(SIGN_UP_PAGE);
+		ImageIcon icon = new ImageIcon(getClass().getResource("../images/delete.png"));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+		cancelOrderBtn = new JButton(icon);
+		cancelOrderBtn.setName("CANCEL_ORDER");
+		cancelOrderBtn.setBorder(new EmptyBorder(0,0,0,0));
+		cancelOrderBtn.addMouseListener(this);
 
-		rightPanel = new JPanel(new GridLayout(2,1));
-		subPanel1 = new JPanel(new GridLayout(2,1)); 
 		p1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		p2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		p3 = new JPanel(new GridLayout(2,1));
+		p3 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		p4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p1.add(new JLabel("핸드폰 번호"));
 		p1.add(phoneTextField);
 		p2.add(new JLabel("비밀번호"));
 		p2.add(passwordField);
-		subPanel1.add(p1);
-		subPanel1.add(p2);
-		subPanel2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		subPanel2.add(signInBtn1);
-		subPanel2.add(signUpBtn1);
-		subPanel2.add(logOffBtn1);
-		p3.add(subPanel1);
-		p3.add(subPanel2);
-		orderListTextArea = new JTextArea("", 200, 200);
-		orderListTextArea.setEditable(false);
-        orderListTextArea.setFont(new Font("맑은고딕", Font.BOLD, 11));
-        orderListTextArea.setForeground(Color.DARK_GRAY);
-		orderListScrollPane = new JScrollPane(orderListTextArea, 
-				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		rightPanel.add(p3);
-		rightPanel.add(orderListScrollPane);
+		p3.add(signInBtn1);
+		p3.add(signUpBtn1);
+		p3.add(logOffBtn1);
+		p4.add(cancelOrderBtn);
+		userLogOffCard = new JPanel(new GridLayout(3,1));
+		userLogOffCard.add(p1);
+		userLogOffCard.add(p2);
+		userLogOffCard.add(p3);
 
-		signInBtn1.addMouseListener(new SignInEventHandler(phoneTextField, passwordField, userRepo));
-		logOffBtn1.addMouseListener(new SignOffEventHandler(phoneTextField, passwordField, userRepo));
+		CardLayout cl = new CardLayout();
+		userCards = new JPanel(cl);
+		userLoggedCard = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		userLoggedCard.add(new JButton("Hello!"));
+		userCards.add(userLogOffCard, "USER_LOGOFF");
+		userCards.add(userLoggedCard, "USER_LOGGED");
+
+		subSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		subSplitPane3.setTopComponent(userCards);
+		subSplitPane3.setBottomComponent(p4);
+		
+
+		modelOrdering = constructOrderingTableModel();
+		orderingTable = new JTable(modelOrdering);
+		orderingTable.setName("ORDERING_TABLE");
+		orderingTable.setAutoCreateRowSorter(true);
+		scrollOrderingPane = new JScrollPane(orderingTable);
+
+		rightPanel = new JPanel(new GridLayout(2,1));
+		rightPanel.add(subSplitPane3);
+		rightPanel.add(scrollOrderingPane);
+
+		signInBtn1.addMouseListener(new SignInEventHandler(cl, userCards, phoneTextField, passwordField, userRepo));
+		logOffBtn1.addMouseListener(new SignOffEventHandler(cl, userCards, phoneTextField, passwordField, userRepo));
 		signUpBtn1.addMouseListener(this);
 	}
 
@@ -430,12 +445,12 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		orderBtn = new JButton("주문 하기");
 		orderBtn.setName(ORDER);
 		
-		subSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		subSplitPane3.setTopComponent(popularMenuPanel);
-		subSplitPane3.setBottomComponent(orderBtn);
+		subSplitPane4 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		subSplitPane4.setTopComponent(popularMenuPanel);
+		subSplitPane4.setBottomComponent(orderBtn);
 
 		bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.add(subSplitPane3);
+		bottomPanel.add(subSplitPane4);
 
 		orderBtn.addMouseListener(this);
 	}
@@ -481,8 +496,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		topPanel.add(signUpBtn2);
 		topPanel.add(logOffBtn2);
 
-		signInBtn2.addMouseListener(new SignInEventHandler(phoneTextField, passwordField, userRepo));
-		logOffBtn2.addMouseListener(new SignOffEventHandler(phoneTextField, passwordField, userRepo));
+		signInBtn2.addMouseListener(new SignInEventHandler((CardLayout)userCards.getLayout(), userCards, phoneTextField, passwordField, userRepo));
+		logOffBtn2.addMouseListener(new SignOffEventHandler((CardLayout)userCards.getLayout(), userCards, phoneTextField, passwordField, userRepo));
 		signUpBtn2.addMouseListener(this);
 	}
 
@@ -567,6 +582,24 @@ public class InitPageFrame extends JFrame implements MouseListener {
         };
 	}
 
+	private DefaultTableModel constructOrderingTableModel() {
+		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격", "개수"};
+        modelOrdering = new DefaultTableModel(colNames, 0) {
+			private static final long serialVersionUID = 1L;
+			String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격", "개수"};
+			@Override
+			public String getColumnName(int column) {
+				return colNames[column];
+			}
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		       return false;
+		    }
+        };
+
+		return modelOrdering;
+	}
+
 	private Map<String, DefaultTableModel> constructTableModels() {
 		Map<String, DefaultTableModel> map = new TreeMap<String, DefaultTableModel>();
 		
@@ -646,27 +679,31 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				mainSplitPane1.setDividerLocation(300 + mainSplitPane1.getInsets().top);
 //				mainSplitPane1.setDividerLocation(mainSplitPane1.getSize().height/2);
 				mainSplitPane1.setDividerSize(1);
-//				mainSplitPane1.setEnabled(false);
+				mainSplitPane1.setEnabled(false);
 
-				mainSplitPane2.setDividerLocation(53 + mainSplitPane2.getInsets().top);
-//				mainSplitPane1.setDividerLocation(mainSplitPane2.getSize().height/2);
+				mainSplitPane2.setDividerLocation(67 + mainSplitPane2.getInsets().top);
 				mainSplitPane2.setDividerSize(1);
-//				mainSplitPane2.setEnabled(false);
+				mainSplitPane2.setEnabled(false);
 
-				mainSplitPane3.setDividerLocation(30 + mainSplitPane3.getInsets().top);
-//				mainSplitPane1.setDividerLocation(mainSplitPane3.getSize().height/2);
+				mainSplitPane3.setDividerLocation(35 + mainSplitPane3.getInsets().top);
 				mainSplitPane3.setDividerSize(1);
-//				mainSplitPane3.setEnabled(false);
+				mainSplitPane3.setEnabled(false);
 
-				subSplitPane1.setDividerLocation(150 + subSplitPane1.getInsets().top);
-//				mainSplitPane1.setDividerLocation(subSplitPane1.getSize().height/2);
+				subSplitPane1.setDividerLocation(170 + subSplitPane1.getInsets().top);
 				subSplitPane1.setDividerSize(1);
-//				subSplitPane1.setEnabled(false);
+				subSplitPane1.setEnabled(false);
 
-				subSplitPane3.setDividerLocation(110+ subSplitPane3.getInsets().top);
-//				mainSplitPane1.setDividerLocation(subSplitPane3.getSize().height/2);
+				subSplitPane2.setDividerLocation(.2);
+				subSplitPane2.setDividerSize(1);
+				subSplitPane2.setEnabled(false);
+
+				subSplitPane3.setDividerLocation(100+ subSplitPane3.getInsets().top);
 				subSplitPane3.setDividerSize(1);
-//				subSplitPane3.setEnabled(false);
+				subSplitPane3.setEnabled(false);
+
+				subSplitPane4.setDividerLocation(135+ subSplitPane4.getInsets().top);
+				subSplitPane4.setDividerSize(1);
+				subSplitPane4.setEnabled(false);
             }
         });
     }
@@ -696,6 +733,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				case RICE: showRiceMenu(); break;
 				case ADD_FOOD: saveOrderList(name); break;
 				case ORDER: completeOrder(); break;
+				case "CANCEL_ORDER": cancelOrder(); break;
 				default:
 					break;
 			}
@@ -720,8 +758,30 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			this.subMenuTxt.setText(o1.toString() + ". " + o2.toString());
 		}
 	}
+	
+	private void cancelOrder() {
+		int row = orderingTable.getSelectedRow();
 
-	public void completeOrder() {
+		if (row == -1) {
+			JOptionPane.showMessageDialog(null, "주문취소할 음식을 먼저 클릭해주세요.", "음식 미선택", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
+		String menuCategory = (String)modelOrdering.getValueAt(row, 0);
+		int menuNo = Integer.valueOf((String)modelOrdering.getValueAt(row, 1));
+		String menuName=  (String)modelOrdering.getValueAt(row, 2);
+		int menuPrice = 0;
+		String temp = ((String)modelOrdering.getValueAt(row, 3)).substring(1);
+		menuPrice = Integer.valueOf(temp.replace(",", ""));
+
+		Food food = new Food(menuCategory, menuNo, menuName, menuPrice);
+		tempOrderList.remove(food);
+		
+		modelOrdering.removeRow(row);
+		modelOrdering.fireTableDataChanged();
+	}
+
+	private void completeOrder() {
 		if(this.phoneTextField.getText() == "") {
 			JOptionPane.showMessageDialog(null, "로그인이 필요합니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
 			return;
@@ -735,11 +795,13 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				JOptionPane.OK_CANCEL_OPTION);
 
 		if(result!= JOptionPane.OK_OPTION) {
-			System.out.println("주문을 취소합니다.");
-
 			User user = userRepo.getUserByPhone(this.phoneTextField.getText());
 			user.setOrdering(false);
+			modelOrdering.setRowCount(0);
+//			modelOrdering = constructOrderingTableModel();
+//			modelOrdering.fireTableDataChanged();
 
+			JOptionPane.showMessageDialog(null, "주문을 취소합니다.", "주문취소", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
@@ -765,17 +827,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			food = entry.getKey();
 			qty = entry.getValue();
 
-			for(Map.Entry<Food, Integer> e: salesResult.entrySet()) {
-				System.out.println(e.getKey());
-				System.out.println(e.getValue());
-				System.out.println(food.equals(e.getKey()));
-			}
-			if(salesResult.get(food) != null) {
-				System.out.println(food);
-				System.out.println(salesResult.get(food));
+			if(salesResult.get(food) != null)
 				salesResult.put(food, salesResult.get(food) + qty);
-				System.out.println(salesResult.get(food));
-			}
 			else
 				salesResult.put(food, qty);
 		}
@@ -786,18 +839,20 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		user.setOrderCreated(new GregorianCalendar());
 		userRepo.showUsers();
 		setPopularMenuList();
-		orderListTextArea.setText("");
 		
+		modelOrdering.setRowCount(0);
+//		modelOrdering = constructOrderingTableModel();
+//		modelOrdering.fireTableDataChanged();
 
 		JOptionPane.showMessageDialog(null, "주문이 완료 되었습니다.", "주문결제 완료 확인", JOptionPane.WARNING_MESSAGE);
+		return;
 	}
 
-	public void saveOrderList(String name) {
+	private void saveOrderList(String name) {
 		if(this.phoneTextField.getText() == ""
 				|| (this.phoneTextField.isEditable()
 						&& this.passwordField.isEditable())) {
 			JOptionPane.showMessageDialog(null, "로그인이 필요합니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
-			this.orderListTextArea.setText("");
 			return;
 		}
 
@@ -805,13 +860,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		if (user == null) {
 			JOptionPane.showMessageDialog(null, "핸드폰정보 유저 없음", "로그인 확인", JOptionPane.WARNING_MESSAGE);
-			this.orderListTextArea.setText("");
 			return;
 		}
 
 		if(!name.equals(ADD_FOOD)) {
 			JOptionPane.showMessageDialog(null, "잘못된 메뉴입니다", "프로그램 버그 확인", JOptionPane.WARNING_MESSAGE);
-			this.orderListTextArea.setText("");
 			return;
 		}
 
@@ -841,6 +894,10 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				break;
 		}
 
+		if (row==-1) {
+			JOptionPane.showMessageDialog(null, "주문할 음식을 먼저 클릭해주세요.", "음식 미선택", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
 		String menuCategory = (String)model.getValueAt(row, 0);
 		int menuNo = Integer.valueOf((String)model.getValueAt(row, 1));
 		String menuName=  (String)model.getValueAt(row, 2);
@@ -852,18 +909,42 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		
 		tempOrderList.put(food, (int)this.menuQtyComboBox.getSelectedItem());
 		
-		displayOrderList();
+		updateOrderingTable(food, (int)this.menuQtyComboBox.getSelectedItem());
 
 		JOptionPane.showMessageDialog(null, "주문이 추가되었습니다.", "주문 추가 확인", JOptionPane.WARNING_MESSAGE);
 		return;
 	}
 
-	private void displayOrderList() {
-		String msg = "";
-		for(Map.Entry<Food, Integer> entry : tempOrderList.entrySet())
-			msg +=  entry.getKey() + "  :  " +  entry.getValue() + "개 주문.\n";
+	private void updateOrderingTable(Food food, int qty) {
+		boolean duplicate = false;
+		String menuCategory = "", menuName = "";
+		int menuNo =0, menuPrice = 0;
+		
+		String[] orderingItem = new String[] {
+				food.getMenuCategory(), 
+				String.valueOf(food.getMenuNo()), 
+				food.getMenuName(), 
+				NumberFormat.getCurrencyInstance(Locale.KOREA).format(food.getMenuPrice()),
+				String.valueOf(qty),};
+		for(int i =0; i<modelOrdering.getRowCount(); i++) {
+			menuCategory = (String)modelOrdering.getValueAt(i, 0);
+			menuNo = Integer.valueOf((String)modelOrdering.getValueAt(i, 1));
+			menuName = (String)modelOrdering.getValueAt(i, 2);
+			menuPrice = Integer.valueOf(((String)modelOrdering.getValueAt(i, 3)).substring(1).replace(",", ""));
+			
+			if(orderingItem[0].equals(menuCategory)
+					&& Integer.valueOf(orderingItem[1]) == menuNo
+					&& orderingItem[2].equals(menuName)
+					&& food.getMenuPrice() == menuPrice) {
+				duplicate = true;
+				modelOrdering.setValueAt(qty, i, 4);
+			}
+		}
 
-		this.orderListTextArea.setText(msg);
+		if(!duplicate)
+			modelOrdering.addRow(orderingItem);
+
+		modelOrdering.fireTableDataChanged();
 	}
 
 	private void showNoodleMenu() {
@@ -897,7 +978,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			return;
 		}
 
-		JFrame frame = new AdminPageCard(modelN, modelS, modelR, popularMenuTextArea, userRepo);
+		JFrame frame = new AdminPageFrame(modelN, modelS, modelR, popularMenuTextArea, userRepo);
 		
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
