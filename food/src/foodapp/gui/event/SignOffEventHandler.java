@@ -36,7 +36,7 @@ public class SignOffEventHandler extends MouseAdapter {
 	}
 	
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mousePressed(MouseEvent e) {
 		if (loggedPhoneTextField != null) {
 			String phoneNum = loggedPhoneTextField.getText().replaceAll("\\s+", "");
 			if(phoneNum.length() > 0 ) {

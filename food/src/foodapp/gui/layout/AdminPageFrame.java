@@ -284,8 +284,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		menuSplitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		menuSplitPane1.setTopComponent(buttonPanel);
 		menuSplitPane1.setBottomComponent(scrollPanePanel2);
-		menuSplitPane1.setDividerLocation(50 + menuSplitPane1.getInsets().top);
-		menuSplitPane1.setDividerSize(1);
 		
 		backBtn = new JButton("뒤로가기");
 		backBtn.setName("SALES_RESULT");
@@ -299,8 +297,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		menuSplitPane2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		menuSplitPane2.setTopComponent(topPanel);
 		menuSplitPane2.setBottomComponent(bottomPanel);
-		menuSplitPane2.setDividerLocation(30 + menuSplitPane2.getInsets().top);
-		menuSplitPane2.setDividerSize(1);
 	}
 	
 	private void initMenuTable() {
@@ -360,21 +356,28 @@ public class AdminPageFrame extends JFrame implements MouseListener {
             public void run() {
 
                 adminSplitPane1.setDividerLocation(50 + adminSplitPane1.getInsets().left);
-                adminSplitPane2.setDividerLocation(440+adminSplitPane2.getInsets().left);
-                adminSplitPane3.setDividerLocation(30+adminSplitPane3.getInsets().bottom);
-                adminCenterSplitPane.setDividerLocation(20+adminCenterSplitPane.getInsets().bottom);
-
                 adminSplitPane1.setEnabled(false);
                 adminSplitPane1.setDividerSize(1);
 
+                adminSplitPane2.setDividerLocation(440+adminSplitPane2.getInsets().left);
                 adminSplitPane2.setEnabled(false);
                 adminSplitPane2.setDividerSize(1);
 
+                adminSplitPane3.setDividerLocation(30+adminSplitPane3.getInsets().bottom);
                 adminSplitPane3.setEnabled(false);
                 adminSplitPane3.setDividerSize(1);
                 
+                adminCenterSplitPane.setDividerLocation(20+adminCenterSplitPane.getInsets().bottom);
                 adminCenterSplitPane.setEnabled(false);
                 adminCenterSplitPane.setDividerSize(1);
+
+				menuSplitPane1.setDividerLocation(50 + menuSplitPane1.getInsets().top);
+				menuSplitPane1.setEnabled(false);
+				menuSplitPane1.setDividerSize(1);
+
+				menuSplitPane2.setDividerLocation(30 + menuSplitPane2.getInsets().top);
+				menuSplitPane2.setEnabled(false);
+				menuSplitPane2.setDividerSize(1);
             }
         });
 	}
@@ -456,8 +459,8 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 
 		modifySplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		modifySplitPane.setDividerLocation(230 + modifySplitPane.getInsets().top);
-		modifySplitPane.setDividerSize(1);
 		modifySplitPane.setEnabled(false);
+		modifySplitPane.setDividerSize(1);
 
 		modifyPanel = new JPanel(new GridLayout(4,2));
 

@@ -51,9 +51,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -67,8 +64,9 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -86,7 +84,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private static final long serialVersionUID = 1L;
 
 	private JSplitPane mainSplitPane1, mainSplitPane2, mainSplitPane3;
-	private JSplitPane subSplitPane1, subSplitPane2, subSplitPane3, subSplitPane4, subSplitPane5;
+	private JSplitPane subSplitPane1, subSplitPane2, subSplitPane3, subSplitPane5;
 
 	private JPanel cards;
 	private JPanel card1, card2, card3, card4;
@@ -99,10 +97,10 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	
 	private JPanel topPanel, bottomPanel, rightPanel, centerAndRightPanel, leftPanel;
 	private JPanel centerPanel;
-	private JPanel p1, p2, p3, p4;
+	private JPanel p1, p2, p4, p5, p6;
 	
 	private JButton foodMenuBtn, adminPageBtn, orderViewBtn;
-	private JButton signInBtn2, signUpBtn2, logOffBtn2;
+	private JButton signInBtn, signUpBtn, logOffBtn;
 	private JButton orderBtn, cancelOrderBtn;
 	
 	private JTextArea subTotalTextArea;
@@ -117,21 +115,24 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private JToggleButton payCardBtn, payCashBtn;
 	private ButtonGroup payMethodBtnGrp;
 	
-	private JLabel addMenuLabel;
 	private JButton addMenuBtn;
 	
-	private JPanel menuCategoryPanel, menuChoicePanel, menuQtyPanel, payMethodPanel, addMenuPanel;
+	private JPanel menuCategoryPanel, menuChoicePanel, menuQtyPanel, payMethodPanel;
 	
 	private JButton noodleBtn, soupBtn, riceBtn;
 	
 	private DefaultTableModel modelN, modelS, modelR, modelOrdering;
 	
 	private JComboBox<Integer> menuQtyComboBox;
+
 	private JTextField phoneTextField;
 	private JPasswordField passwordField;
+	private JLabel phoneLabel, passwordLabel;
 	
 	private JTable menuNoodleTable, menuSoupTable, menuRiceTable, orderingTable;
 	private JScrollPane scrollNoodlePane, scrollSoupPane, scrollRicePane, scrollOrderingPane;
+	
+	private JLabel fancyLabel;
 	
 	private UserRepository userRepo = null;
 	
@@ -148,9 +149,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setLocationRelativeTo(null); //center window
 		getContentPane().setLayout(new BorderLayout());
-
-		//시스템 메뉴 File-exit 생성
-		createTopMenuBar();
 
 		/* 첫번째 JSplitPane */
 		createFirstTop();
@@ -293,7 +291,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		menuCards.add(soupCard,SOUP);
 		menuCards.add(riceCard, RICE);
 		
-		orderSelectionPanel = new JPanel(new GridLayout(5,1));
+		orderSelectionPanel = new JPanel(new GridLayout(4,1));
 
 		menuCategoryLabel = new JLabel("메뉴 카테고리");
 		menuCategoryTxt = new JTextField("", 10);
@@ -320,15 +318,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				new DefaultComboBoxModel<Integer>(new Integer[] {1,2,3,4,5});
 		menuQtyComboBox = new JComboBox<Integer>(comboBoxModel);
 		
-		addMenuLabel = new JLabel("메뉴 추가");
-
-		ImageIcon icon = new ImageIcon(getClass().getResource("../images/add.png"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
-		addMenuBtn = new JButton(icon);
-		addMenuBtn.setName(ADD_FOOD);
-		addMenuBtn.setBorder(new EmptyBorder(0,0,0,0));
-		addMenuBtn.setFocusPainted(false);
-
 		payCardBtn = new JToggleButton("카드 주문");
 		payCardBtn.setName(CARD);
 		payCardBtn.setBackground(Color.WHITE);
@@ -345,28 +334,23 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		menuChoicePanel = new JPanel(new GridLayout(1,2));
 		menuQtyPanel = new JPanel(new GridLayout(1,2));
 		payMethodPanel = new JPanel(new GridLayout(1,2));
-		addMenuPanel = new JPanel(new GridLayout(1,2));
 		
 		JPanel l1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		JPanel l2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		JPanel l3 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		JPanel l4 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
 		l1.add(menuCategoryLabel);
 		l2.add(menuChoiceLabel);
 		l3.add(menuQtyLabel);
-		l4.add(addMenuLabel);
 
 		menuCategoryPanel.add(l1); menuCategoryPanel.add(menuCategoryTxt);
 		menuChoicePanel.add(l2); menuChoicePanel.add(subMenuTxt);
 		menuQtyPanel.add(l3); menuQtyPanel.add(menuQtyComboBox);
-		addMenuPanel.add(l4); addMenuPanel.add(addMenuBtn);
 		payMethodPanel.add(payCardBtn); payMethodPanel.add(payCashBtn);
 		
 		orderSelectionPanel.add(menuCategoryPanel);
 		orderSelectionPanel.add(menuChoicePanel);
 		orderSelectionPanel.add(menuQtyPanel);
-		orderSelectionPanel.add(addMenuPanel);
 		orderSelectionPanel.add(payMethodPanel);
 		
 		subSplitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -381,62 +365,52 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		soupBtn.addMouseListener(this);
 		riceBtn.addMouseListener(this);
 		
-		addMenuBtn.addMouseListener(this);
 
 		payCardBtn.addMouseListener(this);
 		payCashBtn.addMouseListener(this);
 	}
 
 	private void createFirstTopRight() {
-		//버튼, 텍스트 필드 초기화
-		phoneTextField = new JTextField("", 11); //핸드폰 11자리
-		passwordField = new JPasswordField(11);
 		ImageIcon icon = new ImageIcon(getClass().getResource("../images/delete.png"));
 		icon = new ImageIcon(icon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
 		cancelOrderBtn = new JButton(icon);
 		cancelOrderBtn.setName("CANCEL_ORDER");
 		cancelOrderBtn.setBorder(new EmptyBorder(0,0,0,0));
-		cancelOrderBtn.addMouseListener(this);
 		cancelOrderBtn.setBackground(new Color(221, 227, 231));
 		cancelOrderBtn.setFocusPainted(false);
+		cancelOrderBtn.addMouseListener(this);
 
-		p1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		p2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		p3 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		p4 = new JPanel(new BorderLayout());
-//		p4.setBorder(new EmptyBorder(0,0,0,0));
-		p1.add(new JLabel("핸드폰 번호"));
-		p1.add(phoneTextField);
-		p2.add(new JLabel("비밀번호"));
-		p2.add(passwordField);
-		
-		
+		icon = new ImageIcon(getClass().getResource("../images/add.png"));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
+		addMenuBtn = new JButton(icon);
+		addMenuBtn.setName(ADD_FOOD);
+		addMenuBtn.setBorder(new EmptyBorder(0,0,0,0));
+		addMenuBtn.setBackground(new Color(221, 227, 231));
+		addMenuBtn.setFocusPainted(false);
+		addMenuBtn.addMouseListener(this);
+		Border current = addMenuBtn.getBorder();
+		Border empty = new EmptyBorder(0, 7, 0, 7);
+		if (current == null) addMenuBtn.setBorder(empty);
+		else addMenuBtn.setBorder(new CompoundBorder(empty, current));
+
+		p2 = new JPanel(new GridLayout(1,2));
+		p2.add(addMenuBtn);
+		p2.add(cancelOrderBtn);
+		p2.setBackground(new Color(221, 227, 231));
+
 		subTotalTextArea = new JTextArea("", 50, 25);
 		subTotalTextArea.setEditable(false);
 		subTotalTextArea.setBackground(new Color(221, 227, 231));
 
-		subSplitPane4 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		subSplitPane4.setLeftComponent(cancelOrderBtn);
-		subSplitPane4.setRightComponent(subTotalTextArea);
+		p5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		p5.add(addMenuBtn);
+		p5.add(cancelOrderBtn);
+		p5.setBackground(new Color(221, 227, 231));
 
-
-		p4.add(subSplitPane4);
-		userLogOffCard = new JPanel(new GridLayout(3,1));
-		userLogOffCard.add(p1);
-		userLogOffCard.add(p2);
-		userLogOffCard.add(p3);
-
-		CardLayout cl = new CardLayout();
-		userCards = new JPanel(cl);
-		userLoggedCard = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		userLoggedCard.add(new JButton("Hello!"));
-		userCards.add(userLogOffCard, "USER_LOGOFF");
-		userCards.add(userLoggedCard, "USER_LOGGED");
-
-		subSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		subSplitPane3.setTopComponent(userCards);
-		subSplitPane3.setBottomComponent(p4);
-		
+		p6 = new JPanel(new GridLayout(1,2));
+		p6.add(p5);
+		p6.add(subTotalTextArea);
+		p6.setBackground(new Color(221, 227, 231));
 
 		modelOrdering = constructOrderingTableModel();
 		orderingTable = new JTable(modelOrdering);
@@ -444,9 +418,16 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		orderingTable.setAutoCreateRowSorter(true);
 		scrollOrderingPane = new JScrollPane(orderingTable);
 
+		subSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		subSplitPane3.setTopComponent(scrollOrderingPane);
+		subSplitPane3.setBottomComponent(p6);
+
+		icon = new ImageIcon(getClass().getResource("../images/screen.jpg"));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(340, 170, Image.SCALE_SMOOTH));
+		fancyLabel = new JLabel(icon);
 		rightPanel = new JPanel(new GridLayout(2,1));
+		rightPanel.add(fancyLabel);
 		rightPanel.add(subSplitPane3);
-		rightPanel.add(scrollOrderingPane);
 	}
 
 	private void createFirstBottom() {
@@ -499,38 +480,60 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	}
 
 	private void createThirdTop() {
-		signInBtn2 = new JButton("로그인");
-		logOffBtn2 = new JButton("로그아웃");
-		signUpBtn2 = new JButton("회원가입");
-		signUpBtn2.setName(SIGN_UP_PAGE);
+		CardLayout cl = new CardLayout();
+		userCards = new JPanel(cl);
 
-		topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		topPanel.add(signInBtn2);
-		topPanel.add(signUpBtn2);
-		topPanel.add(logOffBtn2);
+		phoneTextField = new JTextField("", 11); //핸드폰 11자리
+		passwordField = new JPasswordField(11);
 
-		signInBtn2.addMouseListener(new SignInEventHandler((CardLayout)userCards.getLayout(), userCards,
+		Font font = new Font("바탕체", Font.BOLD, 11);
+		phoneLabel = new JLabel("핸드폰 번호");
+		phoneLabel.setFont(font);
+		passwordLabel = new JLabel("비밀번호");
+		passwordLabel.setFont(font);
+
+		userLogOffCard = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		userLogOffCard.add(phoneLabel);
+		userLogOffCard.add(phoneTextField);
+		userLogOffCard.add(passwordLabel);
+		userLogOffCard.add(passwordField);
+
+		userLoggedCard = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		userLoggedCard.add(new JButton("Hello!"));
+
+		userCards.add(userLogOffCard, "USER_LOGOFF");
+		userCards.add(userLoggedCard, "USER_LOGGED");
+
+		signInBtn = new JButton("로그인");
+		signInBtn.setFont(font);
+		logOffBtn = new JButton("로그아웃");
+		logOffBtn.setFont(font);
+		signUpBtn = new JButton("회원가입");
+		signUpBtn.setFont(font);
+		signUpBtn.setName(SIGN_UP_PAGE);
+
+		p1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		p1.add(signInBtn);
+		p1.add(logOffBtn);
+		p1.add(signUpBtn);
+
+		p4 = new JPanel(new GridLayout(1,2));
+		p4.add(userCards);
+		p4.add(p1);
+
+		topPanel = new JPanel(new BorderLayout());
+		topPanel.add(p4);
+
+		signInBtn.addMouseListener(new SignInEventHandler((CardLayout)userCards.getLayout(), userCards,
 				adminPageBtn, phoneTextField, passwordField, userRepo));
-		logOffBtn2.addMouseListener(new SignOffEventHandler((CardLayout)userCards.getLayout(), userCards,
+		logOffBtn.addMouseListener(new SignOffEventHandler((CardLayout)userCards.getLayout(), userCards,
 				adminPageBtn, phoneTextField, passwordField, modelOrdering, userRepo));
-		signUpBtn2.addMouseListener(this);
+		signUpBtn.addMouseListener(this);
 	}
 
 	private void createThirdBottom() {
 		bottomPanel = new JPanel(new BorderLayout());
 		bottomPanel.add(mainSplitPane2);
-	}
-
-	private void createTopMenuBar() {
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-		
-		JMenu menuFile = new JMenu("File");
-		JMenuItem menuItemExit = new JMenuItem("Exit");
-		
-		menuFile.add(menuItemExit);
-		
-		menuBar.add(menuFile);
 	}
 	
 	private JToolBar createNavBar() {
@@ -704,7 +707,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				mainSplitPane3.setDividerSize(1);
 				mainSplitPane3.setEnabled(false);
 
-				subSplitPane1.setDividerLocation(180 + subSplitPane1.getInsets().top);
+				subSplitPane1.setDividerLocation(200 + subSplitPane1.getInsets().top);
 				subSplitPane1.setDividerSize(1);
 				subSplitPane1.setEnabled(false);
 
@@ -712,16 +715,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				subSplitPane2.setDividerSize(1);
 				subSplitPane2.setEnabled(false);
 
-				subSplitPane3.setDividerLocation(135+ subSplitPane3.getInsets().top);
+				subSplitPane3.setDividerLocation(133+ subSplitPane3.getInsets().top);
 				subSplitPane3.setDividerSize(1);
 				subSplitPane3.setEnabled(false);
 
-				subSplitPane4.setDividerLocation(50 + subSplitPane4.getInsets().right);
-				subSplitPane4.setDividerSize(1);
-				subSplitPane4.setEnabled(false);
-				subSplitPane4.setBorder(new EmptyBorder(0,0,0,0));
-
-				subSplitPane5.setDividerLocation(110+ subSplitPane5.getInsets().top);
+				subSplitPane5.setDividerLocation(120+ subSplitPane5.getInsets().top);
 				subSplitPane5.setDividerSize(1);
 				subSplitPane5.setEnabled(false);
             }
@@ -743,7 +741,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		if (source instanceof JButton) {
 			String name = ((JButton) e.getSource()).getName();
 			switch(name) {
-				case INIT_PAGE: createHomePage(); break;
 				case FOOD_MENU_PAGE: createFoodMenuPage(); break;
 				case ORDER_VIEW_PAGE: createOrderViewPage(); break;
 				case ADMIN_PAGE: createAdminPage(); break;
@@ -942,7 +939,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			subTotal += entry.getKey().getMenuPrice() * entry.getValue();
 		}
 
-		Font font = new Font("맑은고딕", Font.ITALIC, 11);
+		Font font = new Font("맑은고딕", Font.BOLD, 12);
         subTotalTextArea.setFont(font);
         subTotalTextArea.setForeground(Color.BLUE);
 
@@ -1031,11 +1028,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setVisible(true); 
-	}
-
-	private void createHomePage() {
-		CardLayout cl = (CardLayout)(cards.getLayout());
-        cl.show(cards, INIT_PAGE);
 	}
 
 	private void updateCards() {
