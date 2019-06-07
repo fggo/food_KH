@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
 import java.text.NumberFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -77,8 +78,8 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	private JSplitPane menuSplitPane1, menuSplitPane2;
 	private JPanel topPanel, bottomPanel;
 
-	private JFrame categoryFrame;
-	private JPanel categoryPanel;
+	private JFrame addFrame;
+	private JPanel addPanel;
 	private JButton okBtn;
 	private JSplitPane splitPane;
 
@@ -379,17 +380,17 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	}
 
 	private void createAddMenuFrame() {
-		categoryFrame = new JFrame("음식 카테고리 선택");
-		categoryFrame.setSize(300, 300);
-		categoryFrame.setLocation(this.getX() , this.getY());
-		categoryFrame.setLayout(new BorderLayout());
+		addFrame = new JFrame("메뉴 추가");
+		addFrame.setSize(300, 300);
+		addFrame.setLocation(this.getX() , this.getY());
+		addFrame.setLayout(new BorderLayout());
 
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		splitPane.setDividerLocation(230 + splitPane.getInsets().top);
 		splitPane.setDividerSize(1);
 		splitPane.setEnabled(false);
 
-		categoryPanel = new JPanel(new GridLayout(4,2));
+		addPanel = new JPanel(new GridLayout(4,2));
 
 		l1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		l2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -419,10 +420,10 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		l3.add(menuNameLabel); 		r3.add(menuNameTxtField);
 		l4.add(menuPriceLabel); 	r4.add(menuPriceTxtField);
  
-		categoryPanel.add(l1); categoryPanel.add(r1);
-		categoryPanel.add(l2); categoryPanel.add(r2);
-		categoryPanel.add(l3); categoryPanel.add(r3);
-		categoryPanel.add(l4); categoryPanel.add(r4);
+		addPanel.add(l1); addPanel.add(r1);
+		addPanel.add(l2); addPanel.add(r2);
+		addPanel.add(l3); addPanel.add(r3);
+		addPanel.add(l4); addPanel.add(r4);
 
 		okBtn = new JButton("확인");
 		okBtn.setName("ADD_CONFIRM");
@@ -431,17 +432,23 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		categoryTable.setName("MENU_CATEGORY");
 		categoryTable.addMouseListener(this);
 
-		splitPane.setTopComponent(categoryPanel);
+		splitPane.setTopComponent(addPanel);
 		splitPane.setBottomComponent(okBtn);
 		
-		categoryFrame.add(splitPane);
+		addFrame.add(splitPane);
 
-		categoryFrame.setResizable(false);
-		categoryFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		categoryFrame.setVisible(true); 
+		addFrame.setResizable(false);
+		addFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		addFrame.setVisible(true); 
 	}
 	
 	private void createModifyMenuFrame() {
+		int row = menuTable.getSelectedRow();
+		if(row==-1) {
+			JOptionPane.showMessageDialog(null, "테이블 행이 선택되지 않았습니다.", "테이블 행 미선택", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
 		modifyFrame = new JFrame("메뉴 수정");
 		modifyFrame.setSize(300, 300);
 		modifyFrame.setLocation(this.getX() , this.getY());
@@ -500,12 +507,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		modifyFrame.setVisible(true); 
 
 
-		int row = menuTable.getSelectedRow();
-		if(row==-1) {
-			JOptionPane.showMessageDialog(null, "테이블 행이 선택되지 않았습니다.", "테이블 행 미선택", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
-
 		String menuCategory = (String)tableModel.getValueAt(row, 0);
 		int menuNo = Integer.valueOf((String)tableModel.getValueAt(row, 1));
 		String menuName=  (String)tableModel.getValueAt(row, 2);
@@ -518,17 +519,18 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	}
 	
 	private void deleteMenu() {
+		int row = menuTable.getSelectedRow();
+		if(row== -1) {
+			JOptionPane.showMessageDialog(null, "테이블 행이 선택되지 않았습니다.", "테이블 행 미선택", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
 		//dialog
 		int result = JOptionPane.showConfirmDialog(null, "메뉴 삭제를 하시겠습니까?", "메뉴 삭제 확인",
 				JOptionPane.OK_CANCEL_OPTION);
 
 		if(result!= JOptionPane.OK_OPTION) {
 			System.out.println("메뉴 삭제를 취소합니다.");
-			return;
-		}
-		int row = menuTable.getSelectedRow();
-		if(row== -1) {
-			JOptionPane.showMessageDialog(null, "테이블 행이 선택되지 않았습니다.", "테이블 행 미선택", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
@@ -663,7 +665,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		Object source = e.getSource();
-		System.out.println(source);
 		if (source instanceof JButton) {
 			String name = ((JButton) e.getSource()).getName();
 			switch(name) {
@@ -767,7 +768,8 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 						String.valueOf(food.getMenuPrice()),
 					});
 		tableModel.fireTableDataChanged();
-
+		
+		addFrame.dispatchEvent(new WindowEvent(addFrame, WindowEvent.WINDOW_CLOSING));
 
 		String[] newRow = new String[] { food.getMenuCategory(), 
 					String.valueOf(food.getMenuNo()), 
@@ -873,6 +875,8 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 					});
 		
 		tableModel.fireTableDataChanged();
+		
+		modifyFrame.dispatchEvent(new WindowEvent(modifyFrame, WindowEvent.WINDOW_CLOSING));
 
 		//Update Table : Add food 
 		switch(menuCategory) {
@@ -903,7 +907,6 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		userRepo.getFoodMenu().setFoodMenuList(foodMenuList);
 
 		JOptionPane.showMessageDialog(null, "메뉴수정이 완료되었습니다.", "메뉴수정 완료", JOptionPane.WARNING_MESSAGE);
-
 		updatePopularMenuTextArea();
 	}
 }

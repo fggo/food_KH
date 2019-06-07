@@ -7,10 +7,8 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -26,7 +24,7 @@ import foodapp.dao.UserRepository;
 import foodapp.model.vo.User;
 
 
-public class SignUpPageCard extends JPanel implements ActionListener {
+public class SignUpPageCard extends JPanel implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -132,7 +130,7 @@ public class SignUpPageCard extends JPanel implements ActionListener {
 		backButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		signUpHomeBtn = new JButton("뒤로 가기");
 		signUpHomeBtn.setName(INIT_PAGE);
-		signUpHomeBtn.addActionListener(this);
+		signUpHomeBtn.addMouseListener(this);
 		backButtonPanel.add(signUpHomeBtn);
 		signUpSplitPane3.setTopComponent(backButtonPanel);
 		signUpSplitPane3.setBottomComponent(signUpSplitPane2);
@@ -167,42 +165,8 @@ public class SignUpPageCard extends JPanel implements ActionListener {
 		l5.add(addressLabel); 	r5.add(address);
 
 		confirmBtn = new JButton("가입 하기");
-		confirmBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(username.getText().equals("")
-						|| phone.getText().equals("")
-						|| email.getText().equals("")
-						|| address.getText().equals("")
-						|| phone.getText().length() < 4){
-					System.out.println("일부 필드값이 입력이 잘못됐습니다.");
-					return;
-				}
-				else if(phone.getText().length() < 4){
-					System.out.println("비밀번호는 4자리 이상으로 해주세요.");
-				}
-				User user = new User(username.getText(), new String(password.getPassword()),
-						phone.getText(), email.getText(), address.getText(), OFF,
-						null, null, null, -1, false);
-
-				if(userRepo.getPhone() != null) {
-					System.out.println("회원가입 하려면 먼저 로그아웃 해주세요.");
-					return;
-				}
-				userRepo.signUp(user, new String(password.getPassword()));
-
-				username.setText("");
-				phone.setText("");
-				password.setText("");
-				email.setText("");
-				address.setText("");
-
-				userRepo.showUsers();
-
-				JOptionPane.showMessageDialog(null, "회원가입에 성공했습니다.", "회원가입 확인", JOptionPane.WARNING_MESSAGE);
-			}
-		});
-
+		confirmBtn.setName("CONFIRM_SIGNUP");
+		confirmBtn.addMouseListener(this);
 		c6.add(confirmBtn);
 		
 		add(signUpSplitPane3);
@@ -261,7 +225,65 @@ public class SignUpPageCard extends JPanel implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		cl.show(cards, INIT_PAGE);
+	public void mousePressed(MouseEvent e) {
+		Object source = e.getSource();
+		if (source instanceof JButton) {
+			String name = ((JButton) e.getSource()).getName();
+			switch(name) {
+				case INIT_PAGE: cl.show(cards, INIT_PAGE); break;
+				case "CONFIRM_SIGNUP": confirmSignUp(); break;
+				default:
+					break;
+			}
+		}
 	}
+
+	private void confirmSignUp() {
+		if(username.getText().equals("")
+				|| phone.getText().equals("")
+				|| email.getText().equals("")
+				|| address.getText().equals("")){
+			JOptionPane.showMessageDialog(null, "일부 필드값 입력이 잘못됐습니다.", "필드값 입력 에러", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		else if(password.getPassword().length < 4){
+			JOptionPane.showMessageDialog(null, "비밀번호는 4자리 이상으로 해주세요.", "필드값 입력 에러", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		User user = new User(username.getText(), new String(password.getPassword()),
+				phone.getText(), email.getText(), address.getText(), OFF,
+				null, null, null, -1, false);
+
+		if(userRepo.getPhone() != null) {
+			JOptionPane.showMessageDialog(null, "회원가입 하려면 먼저 로그아웃 해주세요.", "로그인된 유저 에러", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		boolean signUpSuccess = userRepo.signUp(user, new String(password.getPassword()));
+
+		username.setText("");
+		phone.setText("");
+		password.setText("");
+		email.setText("");
+		address.setText("");
+
+		userRepo.showUsers();
+
+		if(signUpSuccess) {
+			JOptionPane.showMessageDialog(null, "회원가입에 성공했습니다.", "회원가입 성공", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "회원가입에 실패 했습니다 - 폰번호 중복", "회원가입 실패", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {}
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
 }

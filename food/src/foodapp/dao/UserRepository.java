@@ -119,23 +119,23 @@ public class UserRepository {
 
 	}
 	
-	public boolean signIn(String phoneTextField, String passwordField) {
+	public User signIn(String phoneTextField, String passwordField) {
 		if(phoneTextField.equals(this.phone)) {
 			System.out.println("이미 로그인 되어 있습니다.");
-			return false;
+			return null;
 		}
 
 		User user = getUserByPhoneAndPassword(phoneTextField, passwordField);
 
 		if(user==null) {
 			System.out.println("로그인에 실패 하였습니다.");
-			return false;
+			return null;
 		}
 		else {
 			user.setLogged(true);
 			setPhone(phoneTextField);
 			System.out.println("로그인 됐슨니다.");
-			return true;
+			return user;
 		}
 	}
 

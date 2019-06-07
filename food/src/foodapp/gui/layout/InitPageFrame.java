@@ -68,6 +68,7 @@ import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -85,7 +86,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private static final long serialVersionUID = 1L;
 
 	private JSplitPane mainSplitPane1, mainSplitPane2, mainSplitPane3;
-	private JSplitPane subSplitPane1, subSplitPane2, subSplitPane3, subSplitPane4;
+	private JSplitPane subSplitPane1, subSplitPane2, subSplitPane3, subSplitPane4, subSplitPane5;
 
 	private JPanel cards;
 	private JPanel card1, card2, card3, card4;
@@ -101,10 +102,10 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private JPanel p1, p2, p3, p4;
 	
 	private JButton foodMenuBtn, adminPageBtn, orderViewBtn;
-	private JButton signInBtn1, signInBtn2, signUpBtn1, signUpBtn2;
-	private JButton logOffBtn1, logOffBtn2;
+	private JButton signInBtn2, signUpBtn2, logOffBtn2;
 	private JButton orderBtn, cancelOrderBtn;
 	
+	private JTextArea subTotalTextArea;
 	private JTextArea popularMenuTextArea;
 	private JPanel popularMenuPanel;
 
@@ -320,8 +321,13 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		menuQtyComboBox = new JComboBox<Integer>(comboBoxModel);
 		
 		addMenuLabel = new JLabel("메뉴 추가");
-		addMenuBtn = new JButton("PUSH 추가");
+
+		ImageIcon icon = new ImageIcon(getClass().getResource("../images/add.png"));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
+		addMenuBtn = new JButton(icon);
 		addMenuBtn.setName(ADD_FOOD);
+		addMenuBtn.setBorder(new EmptyBorder(0,0,0,0));
+		addMenuBtn.setFocusPainted(false);
 
 		payCardBtn = new JToggleButton("카드 주문");
 		payCardBtn.setName(CARD);
@@ -385,29 +391,36 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		//버튼, 텍스트 필드 초기화
 		phoneTextField = new JTextField("", 11); //핸드폰 11자리
 		passwordField = new JPasswordField(11);
-		signInBtn1 = new JButton("로그인");
-		logOffBtn1 = new JButton("로그아웃");
-		signUpBtn1 = new JButton("회원가입");
-		signUpBtn1.setName(SIGN_UP_PAGE);
 		ImageIcon icon = new ImageIcon(getClass().getResource("../images/delete.png"));
 		icon = new ImageIcon(icon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
 		cancelOrderBtn = new JButton(icon);
 		cancelOrderBtn.setName("CANCEL_ORDER");
 		cancelOrderBtn.setBorder(new EmptyBorder(0,0,0,0));
 		cancelOrderBtn.addMouseListener(this);
+		cancelOrderBtn.setBackground(new Color(221, 227, 231));
+		cancelOrderBtn.setFocusPainted(false);
 
 		p1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		p2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		p3 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		p4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		p4 = new JPanel(new BorderLayout());
+//		p4.setBorder(new EmptyBorder(0,0,0,0));
 		p1.add(new JLabel("핸드폰 번호"));
 		p1.add(phoneTextField);
 		p2.add(new JLabel("비밀번호"));
 		p2.add(passwordField);
-		p3.add(signInBtn1);
-		p3.add(signUpBtn1);
-		p3.add(logOffBtn1);
-		p4.add(cancelOrderBtn);
+		
+		
+		subTotalTextArea = new JTextArea("", 50, 25);
+		subTotalTextArea.setEditable(false);
+		subTotalTextArea.setBackground(new Color(221, 227, 231));
+
+		subSplitPane4 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		subSplitPane4.setLeftComponent(cancelOrderBtn);
+		subSplitPane4.setRightComponent(subTotalTextArea);
+
+
+		p4.add(subSplitPane4);
 		userLogOffCard = new JPanel(new GridLayout(3,1));
 		userLogOffCard.add(p1);
 		userLogOffCard.add(p2);
@@ -434,10 +447,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		rightPanel = new JPanel(new GridLayout(2,1));
 		rightPanel.add(subSplitPane3);
 		rightPanel.add(scrollOrderingPane);
-
-		signInBtn1.addMouseListener(new SignInEventHandler(cl, userCards, phoneTextField, passwordField, userRepo));
-		logOffBtn1.addMouseListener(new SignOffEventHandler(cl, userCards, phoneTextField, passwordField, userRepo));
-		signUpBtn1.addMouseListener(this);
 	}
 
 	private void createFirstBottom() {
@@ -449,12 +458,12 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		orderBtn = new JButton("주문 하기");
 		orderBtn.setName(ORDER);
 		
-		subSplitPane4 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		subSplitPane4.setTopComponent(popularMenuPanel);
-		subSplitPane4.setBottomComponent(orderBtn);
+		subSplitPane5 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		subSplitPane5.setTopComponent(popularMenuPanel);
+		subSplitPane5.setBottomComponent(orderBtn);
 
 		bottomPanel = new JPanel(new BorderLayout());
-		bottomPanel.add(subSplitPane4);
+		bottomPanel.add(subSplitPane5);
 
 		orderBtn.addMouseListener(this);
 	}
@@ -500,8 +509,10 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		topPanel.add(signUpBtn2);
 		topPanel.add(logOffBtn2);
 
-		signInBtn2.addMouseListener(new SignInEventHandler((CardLayout)userCards.getLayout(), userCards, phoneTextField, passwordField, userRepo));
-		logOffBtn2.addMouseListener(new SignOffEventHandler((CardLayout)userCards.getLayout(), userCards, phoneTextField, passwordField, userRepo));
+		signInBtn2.addMouseListener(new SignInEventHandler((CardLayout)userCards.getLayout(), userCards,
+				adminPageBtn, phoneTextField, passwordField, userRepo));
+		logOffBtn2.addMouseListener(new SignOffEventHandler((CardLayout)userCards.getLayout(), userCards,
+				adminPageBtn, phoneTextField, passwordField, modelOrdering, userRepo));
 		signUpBtn2.addMouseListener(this);
 	}
 
@@ -532,7 +543,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		icon = new ImageIcon(getClass().getResource("../images/menu.png"));
 		icon = new ImageIcon(icon.getImage().getScaledInstance(43, 43, Image.SCALE_SMOOTH));
 		foodMenuBtn = new JButton(icon);
-//		foodMenuBtn.setPreferredSize(new Dimension(75, 40));
 		foodMenuBtn.setName(FOOD_MENU_PAGE);
 		
 		JPanel panel = new JPanel();
@@ -560,6 +570,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 								.getScaledInstance(43, 43, Image.SCALE_SMOOTH));
 		adminPageBtn = new JButton(icon);
 		adminPageBtn.setName(ADMIN_PAGE);
+		adminPageBtn.setVisible(false);
 
 		panel = new JPanel();
         panel.add(adminPageBtn); //add button to panel
@@ -701,13 +712,18 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				subSplitPane2.setDividerSize(1);
 				subSplitPane2.setEnabled(false);
 
-				subSplitPane3.setDividerLocation(125+ subSplitPane3.getInsets().top);
+				subSplitPane3.setDividerLocation(135+ subSplitPane3.getInsets().top);
 				subSplitPane3.setDividerSize(1);
 				subSplitPane3.setEnabled(false);
 
-				subSplitPane4.setDividerLocation(110+ subSplitPane4.getInsets().top);
+				subSplitPane4.setDividerLocation(50 + subSplitPane4.getInsets().right);
 				subSplitPane4.setDividerSize(1);
 				subSplitPane4.setEnabled(false);
+				subSplitPane4.setBorder(new EmptyBorder(0,0,0,0));
+
+				subSplitPane5.setDividerLocation(110+ subSplitPane5.getInsets().top);
+				subSplitPane5.setDividerSize(1);
+				subSplitPane5.setEnabled(false);
             }
         });
    }
@@ -764,6 +780,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	}
 	
 	private void cancelOrder() {
+		cancelOrderBtn.setFocusPainted(false);
 		int row = orderingTable.getSelectedRow();
 
 		if (row == -1) {
@@ -780,6 +797,14 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		Food food = new Food(menuCategory, menuNo, menuName, menuPrice);
 		tempOrderList.remove(food);
+
+		int subTotal = 0;
+		for(Map.Entry<Food, Integer> entry : tempOrderList.entrySet()) {
+			subTotal += entry.getKey().getMenuPrice() * entry.getValue();
+		}
+
+		this.subTotalTextArea.setText("    " + 
+			NumberFormat.getCurrencyInstance(Locale.KOREA).format(subTotal).toString());
 		
 		modelOrdering.removeRow(row);
 		modelOrdering.fireTableDataChanged();
@@ -802,8 +827,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			User user = userRepo.getUserByPhone(this.phoneTextField.getText());
 			user.setOrdering(false);
 			modelOrdering.setRowCount(0);
-//			modelOrdering = constructOrderingTableModel();
-//			modelOrdering.fireTableDataChanged();
+			this.subTotalTextArea.setText("");
 
 			JOptionPane.showMessageDialog(null, "주문을 취소합니다.", "주문취소", JOptionPane.WARNING_MESSAGE);
 			return;
@@ -845,15 +869,15 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		setPopularMenuList();
 		
 		modelOrdering.setRowCount(0);
-//		modelOrdering = constructOrderingTableModel();
-//		modelOrdering.fireTableDataChanged();
+		this.subTotalTextArea.setText("");
 
 		JOptionPane.showMessageDialog(null, "주문이 완료 되었습니다.", "주문결제 완료 확인", JOptionPane.WARNING_MESSAGE);
 		return;
 	}
 
 	private void saveOrderList(String name) {
-		if(this.phoneTextField.getText() == ""
+		addMenuBtn.setFocusPainted(false);
+		if(this.phoneTextField.getText() == "25, 2"
 				|| (this.phoneTextField.isEditable()
 						&& this.passwordField.isEditable())) {
 			JOptionPane.showMessageDialog(null, "로그인이 필요합니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
@@ -912,6 +936,18 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		tempOrderList.put(food, (int)this.menuQtyComboBox.getSelectedItem());
 		
 		updateOrderingTable(food, (int)this.menuQtyComboBox.getSelectedItem());
+
+		int subTotal = 0;
+		for(Map.Entry<Food, Integer> entry : tempOrderList.entrySet()) {
+			subTotal += entry.getKey().getMenuPrice() * entry.getValue();
+		}
+
+		Font font = new Font("맑은고딕", Font.ITALIC, 11);
+        subTotalTextArea.setFont(font);
+        subTotalTextArea.setForeground(Color.BLUE);
+
+		this.subTotalTextArea.setText("     " + 
+			NumberFormat.getCurrencyInstance(Locale.KOREA).format(subTotal).toString());
 
 		JOptionPane.showMessageDialog(null, "주문이 추가되었습니다.", "주문 추가 확인", JOptionPane.WARNING_MESSAGE);
 		return;
