@@ -64,8 +64,6 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -84,7 +82,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private static final long serialVersionUID = 1L;
 
 	private JSplitPane mainSplitPane1, mainSplitPane2, mainSplitPane3;
-	private JSplitPane subSplitPane1, subSplitPane2, subSplitPane3, subSplitPane5;
+	private JSplitPane subSplitPane1, subSplitPane2, subSplitPane5;
 
 	private JPanel cards;
 	private JPanel card1, card2, card3, card4;
@@ -97,13 +95,14 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	
 	private JPanel topPanel, bottomPanel, rightPanel, centerAndRightPanel, leftPanel;
 	private JPanel centerPanel;
-	private JPanel p1, p2, p4, p5, p6;
+	private JPanel p1, p2, p3, p4, p5, p6, p7;
 	
 	private JButton foodMenuBtn, adminPageBtn, orderViewBtn;
 	private JButton signInBtn, signUpBtn, logOffBtn;
 	private JButton orderBtn, cancelOrderBtn;
 	
-	private JTextArea subTotalTextArea;
+	private JLabel subTotalLabel;
+	private JPanel subTotalPanel;
 	private JTextArea popularMenuTextArea;
 	private JPanel popularMenuPanel;
 
@@ -251,6 +250,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private void createFirstTopCenter() {
 		CardLayout layout = new CardLayout();
 		menuCards = new JPanel(layout);
+		menuCards.setBorder(new EmptyBorder(0,0,0,0));
 
 		noodleCard = new JPanel(new BorderLayout());
 		noodleCard.setName(NOODLE);
@@ -280,8 +280,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		menuRiceTable.addMouseListener(this);
 
 		scrollNoodlePane = new JScrollPane(menuNoodleTable);
+		scrollNoodlePane.setBorder(new EmptyBorder(0,0,0,0));
 		scrollSoupPane = new JScrollPane(menuSoupTable);
+		scrollSoupPane.setBorder(new EmptyBorder(0,0,0,0));
 		scrollRicePane = new JScrollPane(menuRiceTable);
+		scrollRicePane.setBorder(new EmptyBorder(0,0,0,0));
 		
 		noodleCard.add(scrollNoodlePane);
 		soupCard.add(scrollSoupPane);
@@ -290,6 +293,21 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		menuCards.add(noodleCard, NOODLE);
 		menuCards.add(soupCard,SOUP);
 		menuCards.add(riceCard, RICE);
+		
+		ImageIcon icon = new ImageIcon(getClass().getResource("../images/add.png"));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
+		addMenuBtn = new JButton(icon);
+		addMenuBtn.setName(ADD_FOOD);
+		addMenuBtn.setFocusPainted(false);
+		addMenuBtn.addMouseListener(this);
+		addMenuBtn.setBorder(new EmptyBorder(0,7,0,7));
+		p5 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		p5.setBorder(new EmptyBorder(0,0,0,0));
+		p5.add(addMenuBtn);
+
+		p3 = new JPanel(new BorderLayout());
+		p3.add(menuCards, BorderLayout.CENTER);
+		p3.add(p5, BorderLayout.SOUTH);
 		
 		orderSelectionPanel = new JPanel(new GridLayout(4,1));
 
@@ -310,8 +328,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		menuChoiceLabel = new JLabel("선택 메뉴");
 		subMenuTxt = new JTextField(10);
 		subMenuTxt.setEditable(false);
-
-
 
 		menuQtyLabel = new JLabel("수 량");
 		ComboBoxModel<Integer> comboBoxModel = 
@@ -354,7 +370,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		orderSelectionPanel.add(payMethodPanel);
 		
 		subSplitPane1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		subSplitPane1.setTopComponent(menuCards);
+		subSplitPane1.setTopComponent(p3);
 		subSplitPane1.setBottomComponent(orderSelectionPanel);
 
 		centerPanel = new JPanel(new BorderLayout());
@@ -376,58 +392,40 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		cancelOrderBtn = new JButton(icon);
 		cancelOrderBtn.setName("CANCEL_ORDER");
 		cancelOrderBtn.setBorder(new EmptyBorder(0,0,0,0));
-		cancelOrderBtn.setBackground(new Color(221, 227, 231));
 		cancelOrderBtn.setFocusPainted(false);
 		cancelOrderBtn.addMouseListener(this);
 
-		icon = new ImageIcon(getClass().getResource("../images/add.png"));
-		icon = new ImageIcon(icon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
-		addMenuBtn = new JButton(icon);
-		addMenuBtn.setName(ADD_FOOD);
-		addMenuBtn.setBorder(new EmptyBorder(0,0,0,0));
-		addMenuBtn.setBackground(new Color(221, 227, 231));
-		addMenuBtn.setFocusPainted(false);
-		addMenuBtn.addMouseListener(this);
-		Border current = addMenuBtn.getBorder();
-		Border empty = new EmptyBorder(0, 7, 0, 7);
-		if (current == null) addMenuBtn.setBorder(empty);
-		else addMenuBtn.setBorder(new CompoundBorder(empty, current));
-
-		p2 = new JPanel(new GridLayout(1,2));
-		p2.add(addMenuBtn);
+		p2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p2.add(cancelOrderBtn);
-		p2.setBackground(new Color(221, 227, 231));
 
-		subTotalTextArea = new JTextArea("", 50, 25);
-		subTotalTextArea.setEditable(false);
-		subTotalTextArea.setBackground(new Color(221, 227, 231));
+		subTotalLabel = new JLabel("");
 
-		p5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		p5.add(addMenuBtn);
-		p5.add(cancelOrderBtn);
-		p5.setBackground(new Color(221, 227, 231));
+		subTotalPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		subTotalPanel.add(subTotalLabel);
 
 		p6 = new JPanel(new GridLayout(1,2));
-		p6.add(p5);
-		p6.add(subTotalTextArea);
-		p6.setBackground(new Color(221, 227, 231));
+		p6.setBorder(new EmptyBorder(0,0,0,0));
+		p6.add(p2);
+		p6.add(subTotalPanel);
 
 		modelOrdering = constructOrderingTableModel();
 		orderingTable = new JTable(modelOrdering);
 		orderingTable.setName("ORDERING_TABLE");
 		orderingTable.setAutoCreateRowSorter(true);
 		scrollOrderingPane = new JScrollPane(orderingTable);
-
-		subSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		subSplitPane3.setTopComponent(scrollOrderingPane);
-		subSplitPane3.setBottomComponent(p6);
+		scrollOrderingPane.setBorder(new EmptyBorder(0,0,0,0));
+		
+		p7 = new JPanel(new BorderLayout());
+		p7.add(scrollOrderingPane, BorderLayout.CENTER);
+		p7.add(p6, BorderLayout.SOUTH);
 
 		icon = new ImageIcon(getClass().getResource("../images/screen.jpg"));
 		icon = new ImageIcon(icon.getImage().getScaledInstance(340, 170, Image.SCALE_SMOOTH));
 		fancyLabel = new JLabel(icon);
+
 		rightPanel = new JPanel(new GridLayout(2,1));
 		rightPanel.add(fancyLabel);
-		rightPanel.add(subSplitPane3);
+		rightPanel.add(p7);
 	}
 
 	private void createFirstBottom() {
@@ -695,7 +693,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
             @Override
             public void run() {
 				mainSplitPane1.setDividerLocation(330 + mainSplitPane1.getInsets().top);
-//				mainSplitPane1.setDividerLocation(mainSplitPane1.getSize().height/2);
 				mainSplitPane1.setDividerSize(1);
 				mainSplitPane1.setEnabled(false);
 
@@ -715,10 +712,10 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				subSplitPane2.setDividerSize(1);
 				subSplitPane2.setEnabled(false);
 
-				subSplitPane3.setDividerLocation(133+ subSplitPane3.getInsets().top);
-				subSplitPane3.setDividerSize(1);
-				subSplitPane3.setEnabled(false);
-
+//				subSplitPane3.setDividerLocation(133+ subSplitPane3.getInsets().top);
+//				subSplitPane3.setDividerSize(1);
+//				subSplitPane3.setEnabled(false);
+//
 				subSplitPane5.setDividerLocation(120+ subSplitPane5.getInsets().top);
 				subSplitPane5.setDividerSize(1);
 				subSplitPane5.setEnabled(false);
@@ -800,7 +797,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			subTotal += entry.getKey().getMenuPrice() * entry.getValue();
 		}
 
-		this.subTotalTextArea.setText("    " + 
+		this.subTotalLabel.setText("    누적 금액  " + 
 			NumberFormat.getCurrencyInstance(Locale.KOREA).format(subTotal).toString());
 		
 		modelOrdering.removeRow(row);
@@ -824,7 +821,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			User user = userRepo.getUserByPhone(this.phoneTextField.getText());
 			user.setOrdering(false);
 			modelOrdering.setRowCount(0);
-			this.subTotalTextArea.setText("");
+			this.subTotalLabel.setText("");
 
 			JOptionPane.showMessageDialog(null, "주문을 취소합니다.", "주문취소", JOptionPane.WARNING_MESSAGE);
 			return;
@@ -866,7 +863,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		setPopularMenuList();
 		
 		modelOrdering.setRowCount(0);
-		this.subTotalTextArea.setText("");
+
+		this.subTotalLabel.setText("");
 
 		JOptionPane.showMessageDialog(null, "주문이 완료 되었습니다.", "주문결제 완료 확인", JOptionPane.WARNING_MESSAGE);
 		return;
@@ -940,10 +938,9 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		}
 
 		Font font = new Font("맑은고딕", Font.BOLD, 12);
-        subTotalTextArea.setFont(font);
-        subTotalTextArea.setForeground(Color.BLUE);
+        subTotalLabel.setFont(font);
 
-		this.subTotalTextArea.setText("     " + 
+		this.subTotalLabel.setText("     누적 금액  " + 
 			NumberFormat.getCurrencyInstance(Locale.KOREA).format(subTotal).toString());
 
 		JOptionPane.showMessageDialog(null, "주문이 추가되었습니다.", "주문 추가 확인", JOptionPane.WARNING_MESSAGE);

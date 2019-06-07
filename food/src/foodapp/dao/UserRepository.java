@@ -192,7 +192,10 @@ public class UserRepository {
 		foodMenu = new FoodMenu();
 
 		foodMenu.addFood(new Food("NOODLE", 1, "Â¥Àå¸é", 5000));
-		foodMenu.addFood(new Food("NOODLE", 2, "Â«»Í", 6000));
+		foodMenu.addFood(new Food("NOODLE", 2, "Â«»Í", 6500));
+		foodMenu.addFood(new Food("NOODLE", 3, "Äá±¹¼ö", 6000));
+		foodMenu.addFood(new Food("NOODLE", 4, "ºñºö³Ã¸é", 6000));
+		foodMenu.addFood(new Food("NOODLE", 5, "¼ÕÄ®±¹¼ö", 5500));
 
 		foodMenu.addFood(new Food("SOUP", 1, "±èÄ¡Âî°³", 5500));
 		foodMenu.addFood(new Food("SOUP", 2, "µÈÀå±¹", 5500));
