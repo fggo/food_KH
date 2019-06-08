@@ -5,6 +5,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -39,7 +40,7 @@ public class SignOffEventHandler extends MouseAdapter {
 	public void mousePressed(MouseEvent e) {
 		if (loggedPhoneTextField != null) {
 			String phoneNum = loggedPhoneTextField.getText().replaceAll("\\s+", "");
-			if(phoneNum.length() > 0 ) {
+			if(!passwordField.isEditable() && phoneNum.length() > 0) {
 				userRepo.logOff(phoneNum);
 				loggedPhoneTextField.setEditable(true);
 				loggedPhoneTextField.setText("");

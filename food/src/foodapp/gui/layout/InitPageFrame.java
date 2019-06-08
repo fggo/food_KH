@@ -522,10 +522,25 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		topPanel = new JPanel(new BorderLayout());
 		topPanel.add(p4);
 
-		signInBtn.addMouseListener(new SignInEventHandler((CardLayout)userCards.getLayout(), userCards,
-				adminPageBtn, phoneTextField, passwordField, userRepo));
-		logOffBtn.addMouseListener(new SignOffEventHandler((CardLayout)userCards.getLayout(), userCards,
-				adminPageBtn, phoneTextField, passwordField, modelOrdering, userRepo));
+		signInBtn.addMouseListener(
+				new SignInEventHandler(
+						(CardLayout)userCards.getLayout(), 
+						userCards,
+						adminPageBtn, 
+						phoneTextField, 
+						passwordField, 
+						userRepo));
+		
+		logOffBtn.addMouseListener(
+				new SignOffEventHandler(
+						(CardLayout)userCards.getLayout(), 
+						userCards,
+						adminPageBtn, 
+						phoneTextField, 
+						passwordField, 
+						modelOrdering, 
+						userRepo));
+
 		signUpBtn.addMouseListener(this);
 	}
 

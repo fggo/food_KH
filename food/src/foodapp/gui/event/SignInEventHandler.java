@@ -49,12 +49,16 @@ public class SignInEventHandler extends MouseAdapter {
 		String phoneNum = phoneTextField.getText().replaceAll("\\s+", "");
 		String password = new String(passwordField.getPassword());
 		User user = null;
-		if (phoneNum.length() > 0)
+		if (phoneNum.length() > 0 && password.length() >0) {
 			user = userRepo.signIn(phoneNum, password);
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "아이디 비밀번호를 모두 입력해주세요", "로그인 확인", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
 		
 		if(user!=null) {
 			phoneTextField.setEditable(false);
-			passwordField.setText("");
 			passwordField.setEditable(false);
 			if(user.equals(userRepo.getAdmin()))
 				this.adminPageBtn.setVisible(true);

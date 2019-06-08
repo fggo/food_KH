@@ -165,16 +165,6 @@ public class UserRepository {
 		}
 	}
 
-//	public void reserveSeat() {
-//		int seatNo = menu.reserveSeatView();
-//		User user = getUserByPhone(this.phone);
-//		if(seatNo >=1 && seatNo <= reservations.length) {
-//			user.setSeatNo(seatNo);
-//		}
-//		if(user.getOrderList().size() > 0)
-//			user.setOrderCreated(new GregorianCalendar());
-//	}
-
 	public void showUsers() {
 		System.out.println("이름\t전화\t이메일\t주소\t로그인상태\t주문날짜\t주문수단\t주문여부");
 

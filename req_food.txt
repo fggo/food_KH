@@ -1,24 +1,25 @@
 RowFilter Api
 https://stackoverflow.com/questions/22066387/how-to-search-an-element-in-a-jtable-java
 
-ordering 테이블 바로 밑에 휴지통 아이콘
+20분발표 1인당 4분
+기획안 초안제출 (6.3 월) 주제 기획의도 역할분담 화면설계 클래스 설계
+발표제출(6.7 금) 베타 테스트
+발표 (6.10 월)
+1. 로그인&로그아웃&회원가입 = 윤원택
+	signInBtn signOffBtn signUpBtn 각각의 버튼에 mouseListener를 추가하였고,
+	로그인 로그아웃 이벤트는 각각의 파일로 
+2. 주문하기 (2명) = 문준석, 최호준
+3. 관리자메뉴, 주문조회  매출내역 = 오건철, 최장원
+5. 주문취소, 남은좌석확인, 메인화면과 객체간 연결 = 이준호
+
 구현시 에러 어떻게 발생했는지 시행착오 팁 같은 것
-테이블 지정
-add food 할때마다 주문총액 실시간으로 보여주기
-관리자 버튼 setVisible(false) 일반 사용자들
 
 팝업창 x로 닫기 말고, 닫기 버튼으로 닫도록
-메뉴 수정 완료버튼 시 팝업창 닫도록
-로그인 회원가입 로그아웃 한개로 합치고 navi 와 메뉴 버튼 합치기
-
 매출내역 날짜별로 누적 혹은 날짜별 검색
 주문내역도 날짜별로 월별 혹은 검색가능하게
 
-Map<Food, Integer> orderList;
-Map<Food, Integer> salesResult;
-
-Map<Map<Food, Integer>, Date> orderHistory;
-Map<Map<Food, Integer>, Date> salesHistory;
+Map<GregorianCalendar, Map<Food, Integer>> orderHistory; //User
+Map<GregorianCalendar, Map<Food, Integer>> salesHistory; //Admin
 
 --- model.vo패키지
 1. 데이터 정렬 방법
@@ -26,7 +27,7 @@ Map<Map<Food, Integer>, Date> salesHistory;
 
     User클래스에 있는 주문내역은 Food에 정의된 compareTo를 기반으로 자동정렬
         Map<Food, Integer> orderList;
- 
+
     Food는 음식메뉴를 정의하는 클래스로 Comparable<Food> 인터페이스를 상속하여, 이들을 각각 key값으로 하는
         TreeMap<User, ?> 혹은 TreeMap<Food, ?> 컬렉션 사용 시, User, Food 클래스 에서 정의한 
         오버라이드 메소드 compareTo 에 의해 key값(User, Food)으로 TreeMap의 데이터가 자동 정렬 되도록 했습니다.
@@ -94,16 +95,6 @@ Map<Map<Food, Integer>, Date> salesHistory;
     폰번호, 비밀번호 텍스트를 매개변수로 넘겨 데이터 값이 변경되도록 함.
     로그오프 버튼 클릭시에는 SignOffEventHandler로가 이벤트를 처리, 로그인과 동일하게 매개변수를 통해 데이터 변경.
     
-
-20분발표 1인당 4분
-
-기획안 초안제출 (6.3 월) 주제 기획의도 역할분담 화면설계 클래스 설계
-발표제출(6.7 금) 베타 테스트
-발표 (6.10 월)
-1. 로그인&회원가입 = 윤원택
-2. 주문하기 (2명) = 문준석, 최호준
-3. 관리자메뉴, 주문조회  매출내역 = 오건철, 최장원
-5. 주문취소, 남은좌석확인, 메인화면과 객체간 연결 = 이준호
 
 1. 윈도우용 git 다운로드/설치
 https://github.com/git-for-windows/git/releases/download/v2.21.0.windows.1/Git-2.21.0-64-bit.exe
