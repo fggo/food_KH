@@ -72,12 +72,15 @@ public class OrderViewPageCard extends JPanel implements MouseListener{
 		orderViewLeftPanel = new JPanel();
 		centerReceipt = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
-		receiptLabel = new JLabel("ÁÖ¹® ³»¿ª");
+		Font font = new Font("¸¼Àº°íµñ", Font.BOLD, 17);
+		receiptLabel = new JLabel("ÃÖ±Ù ÁÖ¹® ³»¿ª");
+		receiptLabel.setFont(font);
+		receiptLabel.setForeground(Color.DARK_GRAY);
 		receiptLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		receiptLabelPanel.add(receiptLabel);
 		receiptTextArea = new JTextArea(400, 500);
 		receiptTextArea.setEditable(false);
-		Font font = new Font("¸¼Àº°íµñ", Font.BOLD, 13);
+		font = new Font("¸¼Àº°íµñ", Font.BOLD, 13);
         receiptTextArea.setFont(font);
         receiptTextArea.setForeground(Color.BLUE);
 

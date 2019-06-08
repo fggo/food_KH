@@ -833,12 +833,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				JOptionPane.OK_CANCEL_OPTION);
 
 		if(result!= JOptionPane.OK_OPTION) {
-			User user = userRepo.getUserByPhone(this.phoneTextField.getText());
-			user.setOrdering(false);
-			modelOrdering.setRowCount(0);
-			this.subTotalLabel.setText("");
-
-			JOptionPane.showMessageDialog(null, "주문을 취소합니다.", "주문취소", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
@@ -1092,7 +1086,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	}
 
 	private void setPopularMenuList() {
-		Map<Food, Integer> salesResult = (TreeMap<Food, Integer>)((Admin)userRepo.getAdmin()).getSalesResult();				
+		Map<Food, Integer> salesResult = 
+				(TreeMap<Food, Integer>)((Admin)userRepo.getAdmin()).getSalesResult();				
 		if (salesResult == null)
 			return;
 

@@ -227,6 +227,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		});
 
 
+		int sum = 0;
 		int count = 0;
 		int qty = 0;
 		String msg = "";
@@ -238,9 +239,11 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 			newEntry = itr.next();
 			food = newEntry.getValue();
 			qty = newEntry.getKey();
+			sum += food.getMenuPrice()*qty;
 			msg += "\t" + food + " - - - ÃÑ " + qty + " °³.";
 			if(++count < salesResult.size()) msg+="\n";
 		}
+		msg += "\n\n\t    ÃÑ ¸ÅÃâ¾×:  " + food.toCurrency(sum);
 		salesResultTextArea.setText(msg);
 	}
 	
@@ -325,8 +328,7 @@ public class AdminPageFrame extends JFrame implements MouseListener {
 		List<Food> foodMenuList = (ArrayList<Food>)userRepo.getFoodMenu().getFoodMenuList();
 
 		Collections.sort(foodMenuList, (i,j)->{
-			return i.getMenuCategory().compareTo(j.getMenuCategory()) == 0 ? 
-						i.getMenuNo() - j.getMenuNo(): i.getMenuCategory().compareTo(j.getMenuCategory());
+			return i.compareTo(j);
 		});
 
 		Iterator<Food> it = foodMenuList.iterator();
