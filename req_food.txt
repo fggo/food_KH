@@ -39,7 +39,6 @@ Map<GregorianCalendar, Map<Food, Integer>> salesHistory; //Admin
     규칙에 따라, 메뉴 알파벳 순 정렬 하였습니다. 다만 매출량을 조회시에 가장 많이 팔린 개수(Integer) 기준으로
     정렬은, Map의 Value값을 기준으로 정렬할 수 없기 때문에, List<Map.Entry<Integer, Food>> sortedSales;에 
     데이터를 넣고, Collections.sort으로 내림차순 정렬 했습니다.
-        Map<Food,Integer> salesResult;
 
 2. 데이터 중복 여부
     User, Food 클래스에 equals와 hashCode 오버라이드 함수로 데이터를 컬렉션에 저장시 중복 방지
