@@ -98,7 +98,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private JPanel p1, p2, p3, p4, p5, p6, p7;
 	
 	private JButton foodMenuBtn, adminPageBtn, orderViewBtn;
-	private JButton signInBtn, signUpBtn, logOffBtn;
+	private JButton signInBtn, signUpBtn, logOffBtn, welcomeBtn;
 	private JButton orderBtn, cancelOrderBtn;
 	
 	private JLabel subTotalLabel;
@@ -496,8 +496,10 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		userLogOffCard.add(passwordLabel);
 		userLogOffCard.add(passwordField);
 
+		welcomeBtn = new JButton("Hello!");
+		welcomeBtn.setBorder(new EmptyBorder(0,0,0,0));
 		userLoggedCard = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		userLoggedCard.add(new JButton("Hello!"));
+		userLoggedCard.add(welcomeBtn);
 
 		userCards.add(userLogOffCard, "USER_LOGOFF");
 		userCards.add(userLoggedCard, "USER_LOGGED");
@@ -506,6 +508,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		signInBtn.setFont(font);
 		logOffBtn = new JButton("로그아웃");
 		logOffBtn.setFont(font);
+		logOffBtn.setVisible(false);
 		signUpBtn = new JButton("회원가입");
 		signUpBtn.setFont(font);
 		signUpBtn.setName(SIGN_UP_PAGE);
@@ -526,6 +529,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				new SignInEventHandler(
 						(CardLayout)userCards.getLayout(), 
 						userCards,
+						signInBtn,
+						logOffBtn,
 						adminPageBtn, 
 						phoneTextField, 
 						passwordField, 
@@ -535,6 +540,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				new SignOffEventHandler(
 						(CardLayout)userCards.getLayout(), 
 						userCards,
+						signInBtn,
+						logOffBtn,
 						adminPageBtn, 
 						phoneTextField, 
 						passwordField, 

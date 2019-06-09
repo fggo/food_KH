@@ -1,14 +1,18 @@
 package foodapp.gui.event;
 
 import java.awt.CardLayout;
+import java.awt.Component;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import foodapp.dao.UserRepository;
 import foodapp.model.vo.User;
@@ -16,17 +20,20 @@ import foodapp.model.vo.User;
 public class SignInEventHandler extends MouseAdapter {
 	private CardLayout cl;
 	private JPanel userCards;
+	private JButton signInBtn, logOffBtn;
 	private JButton adminPageBtn;
 	private JTextField phoneTextField;
 	private JPasswordField passwordField;
 
 	private UserRepository userRepo;
 
-	public SignInEventHandler(CardLayout cl, JPanel userCards, JButton adminPageBtn,
+	public SignInEventHandler(CardLayout cl, JPanel userCards, JButton signInBtn, JButton logOffBtn, JButton adminPageBtn,
 			JTextField phoneTextField, JPasswordField passwordField, UserRepository userRepo) {
 		super();
 		this.cl = cl;
 		this.userCards = userCards;
+		this.signInBtn = signInBtn;
+		this.logOffBtn = logOffBtn;
 		this.adminPageBtn = adminPageBtn;
 		this.phoneTextField = phoneTextField;
 		this.passwordField = passwordField;
@@ -64,9 +71,27 @@ public class SignInEventHandler extends MouseAdapter {
 				this.adminPageBtn.setVisible(true);
 			else
 				this.adminPageBtn.setVisible(false);
+			signInBtn.setVisible(false);
+			logOffBtn.setVisible(true);
 
 			JOptionPane.showMessageDialog(null, "로그인을 성공했습니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
 			cl.show(userCards, "USER_LOGGED");
+			for(Component c : userCards.getComponents()) {
+				System.out.println(c.toString());
+				System.out.println(c.getSize());
+				if(c instanceof JPanel) {
+					for(Component btn : ((JPanel) c).getComponents()) {
+						if(btn instanceof JButton) {
+							ImageIcon icon = new ImageIcon(this.getClass().getResource("../images/online.png"));
+							icon = new ImageIcon(icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+							((JButton)btn).setIcon(icon);
+							((JButton) btn).setText("Hello! " + user.getUsername());
+							((JButton)btn).setHorizontalAlignment(SwingConstants.RIGHT);
+						}
+					}
+				}
+				
+			}
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "로그인 정보가 불일치 합니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
