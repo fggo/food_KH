@@ -45,7 +45,7 @@ public class UserRepository {
 		this.readFromFile();
 		if(users.size() < 1) {
 			User admin = new Admin("admin", "1234", "admin", "0", "0", false, 
-					null, null, "0", 0, false, new TreeMap<Food, Integer>());
+					null, null, "0", 0, false, null, new TreeMap<Food, Integer>(), null);
 			signUp(admin, admin.getPassword());
 		}
 		this.loadDefaultFoodMenu();

@@ -77,8 +77,6 @@ public class SignInEventHandler extends MouseAdapter {
 			JOptionPane.showMessageDialog(null, "로그인을 성공했습니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
 			cl.show(userCards, "USER_LOGGED");
 			for(Component c : userCards.getComponents()) {
-				System.out.println(c.toString());
-				System.out.println(c.getSize());
 				if(c instanceof JPanel) {
 					for(Component btn : ((JPanel) c).getComponents()) {
 						if(btn instanceof JButton) {

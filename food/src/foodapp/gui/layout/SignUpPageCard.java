@@ -252,7 +252,7 @@ public class SignUpPageCard extends JPanel implements MouseListener {
 		}
 		User user = new User(username.getText(), new String(password.getPassword()),
 				phone.getText(), email.getText(), address.getText(), OFF,
-				null, null, null, -1, false);
+				null, null, null, -1, false, null);
 
 		if(userRepo.getPhone() != null) {
 			JOptionPane.showMessageDialog(null, "회원가입 하려면 먼저 로그아웃 해주세요.", "로그인된 유저 에러", JOptionPane.WARNING_MESSAGE);

@@ -824,6 +824,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		
 		modelOrdering.removeRow(row);
 		modelOrdering.fireTableDataChanged();
+		
+		if(modelOrdering.getRowCount() == 0) {
+			User user = userRepo.getUserByPhone(this.phoneTextField.getText());
+			user.setOrdering(false);
+		}
 	}
 
 	private void completeOrder() {
@@ -848,8 +853,10 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		User user = userRepo.getUserByPhone(this.phoneTextField.getText());
 		if(user == null)
 			return;
-		if(!user.isOrdering())
+		if(!user.isOrdering()) {
+			JOptionPane.showMessageDialog(null, "음식 메뉴를 추가해 주세요.", "메뉴 미지정", JOptionPane.WARNING_MESSAGE);
 			return;
+		}
 
 		Map<Food, Integer> orderList = tempOrderList;
 
@@ -875,6 +882,12 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		user.setRecentPayMethod(payMethod);
 		user.setOrdering(false);
 		user.setOrderCreated(new GregorianCalendar());
+
+		Map<GregorianCalendar, Map<Food, Integer>> orderHistory = user.getOrderHistory();
+		if (orderHistory == null) {
+			orderHistory = new TreeMap<GregorianCalendar, Map<Food, Integer>>();
+		}
+		
 		userRepo.showUsers();
 		setPopularMenuList();
 		
