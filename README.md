@@ -8,18 +8,18 @@ food ordering app
     User클래스에 있는 주문내역 ```Map<Food, Integer> orderList;```은 Food에 정의된 compareTo를 기반으로 자동정렬
     
     Food는 음식메뉴를 정의하는 클래스로 ```Comparable<Food>``` 인터페이스를 상속하여, 이들을 각각 key값으로 하는
-        TreeMap<User, ?> 혹은 TreeMap<Food, ?> 컬렉션 사용 시, User, Food 클래스 에서 정의한 
+        ```TreeMap<User, ?>``` 혹은 ```TreeMap<Food, ?>``` 컬렉션 사용 시, User, Food 클래스 에서 정의한 
         오버라이드 메소드 compareTo 에 의해 key값(User, Food)으로 TreeMap의 데이터 정렬(natural ordering)
         
     natural ordering 대신에 TreeMap 생성인자로 Comparator inner class를 전달하여 정렬방법 변경
-        ```java
-        Map<Food, Integer> orderList = new TreeMap<Food, Integer>(new Comparator<Food>(){
-            @Override
-            public int compare(Food o1, Food o2){
-                return o1.getMenuPrice() - o2.getMenuPrice();
-            }
-        });
-        ```
+    ```java
+    Map<Food, Integer> orderList = new TreeMap<Food, Integer>(new Comparator<Food>(){
+        @Override
+        public int compare(Food o1, Food o2){
+            return o1.getMenuPrice() - o2.getMenuPrice();
+        }
+    });
+    ```
     FoodMenu는 음식메뉴 List를 정의하는 클래스로, 이 List는 Collections의 sort를 이용하여 정렬
     ```java
     List<Food> foodMenuList;
@@ -67,7 +67,7 @@ food ordering app
         
         관리자화면은 버튼 클릭시, 새로운 창이 생성되고, 2장의 카드(총 매출내역, 메뉴관리-추가 수정 삭제)로 구성됨
         관리자 화면에서 음식 메뉴 수정시에, 메인 화면에서도 메뉴가 같이 수정되도록
-        DefaultTableModel.fireTableDataChanged(); 메소드를 호출.
+        ```DefaultTableModel.fireTableDataChanged();``` 메소드를 호출.
         
     FoodMenuPageCard
         전체 음식메뉴를 보여주는 기능
