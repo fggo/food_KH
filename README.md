@@ -5,15 +5,13 @@ food ordering app
 1. 데이터 정렬 방법
     User는 음식주문 사용자를 정의하는 클래스로 ```Comparable<User>``` 인터페이스를 상속
 
-    User클래스에 있는 주문내역은 Food에 정의된 compareTo를 기반으로 자동정렬
-        ```java
-        Map<Food, Integer> orderList;
-        ```
+    User클래스에 있는 주문내역 ```Map<Food, Integer> orderList;```은 Food에 정의된 compareTo를 기반으로 자동정렬
+    
     Food는 음식메뉴를 정의하는 클래스로 ```Comparable<Food>``` 인터페이스를 상속하여, 이들을 각각 key값으로 하는
         TreeMap<User, ?> 혹은 TreeMap<Food, ?> 컬렉션 사용 시, User, Food 클래스 에서 정의한 
         오버라이드 메소드 compareTo 에 의해 key값(User, Food)으로 TreeMap의 데이터 정렬(natural ordering)
         
-        natural ordering 대신에 TreeMap 생성인자로 Comparator inner class를 전달하여 정렬방법 변경
+    natural ordering 대신에 TreeMap 생성인자로 Comparator inner class를 전달하여 정렬방법 변경
         ```java
         Map<Food, Integer> orderList = new TreeMap<Food, Integer>(new Comparator<Food>(){
             @Override
@@ -21,12 +19,12 @@ food ordering app
                 return o1.getMenuPrice() - o2.getMenuPrice();
             }
         });
-        ```
+            ```
     FoodMenu는 음식메뉴 List를 정의하는 클래스로, 이 List는 Collections의 sort를 이용하여 정렬
-        ```java
-        List<Food> foodMenuList;
-        ```
-        
+    ```java
+    List<Food> foodMenuList;
+    ```
+    
     Admin클래스에 있는 메뉴별 매출(salesResult)은 TreeMap의 자동정렬 특성과, Food의 compareTo에 정의된 
     규칙에 따라, 메뉴 알파벳 순 정렬 하였습니다. 다만 매출량을 조회시에 가장 많이 팔린 개수(Integer) 기준으로
     정렬은, Map의 Value값을 기준으로 정렬할 수 없기 때문에, 
