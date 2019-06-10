@@ -19,7 +19,7 @@ food ordering app
                 return o1.getMenuPrice() - o2.getMenuPrice();
             }
         });
-            ```
+        ```
     FoodMenu는 음식메뉴 List를 정의하는 클래스로, 이 List는 Collections의 sort를 이용하여 정렬
     ```java
     List<Food> foodMenuList;
