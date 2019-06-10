@@ -1,3 +1,8 @@
+UserRepo 에 List<User>users;
+for 문으로 돌면서 
+user.logged == true
+-> 현재 화면에서 로그인 중인 유저
+
 RowFilter Api
 https://stackoverflow.com/questions/22066387/how-to-search-an-element-in-a-jtable-java
 
@@ -19,7 +24,7 @@ https://stackoverflow.com/questions/22066387/how-to-search-an-element-in-a-jtabl
 주문내역도 날짜별로 월별 혹은 검색가능하게
 
 Map<GregorianCalendar, Map<Food, Integer>> orderHistory; //User
-Map<GregorianCalendar, Map<Food, Integer>> salesHistory; //Admin
+Map<GregorianCalen dar, Map<Food, Integer>> salesHistory; //Admin
 
 --- model.vo패키지
 1. 데이터 정렬 방법
@@ -50,7 +55,7 @@ Map<GregorianCalendar, Map<Food, Integer>> salesHistory; //Admin
 --- dao 패키지
     Constants클래스에 각종 상수 (public final static) 정의
         
-    UserRepository클래스는 
+    UserRepository 클래스는 
         User객체 List, Food 메뉴 List, 읽기/쓰기용 User.dat 파일 객체, 
         User의 핸드폰번호(화면에서 로그인,음식주문,메뉴관리 등을 사용 중인 User)등 field 정의.
         이 데이터들을 화면에서 발생하는 event에 따라 변경합니다. Event 발생시 UserRepository에
@@ -113,4 +118,10 @@ https://github.com/git-for-windows/git/releases/download/v2.21.0.windows.1/Git-2
     git pull
 내려받기만 하려면 :
     git fetch
+
+
+객체에 대해 설명하고자 합니다.
+음식 메뉴를 정의하는 Food 클래스와 주문사용자를 정의하는 User
+는 Comparable 인터페이스를 상속합니다. 이유는 Map에서 
+
 
