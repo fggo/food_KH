@@ -1,32 +1,5 @@
-UserRepo 에 List<User>users;
-for 문으로 돌면서 
-user.logged == true
--> 현재 화면에서 로그인 중인 유저
 
-RowFilter Api
-https://stackoverflow.com/questions/22066387/how-to-search-an-element-in-a-jtable-java
-
-20분발표 1인당 4분
-기획안 초안제출 (6.3 월) 주제 기획의도 역할분담 화면설계 클래스 설계
-발표제출(6.7 금) 베타 테스트
-발표 (6.10 월)
-1. 로그인&로그아웃&회원가입 = 윤원택
-	signInBtn signOffBtn signUpBtn 각각의 버튼에 mouseListener를 추가하였고,
-	로그인 로그아웃 이벤트는 각각의 파일로 
-2. 주문하기 (2명) = 문준석, 최호준
-3. 관리자메뉴, 주문조회  매출내역 = 오건철, 최장원
-5. 주문취소, 남은좌석확인, 메인화면과 객체간 연결 = 이준호
-
-구현시 에러 어떻게 발생했는지 시행착오 팁 같은 것
-
-팝업창 x로 닫기 말고, 닫기 버튼으로 닫도록
-매출내역 날짜별로 누적 혹은 날짜별 검색
-주문내역도 날짜별로 월별 혹은 검색가능하게
-
-Map<GregorianCalendar, Map<Food, Integer>> orderHistory; //User
-Map<GregorianCalen dar, Map<Food, Integer>> salesHistory; //Admin
-
---- model.vo패키지
+--- foodapp.model.vo 패키지
 1. 데이터 정렬 방법
     User는 음식주문 사용자를 정의하는 클래스로 Comparable<User> 인터페이스를 상속
 
@@ -35,8 +8,15 @@ Map<GregorianCalen dar, Map<Food, Integer>> salesHistory; //Admin
 
     Food는 음식메뉴를 정의하는 클래스로 Comparable<Food> 인터페이스를 상속하여, 이들을 각각 key값으로 하는
         TreeMap<User, ?> 혹은 TreeMap<Food, ?> 컬렉션 사용 시, User, Food 클래스 에서 정의한 
-        오버라이드 메소드 compareTo 에 의해 key값(User, Food)으로 TreeMap의 데이터가 자동 정렬 되도록 했습니다.
-
+        오버라이드 메소드 compareTo 에 의해 key값(User, Food)으로 TreeMap의 데이터 정렬(natural ordering)
+        
+        natural ordering 대신에 TreeMap 생성인자로 Comparator inner class를 전달하여 정렬방법 변경
+        Map<Food, Integer> orderList = new TreeMap<Food, Integer>(new Comparator<Food>(){
+            @Override
+            public int compare(Food o1, Food o2){
+                return o1.getMenuPrice() - o2.getMenuPrice();
+            }
+        });
     FoodMenu는 음식메뉴 List를 정의하는 클래스로, 이 List는 Collections의 sort를 이용하여 정렬
         List<Food> foodMenuList;
 
@@ -52,25 +32,25 @@ Map<GregorianCalen dar, Map<Food, Integer>> salesHistory; //Admin
     User, Food, FoodMenu는 Object input/output 스트림으로 파일에 저장시
     직렬화를 위해 Serializable 인터페이스를 상속
 
---- dao 패키지
+--- foodapp.dao 패키지
     Constants클래스에 각종 상수 (public final static) 정의
-        
-    UserRepository 클래스는 
+    
+    UserRepository 클래스는
         User객체 List, Food 메뉴 List, 읽기/쓰기용 User.dat 파일 객체, 
         User의 핸드폰번호(화면에서 로그인,음식주문,메뉴관리 등을 사용 중인 User)등 field 정의.
-        이 데이터들을 화면에서 발생하는 event에 따라 변경합니다. Event 발생시 UserRepository에
-        저장된 데이터를 직접 변경하거나 UserRepository가 정의하고있는 메소드를 통해 변경합니다.
-        어플리케이션 시작시 User.dat 파일에 데이터를 read하고, 종료시 write합니다.
-        회원가입시 User의 입력 비밀번호를 Hash 알고리즘으로 암호화.
+        이 데이터들을 화면에서 발생하는 event에 따라 변경. Event 발생시 UserRepository에
+        저장된 데이터를 직접 변경하거나 UserRepository가 정의하고있는 메소드를 통해 변경.
+        어플리케이션 시작시 User.dat 파일에 데이터를 read, 종료시 write.
+        회원가입시 User의 입력 비밀번호를 Hash 알고리즘으로 암호화. (링크 참고)
         
--- gui.layout 패키지
+-- fooapp.gui.layout 패키지
     InitPageFrame 메인화면의 디자인 component 생성 및 이벤트 정의.
         로그인과 로그아웃 버튼 이벤트는 event패키지의 SignInEventHandler와 SignOffEventHandler로 정의
         메인화면에서 메뉴 및 회원가입 버튼 클릭시,
         해당 메뉴로 넘어가기 위해 CardLayout에 4장의 카드(메인화면, 전체메뉴화면, 주문내역화면,회원가입화면)를 
         메인화면(JSplitPane)과 각각의 JPanel (FoodMenuPageCard, OrderViewPageCard, SignUpPageCard) 정의.
         메인화면에서 음식카테고리(면,탕,밥) 선택시, 세부 음식 메뉴를 CardLayout의 3장의 카드 패널로 보여줌
-        음식 메뉴 정렬은 Food에 compareTo에 따라 정렬되어 테이블에 보여짐.
+        음식 메뉴 정렬은 Food에 compareTo의 natural comparison에 따라 정렬되어 테이블에 보여짐.
         
         로그인한 유저는 음식 카테고리 3가지 중 하나를 선택하면, 오른쪽에 해당 카테고리의 음식메뉴를 보여줌
         테이블에서 해당 메뉴를 클릭하고, 수량, 결제방법 등을 선택해서 음식추가하면, 오른쪽 테이블에 메뉴가 추가됨
@@ -94,11 +74,18 @@ Map<GregorianCalen dar, Map<Food, Integer>> salesHistory; //Admin
         메인화면과 별개의 화면이 생성됨.
         매출내역은 팔린 음식과 갯수
     
--- gui.event 패키지
+-- foodapp.gui.event 패키지
     로그인 버튼 클릭시, SignInEventHandler가 이벤트를 처리. 버튼 이벤트 추가시에, UserRepository 및
     폰번호, 비밀번호 텍스트를 매개변수로 넘겨 데이터 값이 변경되도록 함.
     로그오프 버튼 클릭시에는 SignOffEventHandler로가 이벤트를 처리, 로그인과 동일하게 매개변수를 통해 데이터 변경.
-    
+
+* 매출내역, 주문내역 날짜별로 누적 혹은 날짜별 검색 날짜별로 월별 혹은 검색가능하게(구현 예정)
+Map<GregorianCalendar, Map<Food, Integer>> orderHistory; //User
+Map<GregorianCalen dar, Map<Food, Integer>> salesHistory; //Admin
+
+* RowFilter Api
+https://stackoverflow.com/questions/22066387/how-to-search-an-element-in-a-jtable-java
+
 
 1. 윈도우용 git 다운로드/설치
 https://github.com/git-for-windows/git/releases/download/v2.21.0.windows.1/Git-2.21.0-64-bit.exe
@@ -118,10 +105,3 @@ https://github.com/git-for-windows/git/releases/download/v2.21.0.windows.1/Git-2
     git pull
 내려받기만 하려면 :
     git fetch
-
-
-객체에 대해 설명하고자 합니다.
-음식 메뉴를 정의하는 Food 클래스와 주문사용자를 정의하는 User
-는 Comparable 인터페이스를 상속합니다. 이유는 Map에서 
-
-
