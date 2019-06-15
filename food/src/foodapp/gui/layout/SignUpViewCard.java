@@ -24,7 +24,7 @@ import foodapp.dao.UserRepository;
 import foodapp.model.vo.User;
 
 
-public class SignUpPageCard extends JPanel implements MouseListener {
+public class SignUpViewCard extends JPanel implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -59,7 +59,7 @@ public class SignUpPageCard extends JPanel implements MouseListener {
 
 	private UserRepository userRepo;
 	
-	public SignUpPageCard(CardLayout cl, JPanel cards, UserRepository userRepo) {
+	public SignUpViewCard(CardLayout cl, JPanel cards, UserRepository userRepo) {
 		this.userRepo = userRepo;
 		this.cl = cl;
 		this.cards = cards;

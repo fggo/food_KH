@@ -32,6 +32,7 @@ public final class Constants {
 	/* 주문 시 버튼이름 */
 	public static final String		ADD_FOOD			= "ADD_FOOD";
 	public static final String		ORDER				= "ORDER";
+	public static final String		CANCLE_ORDER		= "CANCLE_ORDER";
 	
 	/* 면,탕,밥 메뉴 테이블 */
 	public static final String		NOODLE_TABLE		= "NOODLE_TABLE";

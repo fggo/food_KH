@@ -10,7 +10,7 @@ public class Main {
 		return userRepo;
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {

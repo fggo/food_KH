@@ -9,67 +9,78 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.JTextPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
 
 import foodapp.dao.UserRepository;
 import foodapp.model.vo.Food;
-import foodapp.model.vo.FoodMenu;
+import foodapp.model.vo.User;
 
-public class FoodMenuPageCard extends JPanel implements MouseListener {
+public class OrderViewCard extends JPanel implements MouseListener{
 
 	private static final long serialVersionUID = 1L;
 
-	private JButton logoBtn;
-	
 	private CardLayout cl;
 	private JPanel cards;
+	private JTextField phoneTextField;
+	
 
+	private JTextArea receiptTextArea;
 	private JPanel orderViewLeftPanel;
-	private JPanel orderViewRightPanel;
 	private JSplitPane centerReceipt;
 
 	private JPanel receiptLabelPanel;
 	private JLabel receiptLabel;
-	private JTextPane receiptTextArea;
 
 	private JSplitPane orderViewSplitPane1, orderViewSplitPane2, orderViewSplitPane3;
-
+	private JPanel orderViewRightPanel;
+		
 	private JPanel backButtonPanel;
+	private JButton orderViewHomeBtn;
 
 	private UserRepository userRepo;
 
-	public FoodMenuPageCard(CardLayout cl, JPanel cards, UserRepository userRepo) {
+	public OrderViewCard(CardLayout cl, JPanel cards, 
+			JTextField phoneTextField, UserRepository userRepo) {
 		this.cl = cl;
 		this.cards = cards;
+		this.phoneTextField = phoneTextField;
 		this.userRepo = userRepo;
-
+		
 		initialize();
 	}
+	
+	private void initialize() {
+		createOrderViewPage();
+		showOrderViewPage();
+	}
 
-	private void initialize(){
+	private void createOrderViewPage() {
 		orderViewLeftPanel = new JPanel();
 		centerReceipt = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
+		Font font = new Font("맑은고딕", Font.BOLD, 17);
+		receiptLabel = new JLabel("최근 주문 내역");
+		receiptLabel.setFont(font);
+		receiptLabel.setForeground(Color.DARK_GRAY);
 		receiptLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		receiptLabel = new JLabel("전체 메뉴");
 		receiptLabelPanel.add(receiptLabel);
-		receiptTextArea = new JTextPane();
-		Font font = new Font("맑은고딕", Font.BOLD, 13);
+		receiptTextArea = new JTextArea(400, 500);
+		receiptTextArea.setEditable(false);
+		font = new Font("맑은고딕", Font.BOLD, 13);
         receiptTextArea.setFont(font);
         receiptTextArea.setForeground(Color.BLUE);
 
@@ -87,19 +98,19 @@ public class FoodMenuPageCard extends JPanel implements MouseListener {
 		
 		orderViewSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		backButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		logoBtn = new JButton("뒤로 가기");
-		logoBtn.setName(INIT_PAGE);
-		logoBtn.addMouseListener(this);
-		backButtonPanel.add(logoBtn);
+		orderViewHomeBtn = new JButton("뒤로 가기");
+		orderViewHomeBtn.setName(INIT_PAGE);
+		backButtonPanel.add(orderViewHomeBtn);
 		orderViewSplitPane3.setTopComponent(backButtonPanel);
 		orderViewSplitPane3.setBottomComponent(orderViewSplitPane2);
 		
 		invokeSplitPane();
-
-		showMenuList();
 		
+		orderViewHomeBtn.addMouseListener(this);
+
 		setLayout(new BorderLayout());
 		add(orderViewSplitPane3);
+
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch(Exception e) {
@@ -109,67 +120,12 @@ public class FoodMenuPageCard extends JPanel implements MouseListener {
 		setVisible(true);
 	}
 
-	private void showMenuList() {
-		FoodMenu menu = userRepo.getFoodMenu();
-
-		if(menu ==null || menu.getFoodMenuList() == null)
-			return;
-
-		List<Food> foodMenuList = (ArrayList<Food>)userRepo.getFoodMenu().getFoodMenuList();
-		Collections.sort(foodMenuList, (i,j)->{
-			return i.compareTo(j);
-		});
-
-		Iterator<Food> itr = foodMenuList.iterator();
-		Food food = null;
-		String msg = "";
-
-		receiptTextArea.setText("");
-		receiptTextArea.setEditable(true);
-
-		int count = 0;
-		Color[] colors = {Color.BLUE, Color.ORANGE, Color.RED,};
-		String menuCategory = null;
-
-		receiptTextArea.setText("");
-
-
-		while(itr.hasNext()) {
-			food = itr.next();
-				
-			msg = "\t"+food + "\n";
-			if(menuCategory != null && !menuCategory.equals(food.getMenuCategory())) {
-				count++;
-				msg = "\n" + msg;
-			}
-			menuCategory = food.getMenuCategory();
-
-			appendToPane(receiptTextArea, msg, colors[count]);
-		}
-		receiptTextArea.setEditable(false);
-
-	}
-
-	private void appendToPane(JTextPane tp, String msg, Color c)
-    {
-        StyleContext sc = StyleContext.getDefaultStyleContext();
-        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
-
-        aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
-        aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
-
-        int len = tp.getDocument().getLength();
-        tp.setCaretPosition(len);
-        tp.setCharacterAttributes(aset, false);
-        tp.replaceSelection(msg);
-    }
-
 	private void invokeSplitPane() {
         SwingUtilities.invokeLater(new Runnable() {
 
             @Override
             public void run() {
-                orderViewSplitPane1.setDividerLocation(200 + orderViewSplitPane1.getInsets().left);
+                orderViewSplitPane1.setDividerLocation(150 + orderViewSplitPane1.getInsets().left);
                 orderViewSplitPane2.setDividerLocation(675+orderViewSplitPane2.getInsets().left);
                 orderViewSplitPane3.setDividerLocation(40+orderViewSplitPane3.getInsets().top);
                 centerReceipt.setDividerLocation(30+centerReceipt.getInsets().top);
@@ -189,6 +145,41 @@ public class FoodMenuPageCard extends JPanel implements MouseListener {
         });
     }
 
+	private void showOrderViewPage() {
+		if(this.phoneTextField.getText().equals("")) {
+			receiptTextArea.setText("");
+			return;
+		}
+		User user = userRepo.getUserByPhone(this.phoneTextField.getText());
+		if(user ==null) {
+			JOptionPane.showMessageDialog(null, "로그인이 필요합니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		Map<Food, Integer> orderList = user.getOrderList();
+
+		if(orderList == null || orderList.size() < 1) {
+			receiptTextArea.setText("");
+			return;
+		}
+		
+		Date temp = new Date(user.getOrderCreated().getTimeInMillis());
+		SimpleDateFormat sdf = new SimpleDateFormat("yy년 MM월 dd일, HH시 mm분 ss초");
+		String date = sdf.format(temp);
+		String msg = "\t주문 날짜:  " + date + "\n\n";
+		Food food = null;
+		int qty = 0;
+		int sum = 0;
+		for(Map.Entry<Food, Integer> entry : orderList.entrySet()) {
+			food = entry.getKey();
+			qty = entry.getValue();
+			msg += "\t" + food + " * " + qty + " 개.\n";
+			sum += food.getMenuPrice() * qty;
+		}
+		msg += "\n\t 총 주문 액: " + NumberFormat.getCurrencyInstance(Locale.KOREA).format(sum);
+
+		receiptTextArea.setText(msg);
+	}
+	
 	@Override
 	public void mousePressed(MouseEvent e) {
 		cl.show(cards, INIT_PAGE);

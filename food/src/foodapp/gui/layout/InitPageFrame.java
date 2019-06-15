@@ -9,6 +9,7 @@ import static foodapp.dao.Constants.INIT_PAGE;
 import static foodapp.dao.Constants.NOODLE;
 import static foodapp.dao.Constants.NOODLE_TABLE;
 import static foodapp.dao.Constants.ORDER;
+import static foodapp.dao.Constants.CANCLE_ORDER;
 import static foodapp.dao.Constants.ORDER_VIEW_PAGE;
 import static foodapp.dao.Constants.RICE;
 import static foodapp.dao.Constants.RICE_TABLE;
@@ -84,13 +85,13 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private JSplitPane mainSplitPane1, mainSplitPane2, mainSplitPane3;
 	private JSplitPane subSplitPane1, subSplitPane2, subSplitPane5;
 
-	private JPanel cards;
-	private JPanel card1, card2, card3, card4;
+	private JPanel pageViewCards;
+	private JPanel pageCard1, pageCard2, pageCard3, pageCard4;
 
-	private JPanel menuCards;
+	private JPanel menuTableCards;
 	private JPanel noodleCard, soupCard, riceCard;
 	
-	private JPanel userCards;
+	private JPanel userInputCards;
 	private JPanel userLogOffCard, userLoggedCard;
 	
 	private JPanel topPanel, bottomPanel, rightPanel, centerAndRightPanel, leftPanel;
@@ -144,7 +145,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		setPopularMenuList();
 	}
 
-	private void initialize() throws Exception {
+	private void initialize() {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setLocationRelativeTo(null); //center window
 		getContentPane().setLayout(new BorderLayout());
@@ -173,10 +174,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		/* window closing */
 		this.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowOpened(WindowEvent e) {
-			}
-
-			@Override
 			public void windowClosing(WindowEvent e) {
 				User user = null;
 				if (userRepo.getPhone() != null) {
@@ -193,7 +190,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		});
 
 		setResizable(false);
-		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
@@ -227,23 +224,16 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		icon = new ImageIcon(getClass().getResource("../images/noodle.jpg"));
 		icon = new ImageIcon(icon.getImage().getScaledInstance(180, 106, Image.SCALE_SMOOTH));
 		noodleBtn = new JButton(icon); noodleBtn.setName(NOODLE);
-//		noodleBtn.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-		noodleBtn.setMargin(new Insets(0, 0, 0, 0));
-		noodleBtn.setBackground(Color.LIGHT_GRAY);
 		leftPanel.add(noodleBtn);
 
 		icon = new ImageIcon(getClass().getResource("../images/soup.jpg"));
 		icon = new ImageIcon(icon.getImage().getScaledInstance(180, 106, Image.SCALE_SMOOTH));
 		soupBtn = new JButton(icon); soupBtn.setName(SOUP);
-		soupBtn.setMargin(new Insets(0, 0, 0, 0));
-		soupBtn.setBackground(Color.LIGHT_GRAY);
 		leftPanel.add(soupBtn);
 
 		icon = new ImageIcon(getClass().getResource("../images/rice.png"));
 		icon = new ImageIcon(icon.getImage().getScaledInstance(180, 106, Image.SCALE_SMOOTH));
 		riceBtn = new JButton(icon); riceBtn.setName(RICE);
-		riceBtn.setMargin(new Insets(0, 0, 0, 0));
-		riceBtn.setBackground(Color.LIGHT_GRAY);
 		leftPanel.add(riceBtn);
 
 		noodleBtn.addMouseListener(this);
@@ -253,8 +243,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 	private void createFirstTopCenter() {
 		CardLayout layout = new CardLayout();
-		menuCards = new JPanel(layout);
-		menuCards.setBorder(new EmptyBorder(0,0,0,0));
+		menuTableCards = new JPanel(layout);
+		menuTableCards.setBorder(new EmptyBorder(0,0,0,0));
 
 		noodleCard = new JPanel(new BorderLayout());
 		noodleCard.setName(NOODLE);
@@ -263,16 +253,19 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		riceCard = new JPanel(new BorderLayout());
 		riceCard.setName(RICE);
 		
+		//create table models
 		Map<String, DefaultTableModel> tableModels = constructTableModels();
 		modelN = tableModels.get(NOODLE);
 		modelS = tableModels.get(SOUP);
 		modelR = tableModels.get(RICE);
 
+		//create tables
 		menuNoodleTable = new JTable(modelN);
-		menuNoodleTable.setName(NOODLE_TABLE);
 		menuSoupTable = new JTable(modelS);
-		menuSoupTable.setName(SOUP_TABLE);
 		menuRiceTable = new JTable(modelR);
+
+		menuNoodleTable.setName(NOODLE_TABLE);
+		menuSoupTable.setName(SOUP_TABLE);
 		menuRiceTable.setName(RICE_TABLE);
 
 		menuNoodleTable.setAutoCreateRowSorter(true);
@@ -283,21 +276,25 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		menuSoupTable.addMouseListener(this);
 		menuRiceTable.addMouseListener(this);
 
+		//put in scroll panes
 		scrollNoodlePane = new JScrollPane(menuNoodleTable);
-		scrollNoodlePane.setBorder(new EmptyBorder(0,0,0,0));
 		scrollSoupPane = new JScrollPane(menuSoupTable);
-		scrollSoupPane.setBorder(new EmptyBorder(0,0,0,0));
 		scrollRicePane = new JScrollPane(menuRiceTable);
+
+		scrollNoodlePane.setBorder(new EmptyBorder(0,0,0,0));
+		scrollSoupPane.setBorder(new EmptyBorder(0,0,0,0));
 		scrollRicePane.setBorder(new EmptyBorder(0,0,0,0));
-		
+
+		//put in card layout panel
 		noodleCard.add(scrollNoodlePane);
 		soupCard.add(scrollSoupPane);
 		riceCard.add(scrollRicePane);
 
-		menuCards.add(noodleCard, NOODLE);
-		menuCards.add(soupCard,SOUP);
-		menuCards.add(riceCard, RICE);
+		menuTableCards.add(noodleCard, NOODLE);
+		menuTableCards.add(soupCard,SOUP);
+		menuTableCards.add(riceCard, RICE);
 		
+		//add menu button
 		ImageIcon icon = new ImageIcon(getClass().getResource("../images/add.png"));
 		icon = new ImageIcon(icon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
 		addMenuBtn = new JButton(icon);
@@ -310,7 +307,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		p5.add(addMenuBtn);
 
 		p3 = new JPanel(new BorderLayout());
-		p3.add(menuCards, BorderLayout.CENTER);
+		p3.add(menuTableCards, BorderLayout.CENTER);
 		p3.add(p5, BorderLayout.SOUTH);
 		
 		orderSelectionPanel = new JPanel(new GridLayout(4,1));
@@ -319,7 +316,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		menuCategoryTxt = new JTextField("", 10);
 		menuCategoryTxt.setEditable(false);
 
-		for(Component card : menuCards.getComponents()) {
+		for(Component card : menuTableCards.getComponents()) {
 			if(card instanceof JPanel && card.isVisible()) {
 				switch(card.getName()){
 					case NOODLE: this.menuCategoryTxt.setText("면 메뉴"); break;
@@ -385,7 +382,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		ImageIcon icon = new ImageIcon(getClass().getResource("../images/delete.png"));
 		icon = new ImageIcon(icon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
 		cancelOrderBtn = new JButton(icon);
-		cancelOrderBtn.setName("CANCEL_ORDER");
+		cancelOrderBtn.setName(CANCLE_ORDER);
 		cancelOrderBtn.setBorder(new EmptyBorder(0,0,0,0));
 		cancelOrderBtn.setFocusPainted(false);
 		cancelOrderBtn.addMouseListener(this);
@@ -474,7 +471,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 	private void createThirdTop() {
 		CardLayout cl = new CardLayout();
-		userCards = new JPanel(cl);
+		userInputCards = new JPanel(cl);
 
 		phoneTextField = new JTextField("", 11); //핸드폰 11자리
 		passwordField = new JPasswordField(11);
@@ -496,8 +493,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		userLoggedCard = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		userLoggedCard.add(welcomeBtn);
 
-		userCards.add(userLogOffCard, "USER_LOGOFF");
-		userCards.add(userLoggedCard, "USER_LOGGED");
+		userInputCards.add(userLogOffCard, "USER_LOGOFF");
+		userInputCards.add(userLoggedCard, "USER_LOGGED");
 
 		signInBtn = new JButton("로그인");
 		signInBtn.setFont(font);
@@ -514,7 +511,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		p1.add(signUpBtn);
 
 		p4 = new JPanel(new GridLayout(1,2));
-		p4.add(userCards);
+		p4.add(userInputCards);
 		p4.add(p1);
 
 		topPanel = new JPanel(new BorderLayout());
@@ -522,8 +519,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		signInBtn.addMouseListener(
 				new SignInEventHandler(
-						(CardLayout)userCards.getLayout(), 
-						userCards,
+						(CardLayout)userInputCards.getLayout(), 
+						userInputCards,
 						signInBtn,
 						logOffBtn,
 						adminPageBtn, 
@@ -533,8 +530,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		
 		logOffBtn.addMouseListener(
 				new SignOffEventHandler(
-						(CardLayout)userCards.getLayout(), 
-						userCards,
+						(CardLayout)userInputCards.getLayout(), 
+						userInputCards,
 						signInBtn,
 						logOffBtn,
 						adminPageBtn, 
@@ -569,10 +566,9 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		toolbar.add(panel);
 		toolbar.add(new JSeparator());
 
-		//order view
+		//order view btn
 		icon = new ImageIcon(getClass().getResource("../images/orderView.png"));
-		icon = new ImageIcon(icon.getImage()
-								.getScaledInstance(43, 43, Image.SCALE_SMOOTH));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(43, 43, Image.SCALE_SMOOTH));
 		orderViewBtn = new JButton(icon);
 		orderViewBtn.setName(ORDER_VIEW_PAGE);
 
@@ -582,10 +578,9 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		toolbar.add(panel);
 		toolbar.add(new JSeparator());
 		
-        //admin page
+        //admin page btn
 		icon = new ImageIcon(getClass().getResource("../images/admin.png"));
-		icon = new ImageIcon(icon.getImage()
-								.getScaledInstance(43, 43, Image.SCALE_SMOOTH));
+		icon = new ImageIcon(icon.getImage().getScaledInstance(43, 43, Image.SCALE_SMOOTH));
 		adminPageBtn = new JButton(icon);
 		adminPageBtn.setName(ADMIN_PAGE);
 		adminPageBtn.setVisible(false);
@@ -737,10 +732,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				subSplitPane2.setDividerSize(1);
 				subSplitPane2.setEnabled(false);
 
-//				subSplitPane3.setDividerLocation(133+ subSplitPane3.getInsets().top);
-//				subSplitPane3.setDividerSize(1);
-//				subSplitPane3.setEnabled(false);
-//
 				subSplitPane5.setDividerLocation(120+ subSplitPane5.getInsets().top);
 				subSplitPane5.setDividerSize(1);
 				subSplitPane5.setEnabled(false);
@@ -770,9 +761,9 @@ public class InitPageFrame extends JFrame implements MouseListener {
 				case NOODLE: showNoodleMenu(); break;
 				case SOUP: showSoupMenu(); break;
 				case RICE: showRiceMenu(); break;
-				case ADD_FOOD: saveOrderList(name); break;
+				case ADD_FOOD: addFoodOrderList(); break;
 				case ORDER: completeOrder(); break;
-				case "CANCEL_ORDER": cancelOrder(); break;
+				case CANCLE_ORDER: cancelOrder(); break;
 				default:
 					break;
 			}
@@ -832,6 +823,76 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			User user = userRepo.getUserByPhone(this.phoneTextField.getText());
 			user.setOrdering(false);
 		}
+	}
+
+	private void addFoodOrderList() {
+		addMenuBtn.setFocusPainted(false);
+		if(this.phoneTextField.isEditable() && this.passwordField.isEditable()) {
+			JOptionPane.showMessageDialog(null, "로그인이 필요합니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
+		User user = userRepo.getUserByPhone(this.phoneTextField.getText());
+
+		if (user == null) {
+			JOptionPane.showMessageDialog(null, "핸드폰정보 유저 없음", "로그인 확인", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+
+		if(!user.isOrdering()) {
+			this.tempOrderList = new TreeMap<Food, Integer>();
+			user.setOrdering(true);
+		}
+
+		TableModel model = null;
+		int row = 0;
+		
+		for(Component card : menuTableCards.getComponents()) {
+			if(card instanceof JPanel && card.isVisible()) {
+				switch(card.getName()){
+					case NOODLE:model = (DefaultTableModel)menuNoodleTable.getModel();
+								row = menuNoodleTable.getSelectedRow();
+								break;
+					case SOUP:  model = (DefaultTableModel)menuSoupTable.getModel();
+							   	row = menuSoupTable.getSelectedRow();
+							   	break;
+					case RICE:  model = (DefaultTableModel)menuRiceTable.getModel();
+								row = menuRiceTable.getSelectedRow();
+								break;
+				}
+			}
+		}
+
+		if (row==-1) {
+			JOptionPane.showMessageDialog(null, "주문할 음식을 먼저 클릭해주세요.", "음식 미선택", JOptionPane.WARNING_MESSAGE);
+			return;
+		}
+		String menuCategory = (String)model.getValueAt(row, 0);
+		int menuNo = Integer.valueOf((String)model.getValueAt(row, 1));
+		String menuName=  (String)model.getValueAt(row, 2);
+		int menuPrice = 0;
+		String temp = ((String)model.getValueAt(row, 3)).substring(1);
+		menuPrice = Integer.valueOf(temp.replace(",", ""));
+
+		Food food = new Food(menuCategory, menuNo, menuName, menuPrice);
+		
+		tempOrderList.put(food, (int)this.menuQtyComboBox.getSelectedItem());
+		
+		updateOrderingTable(food, (int)this.menuQtyComboBox.getSelectedItem());
+
+		int subTotal = 0;
+		for(Map.Entry<Food, Integer> entry : tempOrderList.entrySet()) {
+			subTotal += entry.getKey().getMenuPrice() * entry.getValue();
+		}
+
+		Font font = new Font("맑은고딕", Font.BOLD, 12);
+        subTotalLabel.setFont(font);
+
+		this.subTotalLabel.setText("     누적 금액  " + 
+			NumberFormat.getCurrencyInstance(Locale.KOREA).format(subTotal).toString());
+
+		JOptionPane.showMessageDialog(null, "주문이 추가되었습니다.", "주문 추가 확인", JOptionPane.WARNING_MESSAGE);
+		return;
 	}
 
 	private void completeOrder() {
@@ -902,83 +963,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		return;
 	}
 
-	private void saveOrderList(String name) {
-		addMenuBtn.setFocusPainted(false);
-		if(this.phoneTextField.getText() == "25, 2"
-				|| (this.phoneTextField.isEditable()
-						&& this.passwordField.isEditable())) {
-			JOptionPane.showMessageDialog(null, "로그인이 필요합니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
-
-		User user = userRepo.getUserByPhone(this.phoneTextField.getText());
-
-		if (user == null) {
-			JOptionPane.showMessageDialog(null, "핸드폰정보 유저 없음", "로그인 확인", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
-
-		if(!name.equals(ADD_FOOD)) {
-			JOptionPane.showMessageDialog(null, "잘못된 메뉴입니다", "프로그램 버그 확인", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
-
-
-		if(!user.isOrdering()) {
-			this.tempOrderList = new TreeMap<Food, Integer>();
-			user.setOrdering(true);
-		}
-
-		TableModel model = null;
-		int row = 0;
-		
-		switch(this.menuCategoryTxt.getText().charAt(0)) {
-			case '면':
-				model = (DefaultTableModel)menuNoodleTable.getModel();
-				row = menuNoodleTable.getSelectedRow();
-				break;
-			case '탕': 
-				model = (DefaultTableModel)menuSoupTable.getModel();
-				row = menuSoupTable.getSelectedRow();
-				break;
-			case '밥':
-				model = (DefaultTableModel)menuRiceTable.getModel();
-				row = menuRiceTable.getSelectedRow();
-				break;
-		}
-
-		if (row==-1) {
-			JOptionPane.showMessageDialog(null, "주문할 음식을 먼저 클릭해주세요.", "음식 미선택", JOptionPane.WARNING_MESSAGE);
-			return;
-		}
-		String menuCategory = (String)model.getValueAt(row, 0);
-		int menuNo = Integer.valueOf((String)model.getValueAt(row, 1));
-		String menuName=  (String)model.getValueAt(row, 2);
-		int menuPrice = 0;
-		String temp = ((String)model.getValueAt(row, 3)).substring(1);
-		menuPrice = Integer.valueOf(temp.replace(",", ""));
-
-		Food food = new Food(menuCategory, menuNo, menuName, menuPrice);
-		
-		tempOrderList.put(food, (int)this.menuQtyComboBox.getSelectedItem());
-		
-		updateOrderingTable(food, (int)this.menuQtyComboBox.getSelectedItem());
-
-		int subTotal = 0;
-		for(Map.Entry<Food, Integer> entry : tempOrderList.entrySet()) {
-			subTotal += entry.getKey().getMenuPrice() * entry.getValue();
-		}
-
-		Font font = new Font("맑은고딕", Font.BOLD, 12);
-        subTotalLabel.setFont(font);
-
-		this.subTotalLabel.setText("     누적 금액  " + 
-			NumberFormat.getCurrencyInstance(Locale.KOREA).format(subTotal).toString());
-
-		JOptionPane.showMessageDialog(null, "주문이 추가되었습니다.", "주문 추가 확인", JOptionPane.WARNING_MESSAGE);
-		return;
-	}
-
 	private void updateOrderingTable(Food food, int qty) {
 		boolean duplicate = false;
 		String menuCategory = "", menuName = "";
@@ -1014,28 +998,29 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private void showNoodleMenu() {
 		menuNoodleTable.getSelectionModel().clearSelection();
 		this.subMenuTxt.setText("");
-		CardLayout cl = (CardLayout)(menuCards.getLayout());
-        cl.show(menuCards, NOODLE);
+		CardLayout cl = (CardLayout)(menuTableCards.getLayout());
+        cl.show(menuTableCards, NOODLE);
         this.menuCategoryTxt.setText("면 메뉴");
 	}
 
 	private void showSoupMenu() {
 		menuSoupTable.getSelectionModel().clearSelection();
 		this.subMenuTxt.setText("");
-		CardLayout cl = (CardLayout)(menuCards.getLayout());
-        cl.show(menuCards, SOUP);
+		CardLayout cl = (CardLayout)(menuTableCards.getLayout());
+        cl.show(menuTableCards, SOUP);
         this.menuCategoryTxt.setText("탕 메뉴");
 	}
 
 	private void showRiceMenu() {
 		menuRiceTable.getSelectionModel().clearSelection();
 		this.subMenuTxt.setText("");
-		CardLayout cl = (CardLayout)(menuCards.getLayout());
-        cl.show(menuCards, RICE);
+		CardLayout cl = (CardLayout)(menuTableCards.getLayout());
+        cl.show(menuTableCards, RICE);
         this.menuCategoryTxt.setText("밥 메뉴");
 	}
 
 	private void createAdminPage() {
+		adminPageBtn.setFocusPainted(false);
 		if(phoneTextField.getText() == null
 				|| !phoneTextField.getText().equals("admin")) {
 			JOptionPane.showMessageDialog(null, "관리자로 먼저 로그인 해주세요.", "관리자 권한 에러", JOptionPane.WARNING_MESSAGE);
@@ -1061,61 +1046,60 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 	private void updateCards() {
 		CardLayout cl = null;
-		if(cards == null
-				|| !(cards.getLayout() instanceof CardLayout)) 
+		if(pageViewCards == null
+				|| !(pageViewCards.getLayout() instanceof CardLayout)) 
 			cl = new CardLayout();
 		else
-			cl = (CardLayout)cards.getLayout();
+			cl = (CardLayout)pageViewCards.getLayout();
 
 
-		cards = new JPanel(cl);
+		pageViewCards = new JPanel(cl);
 
-		card1 = new JPanel(new BorderLayout());
-		card2 = new JPanel(new BorderLayout());
-		card3 = new JPanel(new BorderLayout());
-		card4 = new JPanel(new BorderLayout());
+		pageCard1 = new JPanel(new BorderLayout());
+		pageCard2 = new JPanel(new BorderLayout());
+		pageCard3 = new JPanel(new BorderLayout());
+		pageCard4 = new JPanel(new BorderLayout());
 
-		card1.add(mainSplitPane3);
-		card2.add(new FoodMenuPageCard(cl, cards, userRepo));
-		card3.add(new OrderViewPageCard(cl, cards, phoneTextField, userRepo));
-		card4.add(new SignUpPageCard(cl, cards, userRepo));
+		pageCard1.add(mainSplitPane3);
+		pageCard2.add(new FoodMenuViewCard(cl, pageViewCards, userRepo));
+		pageCard3.add(new OrderViewCard(cl, pageViewCards, phoneTextField, userRepo));
+		pageCard4.add(new SignUpViewCard(cl, pageViewCards, userRepo));
 
-		cards.add(card1, INIT_PAGE);
-		cards.add(card2, FOOD_MENU_PAGE);
-		cards.add(card3, ORDER_VIEW_PAGE);
-		cards.add(card4, SIGN_UP_PAGE);
+		pageViewCards.add(pageCard1, INIT_PAGE);
+		pageViewCards.add(pageCard2, FOOD_MENU_PAGE);
+		pageViewCards.add(pageCard3, ORDER_VIEW_PAGE);
+		pageViewCards.add(pageCard4, SIGN_UP_PAGE);
 
-		add(cards);
+		add(pageViewCards);
 
-		cards.revalidate();
+		pageViewCards.revalidate();
 	}
 
 	private void createFoodMenuPage() {
-		//cards 패널의 레이아웃(카드레이아웃)을 저장
-		//cards 패널은 총 4장의 카드로 이루어져 있습니다.
-		CardLayout cl = (CardLayout)(cards.getLayout());
+		//pageViewCards 패널의 레이아웃(카드레이아웃)을 저장
+		//pageViewCards 패널은 총 4장의 카드로 이루어져 있습니다.
+		CardLayout cl = (CardLayout)(pageViewCards.getLayout());
 		
 		//Food 음식 메뉴가 변동 될 경우를 대비하여, 각 4장의 카드를 새로 업데이트 해줍니다.
 		updateCards();
 
 		//FOOD_MENU_PAGE 라는 이름의 카드를 보여줍니다.
-        cl.show(cards, FOOD_MENU_PAGE);
+        cl.show(pageViewCards, FOOD_MENU_PAGE);
 	}
 
 	private void createOrderViewPage() {
-		CardLayout cl = (CardLayout)(cards.getLayout());
+		CardLayout cl = (CardLayout)(pageViewCards.getLayout());
 		updateCards();
-        cl.show(cards, ORDER_VIEW_PAGE);
+        cl.show(pageViewCards, ORDER_VIEW_PAGE);
 	}
 	
 	private void createSignUpPage() {
-		CardLayout cl = (CardLayout)(cards.getLayout());
-        cl.show(cards, SIGN_UP_PAGE);
+		CardLayout cl = (CardLayout)(pageViewCards.getLayout());
+        cl.show(pageViewCards, SIGN_UP_PAGE);
 	}
 
 	private void setPopularMenuList() {
-		Map<Food, Integer> salesResult = 
-				(TreeMap<Food, Integer>)((Admin)userRepo.getAdmin()).getSalesResult();
+		Map<Food, Integer> salesResult = ((Admin)userRepo.getAdmin()).getSalesResult();
 		if (salesResult == null)
 			return;
 
