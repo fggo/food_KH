@@ -27,7 +27,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -64,7 +63,6 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -190,7 +188,6 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		});
 
 		setResizable(false);
-//		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
@@ -647,20 +644,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		//데이터를 넣을 테이블 모델을 정의합니다.
 		Food food = null;
-		String[] colNames = {"카테고리", "메뉴번호", "메뉴이름", "가격"};
         modelN = (DefaultTableModel)createDefaultTableModel();
         modelS = (DefaultTableModel)createDefaultTableModel();
         modelR = (DefaultTableModel)createDefaultTableModel();
 
-        //면, 탕, 밥 메뉴 데이터를 분리해서 넣을 2차 배열을 3개 생성합니다.
-		String[][] tempNoodleList = new String[foodMenuList ==null? 0: foodMenuList.size()][colNames.length];
-		String[][] tempSoupList = new String[foodMenuList ==null? 0: foodMenuList.size()][colNames.length];
-		String[][] tempRiceList = new String[foodMenuList ==null? 0: foodMenuList.size()][colNames.length];
-
-		//면 탕 밥 각각의 메뉴 개수를 저장하기 위한 변수들
-		int countN =0, countS=0, countR=0;
-		
-		//3가지 메뉴별로 분리해서 배열에 담습니다.
+		//3가지 메뉴별로 row 데이터 저장
 		while(itr!= null && itr.hasNext()) {
 			food = itr.next();
 
@@ -669,34 +657,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 					food.getMenuName(), 
 					food.toCurrency(food.getMenuPrice()) };
 			switch(food.getMenuCategory()) {
-				case NOODLE: tempNoodleList[countN++] = temp;break;
-				case SOUP: tempSoupList[countS++] = temp; break;
-				case RICE: tempRiceList[countR++] = temp; break;
+				case NOODLE: modelN.addRow(temp); break;
+				case SOUP: modelS.addRow(temp); break;
+				case RICE: modelR.addRow(temp); break;
 			}
 		}
-		
-		//각메뉴 별로 음식 개수만큼 맞게 다시 2차배열을 정의하여, 데이터를 넣습니다.
-		String[][] noodleList = new String[countN][colNames.length];
-		String[][] soupList = new String[countS][colNames.length];
-		String[][] riceList = new String[countR][colNames.length];
-		
-		for(int i =0; i<noodleList.length; i++) {
-			for(int j =0; j<noodleList[i].length; j++)
-				noodleList[i][j] = tempNoodleList[i][j];
-		}
-		for(int i =0; i<soupList.length; i++) {
-			for(int j =0; j<soupList[i].length; j++)
-				soupList[i][j] = tempSoupList[i][j];
-		}
-		for(int i =0; i<riceList.length; i++) {
-			for(int j =0; j<riceList[i].length; j++)
-				riceList[i][j] = tempRiceList[i][j];
-		}
-		
-		//위의 메뉴데이터를 테이블 모델에 넣습니다.
-		for(int i =0;  i<noodleList.length; i++)  modelN.addRow(noodleList[i]);
-		for(int i =0;  i<soupList.length; i++)  modelS.addRow(soupList[i]);
-		for(int i =0;  i<riceList.length; i++)  modelR.addRow(riceList[i]);
 		
 		//만들어진 테이블 모델 데이터를 TreeMap에 담아서 return 합니다.
 		Map<String, DefaultTableModel> map = new TreeMap<String, DefaultTableModel>();
@@ -1076,14 +1041,8 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	}
 
 	private void createFoodMenuPage() {
-		//pageViewCards 패널의 레이아웃(카드레이아웃)을 저장
-		//pageViewCards 패널은 총 4장의 카드로 이루어져 있습니다.
 		CardLayout cl = (CardLayout)(pageViewCards.getLayout());
-		
-		//Food 음식 메뉴가 변동 될 경우를 대비하여, 각 4장의 카드를 새로 업데이트 해줍니다.
 		updateCards();
-
-		//FOOD_MENU_PAGE 라는 이름의 카드를 보여줍니다.
         cl.show(pageViewCards, FOOD_MENU_PAGE);
 	}
 

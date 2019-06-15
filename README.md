@@ -1,7 +1,7 @@
 # food_KH
 food ordering app
 
-## foodapp.model.vo 패키지
+## model.vo 패키지
 1. 데이터 정렬 방법
     User는 음식주문 사용자를 정의하는 클래스로 ```Comparable<User>``` 인터페이스를 상속
 
@@ -40,7 +40,7 @@ food ordering app
     User, Food, FoodMenu는 Object input/output 스트림으로 파일에 저장시
     직렬화를 위해 Serializable 인터페이스를 상속
 
-## foodapp.dao 패키지
+## dao 패키지
     Constants클래스에 각종 상수 (public final static) 정의
     
     UserRepository 클래스는
@@ -51,7 +51,7 @@ food ordering app
         어플리케이션 시작시 User.dat 파일에 데이터를 read, 종료시 write.
         회원가입시 User의 입력 비밀번호를 Hash 알고리즘으로 암호화. (링크 참고)
         
-## fooapp.gui.layout 패키지
+## gui.layout 패키지
     InitPageFrame 메인화면의 디자인 component 생성 및 이벤트 정의.
         로그인과 로그아웃 버튼 이벤트는 event패키지의 SignInEventHandler와 SignOffEventHandler로 정의
         메인화면에서 메뉴 및 회원가입 버튼 클릭시,
@@ -82,7 +82,7 @@ food ordering app
         메인화면과 별개의 화면이 생성됨.
         매출내역은 팔린 음식과 갯수
     
-## foodapp.gui.event 패키지
+## gui.event 패키지
     로그인 버튼 클릭시, SignInEventHandler가 이벤트를 처리. 버튼 이벤트 추가시에, UserRepository 및
     폰번호, 비밀번호 텍스트를 매개변수로 넘겨 데이터 값이 변경되도록 함.
     로그오프 버튼 클릭시에는 SignOffEventHandler로가 이벤트를 처리, 로그인과 동일하게 매개변수를 통해 데이터 변경.
