@@ -34,7 +34,7 @@ public class OrderViewCard extends JPanel implements MouseListener{
 	private static final long serialVersionUID = 1L;
 
 	private CardLayout cl;
-	private JPanel cards;
+	private JPanel pageViewCards;
 	private JTextField phoneTextField;
 	
 
@@ -53,10 +53,10 @@ public class OrderViewCard extends JPanel implements MouseListener{
 
 	private UserRepository userRepo;
 
-	public OrderViewCard(CardLayout cl, JPanel cards, 
+	public OrderViewCard(CardLayout cl, JPanel pageViewCards, 
 			JTextField phoneTextField, UserRepository userRepo) {
 		this.cl = cl;
-		this.cards = cards;
+		this.pageViewCards = pageViewCards;
 		this.phoneTextField = phoneTextField;
 		this.userRepo = userRepo;
 		
@@ -182,7 +182,7 @@ public class OrderViewCard extends JPanel implements MouseListener{
 	
 	@Override
 	public void mousePressed(MouseEvent e) {
-		cl.show(cards, INIT_PAGE);
+		cl.show(pageViewCards, INIT_PAGE);
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {}

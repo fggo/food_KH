@@ -29,7 +29,7 @@ public class SignUpViewCard extends JPanel implements MouseListener {
 	private static final long serialVersionUID = 1L;
 
 	private CardLayout cl;
-	private JPanel cards;
+	private JPanel pageViewCards;
 
 	private JTextField username, phone, email, address;
 	private JPasswordField password;
@@ -59,10 +59,10 @@ public class SignUpViewCard extends JPanel implements MouseListener {
 
 	private UserRepository userRepo;
 	
-	public SignUpViewCard(CardLayout cl, JPanel cards, UserRepository userRepo) {
+	public SignUpViewCard(CardLayout cl, JPanel pageViewCards, UserRepository userRepo) {
 		this.userRepo = userRepo;
 		this.cl = cl;
-		this.cards = cards;
+		this.pageViewCards = pageViewCards;
 
 		initialize();
 	}
@@ -230,7 +230,7 @@ public class SignUpViewCard extends JPanel implements MouseListener {
 		if (source instanceof JButton) {
 			String name = ((JButton) e.getSource()).getName();
 			switch(name) {
-				case INIT_PAGE: cl.show(cards, INIT_PAGE); break;
+				case INIT_PAGE: cl.show(pageViewCards, INIT_PAGE); break;
 				case "CONFIRM_SIGNUP": confirmSignUp(); break;
 				default:
 					break;

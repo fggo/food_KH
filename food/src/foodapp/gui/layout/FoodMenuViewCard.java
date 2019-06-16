@@ -37,7 +37,7 @@ public class FoodMenuViewCard extends JPanel implements MouseListener {
 	private JButton logoBtn;
 	
 	private CardLayout cl;
-	private JPanel cards;
+	private JPanel pageViewCards;
 
 	private JPanel orderViewLeftPanel;
 	private JPanel orderViewRightPanel;
@@ -53,9 +53,9 @@ public class FoodMenuViewCard extends JPanel implements MouseListener {
 
 	private UserRepository userRepo;
 
-	public FoodMenuViewCard(CardLayout cl, JPanel cards, UserRepository userRepo) {
+	public FoodMenuViewCard(CardLayout cl, JPanel pageViewCards, UserRepository userRepo) {
 		this.cl = cl;
-		this.cards = cards;
+		this.pageViewCards = pageViewCards;
 		this.userRepo = userRepo;
 
 		initialize();
@@ -191,7 +191,7 @@ public class FoodMenuViewCard extends JPanel implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		cl.show(cards, INIT_PAGE);
+		cl.show(pageViewCards, INIT_PAGE);
 	}
 	@Override
 	public void mouseClicked(MouseEvent e) {}

@@ -14,7 +14,7 @@ import foodapp.dao.UserRepository;
 
 public class SignOffEventHandler extends MouseAdapter {
 	private CardLayout cl;
-	private JPanel userCards;
+	private JPanel userInputCards;
 	private JButton signInBtn, logOffBtn;
 	private JButton adminPageBtn;
 	private DefaultTableModel modelOrdering;
@@ -22,13 +22,13 @@ public class SignOffEventHandler extends MouseAdapter {
 	private JPasswordField passwordField;
 	private UserRepository userRepo;
 
-	public SignOffEventHandler(CardLayout cl, JPanel userCards, JButton signInBtn, JButton logOffBtn,
+	public SignOffEventHandler(CardLayout cl, JPanel userInputCards, JButton signInBtn, JButton logOffBtn,
 			JButton adminPageBtn, JTextField loggedPhoneTextField, JPasswordField passwordField, 
 			DefaultTableModel modelOrdering, UserRepository userRepo) {
 		super();
 
 		this.cl = cl;
-		this.userCards = userCards;
+		this.userInputCards = userInputCards;
 		this.signInBtn = signInBtn;
 		this.logOffBtn = logOffBtn;
 		this.adminPageBtn = adminPageBtn;
@@ -52,7 +52,7 @@ public class SignOffEventHandler extends MouseAdapter {
 				passwordField.setText("");
 				modelOrdering.setRowCount(0);
 				this.adminPageBtn.setVisible(false);
-				cl.show(userCards, "USER_LOGOFF");
+				cl.show(userInputCards, "USER_LOGOFF");
 			}
 		}
 	}

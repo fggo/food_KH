@@ -19,7 +19,7 @@ import foodapp.model.vo.User;
 
 public class SignInEventHandler extends MouseAdapter {
 	private CardLayout cl;
-	private JPanel userCards;
+	private JPanel userInputCards;
 	private JButton signInBtn, logOffBtn;
 	private JButton adminPageBtn;
 	private JTextField phoneTextField;
@@ -27,11 +27,11 @@ public class SignInEventHandler extends MouseAdapter {
 
 	private UserRepository userRepo;
 
-	public SignInEventHandler(CardLayout cl, JPanel userCards, JButton signInBtn, JButton logOffBtn, JButton adminPageBtn,
+	public SignInEventHandler(CardLayout cl, JPanel userInputCards, JButton signInBtn, JButton logOffBtn, JButton adminPageBtn,
 			JTextField phoneTextField, JPasswordField passwordField, UserRepository userRepo) {
 		super();
 		this.cl = cl;
-		this.userCards = userCards;
+		this.userInputCards = userInputCards;
 		this.signInBtn = signInBtn;
 		this.logOffBtn = logOffBtn;
 		this.adminPageBtn = adminPageBtn;
@@ -75,8 +75,8 @@ public class SignInEventHandler extends MouseAdapter {
 			logOffBtn.setVisible(true);
 
 			JOptionPane.showMessageDialog(null, "로그인을 성공했습니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
-			cl.show(userCards, "USER_LOGGED");
-			for(Component c : userCards.getComponents()) {
+			cl.show(userInputCards, "USER_LOGGED");
+			for(Component c : userInputCards.getComponents()) {
 				if(c instanceof JPanel) {
 					for(Component btn : ((JPanel) c).getComponents()) {
 						if(btn instanceof JButton) {

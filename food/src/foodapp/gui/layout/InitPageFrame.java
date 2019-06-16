@@ -251,7 +251,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		riceCard.setName(RICE);
 		
 		//create table models
-		Map<String, DefaultTableModel> tableModels = constructTableModels();
+		Map<String, DefaultTableModel> tableModels = this.constructTableModels();
 		modelN = tableModels.get(NOODLE);
 		modelS = tableModels.get(SOUP);
 		modelR = tableModels.get(RICE);
