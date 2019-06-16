@@ -74,8 +74,8 @@ public class SignInEventHandler extends MouseAdapter {
 			signInBtn.setVisible(false);
 			logOffBtn.setVisible(true);
 
-			JOptionPane.showMessageDialog(null, "로그인을 성공했습니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
 			cl.show(userInputCards, "USER_LOGGED");
+
 			for(Component c : userInputCards.getComponents()) {
 				if(c instanceof JPanel) {
 					for(Component btn : ((JPanel) c).getComponents()) {
@@ -90,6 +90,7 @@ public class SignInEventHandler extends MouseAdapter {
 				}
 				
 			}
+			JOptionPane.showMessageDialog(null, "로그인을 성공했습니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "로그인 정보가 불일치 합니다.", "로그인 확인", JOptionPane.WARNING_MESSAGE);

@@ -133,7 +133,7 @@ public class UserRepository {
 		}
 		else {
 			user.setLogged(true);
-			setPhone(phoneTextField);
+			this.setPhone(phoneTextField);
 			System.out.println("·Î±×ÀÎ µÆ½¼´Ï´Ù.");
 			return user;
 		}
@@ -153,12 +153,12 @@ public class UserRepository {
 			if(user.getPhone().equals(this.phone)) {
 				user.setLogged(false);
 				user.setOrdering(false);
+				this.setPhone(null);
 
 				if(user.getSeatNo() >=1 && user.getSeatNo() <=reservations.length) {
 					reservations[user.getSeatNo() -1] = false;
 					user.setSeatNo(0);
 				}
-				this.phone = null;
 				System.out.println("·Î±×¾Æ¿ô µÆ½À´Ï´Ù.");
 				break;
 			}
