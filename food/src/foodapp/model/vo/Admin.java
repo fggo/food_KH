@@ -10,7 +10,7 @@ public class Admin extends User {
 
 	private static final long serialVersionUID = 1L;
 
-	//¸Ş´º, ÆÇ¸Å·®
+	//ë©”ë‰´, íŒë§¤ëŸ‰
 	private Map<Food, Integer> salesResult;
 	private Map<GregorianCalendar, Map<Food,Integer>> salesHistory;
 
@@ -34,16 +34,16 @@ public class Admin extends User {
 
 	public void showSalesResult(Map<Food, Integer> salesResult) {
 		if(salesResult != null && salesResult.size() > 0) {
-			System.out.println("\t--- ¸ÅÃâ¾× ---");
+			System.out.println("\t--- ë§¤ì¶œì•¡ ---");
 			for(Map.Entry<Food, Integer> entry : salesResult.entrySet())
-				System.out.println("\t" + entry.getKey() + "  :  ÃÑ " + entry.getValue() + " °³ ÆÇ¸Å.");
+				System.out.println("\t" + entry.getKey() + "  :  ì´ " + entry.getValue() + " ê°œ íŒë§¤.");
 		}
 	}
 	
 	public void showSalesHistory() {
 		if(salesHistory != null && salesHistory.size() > 0) {
 			String date = "";
-			System.out.println("\n\t --- ¸ÅÃâ history ---");
+			System.out.println("\n\t --- ë§¤ì¶œ history ---");
 			for(Map.Entry<GregorianCalendar, Map<Food, Integer>> entry : salesHistory.entrySet()) {
 				if(entry.getKey() !=null) {
 					Date temp = new Date(entry.getKey().getTimeInMillis());

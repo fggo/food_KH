@@ -66,10 +66,10 @@ public class FoodMenuViewCard extends JPanel implements MouseListener {
 		centerReceipt = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
 		receiptLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		receiptLabel = new JLabel("¿¸√º ∏ﬁ¥∫");
+		receiptLabel = new JLabel("Ï†ÑÏ≤¥ Î©îÎâ¥");
 		receiptLabelPanel.add(receiptLabel);
 		receiptTextArea = new JTextPane();
-		Font font = new Font("∏º¿∫∞ÌµÒ", Font.BOLD, 13);
+		Font font = new Font("ÎßëÏùÄÍ≥†Îîï", Font.BOLD, 13);
         receiptTextArea.setFont(font);
         receiptTextArea.setForeground(Color.BLUE);
 
@@ -87,7 +87,7 @@ public class FoodMenuViewCard extends JPanel implements MouseListener {
 		
 		orderViewSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		backButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		logoBtn = new JButton("µ⁄∑Œ ∞°±‚");
+		logoBtn = new JButton("Îí§Î°ú Í∞ÄÍ∏∞");
 		logoBtn.setName(INIT_PAGE);
 		logoBtn.addMouseListener(this);
 		backButtonPanel.add(logoBtn);

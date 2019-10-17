@@ -74,7 +74,7 @@ public class SignUpViewCard extends JPanel implements MouseListener {
 		centerReceipt = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
 		receiptLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		receiptLabel = new JLabel("È¸¿ø °¡ÀÔ");
+		receiptLabel = new JLabel("íšŒì› ê°€ì…");
 		receiptLabelPanel.add(receiptLabel);
 		receiptTextArea = new JPanel(new GridLayout(6,1));
 		
@@ -128,7 +128,7 @@ public class SignUpViewCard extends JPanel implements MouseListener {
 		
 		signUpSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		backButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		signUpHomeBtn = new JButton("µÚ·Î °¡±â");
+		signUpHomeBtn = new JButton("ë’¤ë¡œ ê°€ê¸°");
 		signUpHomeBtn.setName(INIT_PAGE);
 		signUpHomeBtn.addMouseListener(this);
 		backButtonPanel.add(signUpHomeBtn);
@@ -145,12 +145,12 @@ public class SignUpViewCard extends JPanel implements MouseListener {
 		address = new JTextField(34);
 		password = new JPasswordField(20);
 		
-		usernameLabel = new JLabel("ÀÌ¸§");
-		phoneLabel = new JLabel("ÀüÈ­");
-		emailLabel = new JLabel("ÀÌ¸ŞÀÏ");
-		addressLabel = new JLabel("ÁÖ¼Ò");
-		passwordLabel1 = new JLabel("ºñ¹Ğ¹øÈ£");
-		passwordLabel2 = new JLabel("(4ÀÚ¸® ÀÌ»ó)");
+		usernameLabel = new JLabel("ì´ë¦„");
+		phoneLabel = new JLabel("ì „í™”");
+		emailLabel = new JLabel("ì´ë©”ì¼");
+		addressLabel = new JLabel("ì£¼ì†Œ");
+		passwordLabel1 = new JLabel("ë¹„ë°€ë²ˆí˜¸");
+		passwordLabel2 = new JLabel("(4ìë¦¬ ì´ìƒ)");
 
 		
 		l1.add(usernameLabel); 	r1.add(username); 
@@ -164,7 +164,7 @@ public class SignUpViewCard extends JPanel implements MouseListener {
 		l4.add(emailLabel); 	r4.add(email);
 		l5.add(addressLabel); 	r5.add(address);
 
-		confirmBtn = new JButton("°¡ÀÔ ÇÏ±â");
+		confirmBtn = new JButton("ê°€ì… í•˜ê¸°");
 		confirmBtn.setName("CONFIRM_SIGNUP");
 		confirmBtn.addMouseListener(this);
 		c6.add(confirmBtn);
@@ -243,11 +243,11 @@ public class SignUpViewCard extends JPanel implements MouseListener {
 				|| phone.getText().equals("")
 				|| email.getText().equals("")
 				|| address.getText().equals("")){
-			JOptionPane.showMessageDialog(null, "ÀÏºÎ ÇÊµå°ª ÀÔ·ÂÀÌ Àß¸øµÆ½À´Ï´Ù.", "ÇÊµå°ª ÀÔ·Â ¿¡·¯", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "ì¼ë¶€ í•„ë“œê°’ ì…ë ¥ì´ ì˜ëª»ëìŠµë‹ˆë‹¤.", "í•„ë“œê°’ ì…ë ¥ ì—ëŸ¬", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		else if(password.getPassword().length < 4){
-			JOptionPane.showMessageDialog(null, "ºñ¹Ğ¹øÈ£´Â 4ÀÚ¸® ÀÌ»óÀ¸·Î ÇØÁÖ¼¼¿ä.", "ÇÊµå°ª ÀÔ·Â ¿¡·¯", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "ë¹„ë°€ë²ˆí˜¸ëŠ” 4ìë¦¬ ì´ìƒìœ¼ë¡œ í•´ì£¼ì„¸ìš”.", "í•„ë“œê°’ ì…ë ¥ ì—ëŸ¬", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		User user = new User(username.getText(), new String(password.getPassword()),
@@ -255,7 +255,7 @@ public class SignUpViewCard extends JPanel implements MouseListener {
 				null, null, null, -1, false, null);
 
 		if(userRepo.getPhone() != null) {
-			JOptionPane.showMessageDialog(null, "È¸¿ø°¡ÀÔ ÇÏ·Á¸é ¸ÕÀú ·Î±×¾Æ¿ô ÇØÁÖ¼¼¿ä.", "·Î±×ÀÎµÈ À¯Àú ¿¡·¯", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "íšŒì›ê°€ì… í•˜ë ¤ë©´ ë¨¼ì € ë¡œê·¸ì•„ì›ƒ í•´ì£¼ì„¸ìš”.", "ë¡œê·¸ì¸ëœ ìœ ì € ì—ëŸ¬", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		boolean signUpSuccess = userRepo.signUp(user, new String(password.getPassword()));
@@ -269,11 +269,11 @@ public class SignUpViewCard extends JPanel implements MouseListener {
 		userRepo.showUsers();
 
 		if(signUpSuccess) {
-			JOptionPane.showMessageDialog(null, "È¸¿ø°¡ÀÔ¿¡ ¼º°øÇß½À´Ï´Ù.", "È¸¿ø°¡ÀÔ ¼º°ø", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "íšŒì›ê°€ì…ì— ì„±ê³µí–ˆìŠµë‹ˆë‹¤.", "íšŒì›ê°€ì… ì„±ê³µ", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		else {
-			JOptionPane.showMessageDialog(null, "È¸¿ø°¡ÀÔ¿¡ ½ÇÆĞ Çß½À´Ï´Ù - Æù¹øÈ£ Áßº¹", "È¸¿ø°¡ÀÔ ½ÇÆĞ", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "íšŒì›ê°€ì…ì— ì‹¤íŒ¨ í–ˆìŠµë‹ˆë‹¤ - í°ë²ˆí˜¸ ì¤‘ë³µ", "íšŒì›ê°€ì… ì‹¤íŒ¨", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 	}

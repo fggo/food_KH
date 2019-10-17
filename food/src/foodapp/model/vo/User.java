@@ -13,11 +13,11 @@ public class User implements Serializable, Comparable<User> {
 	private String password;
 	private String email;
 	private String address;
-	private boolean logged; //·Î±×ÀÎ »óÅÂ ¿©ºÎ
+	private boolean logged; //ë¡œê·¸ì¸ ìƒíƒœ ì—¬ë¶€
 	private Map<Food, Integer> orderList;
 	private GregorianCalendar orderCreated;
 	private String recentPayMethod;
-	private int seatNo; //ÁÂ¼®(1~SEATS)
+	private int seatNo; //ì¢Œì„(1~SEATS)
 	private boolean ordering;
 	private Map<GregorianCalendar, Map<Food, Integer>> orderHistory;
 
@@ -48,7 +48,7 @@ public class User implements Serializable, Comparable<User> {
 		}
 		System.out.printf("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
 							username, phone, email, address,
-							(logged? "·Î±×ON":"·Î±×OFF"), date, recentPayMethod, ordering? "ÁÖ¹®Áß O" : "ÁÖ¹®Áß X");
+							(logged? "ë¡œê·¸ON":"ë¡œê·¸OFF"), date, recentPayMethod, ordering? "ì£¼ë¬¸ì¤‘ O" : "ì£¼ë¬¸ì¤‘ X");
 		if(this.orderList != null)
 			this.showOrderList(this.orderList);
 		if(this.orderHistory != null)
@@ -57,7 +57,7 @@ public class User implements Serializable, Comparable<User> {
 	
 	public void showOrderList(Map<Food,Integer> orderList) {
 		for(Map.Entry<Food, Integer> entry : orderList.entrySet())
-			System.out.println("\t" + entry.getKey() + "  :  " +  entry.getValue() + "°³ ÁÖ¹®.");
+			System.out.println("\t" + entry.getKey() + "  :  " +  entry.getValue() + "ê°œ ì£¼ë¬¸.");
 	}
 	
 	public void showOrderHistory() {

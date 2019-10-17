@@ -48,8 +48,8 @@ public class SignInEventHandler extends MouseAdapter {
 			return;
 		}
 		if(!phoneTextField.isEditable() || !passwordField.isEditable()) {
-			System.out.println("ÀÌ¹Ì ·Î±×ÀÎ µÇ¾î ÀÖ½À´Ï´Ù.");
-			JOptionPane.showMessageDialog(null, "ÀÌ¹Ì ·Î±×ÀÎ µÇ¾î ÀÖ½À´Ï´Ù.", "·Î±×ÀÎ È®ÀÎ", JOptionPane.WARNING_MESSAGE);
+			System.out.println("ì´ë¯¸ ë¡œê·¸ì¸ ë˜ì–´ ìˆìŠµë‹ˆë‹¤.");
+			JOptionPane.showMessageDialog(null, "ì´ë¯¸ ë¡œê·¸ì¸ ë˜ì–´ ìˆìŠµë‹ˆë‹¤.", "ë¡œê·¸ì¸ í™•ì¸", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
@@ -60,7 +60,7 @@ public class SignInEventHandler extends MouseAdapter {
 			user = userRepo.signIn(phoneNum, password);
 		}
 		else {
-			JOptionPane.showMessageDialog(null, "¾ÆÀÌµğ ºñ¹Ğ¹øÈ£¸¦ ¸ğµÎ ÀÔ·ÂÇØÁÖ¼¼¿ä", "·Î±×ÀÎ È®ÀÎ", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "ì•„ì´ë”” ë¹„ë°€ë²ˆí˜¸ë¥¼ ëª¨ë‘ ì…ë ¥í•´ì£¼ì„¸ìš”", "ë¡œê·¸ì¸ í™•ì¸", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		
@@ -90,10 +90,10 @@ public class SignInEventHandler extends MouseAdapter {
 				}
 				
 			}
-			JOptionPane.showMessageDialog(null, "·Î±×ÀÎÀ» ¼º°øÇß½À´Ï´Ù.", "·Î±×ÀÎ È®ÀÎ", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "ë¡œê·¸ì¸ì„ ì„±ê³µí–ˆìŠµë‹ˆë‹¤.", "ë¡œê·¸ì¸ í™•ì¸", JOptionPane.WARNING_MESSAGE);
 		}
 		else {
-			JOptionPane.showMessageDialog(null, "·Î±×ÀÎ Á¤º¸°¡ ºÒÀÏÄ¡ ÇÕ´Ï´Ù.", "·Î±×ÀÎ È®ÀÎ", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "ë¡œê·¸ì¸ ì •ë³´ê°€ ë¶ˆì¼ì¹˜ í•©ë‹ˆë‹¤.", "ë¡œê·¸ì¸ í™•ì¸", JOptionPane.WARNING_MESSAGE);
 			phoneTextField.setText("");
 			passwordField.setText("");
 		}

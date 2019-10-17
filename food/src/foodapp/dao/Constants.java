@@ -5,36 +5,36 @@ public final class Constants {
 		//restrict initialization
 	}
 
-	/* ¸ŞÀÎÈ­¸é Å©±â */
+	/* ë©”ì¸í™”ë©´ í¬ê¸° */
 	public static final int 		WINDOW_WIDTH 		= 830;
 	public static final int 		WINDOW_HEIGHT 		= 650;
 
-	/* È­¸é ÀÌ¸§ */
+	/* í™”ë©´ ì´ë¦„ */
 	public static final String 		INIT_PAGE 			= "Card - Home Page";
 	public static final String 		FOOD_MENU_PAGE 		= "Card - Food Menu";
 	public static final String 		ORDER_VIEW_PAGE 	= "Card - View Order";
 	public static final String 		SIGN_UP_PAGE 		= "Card - Sign Up";
 	public static final String 		ADMIN_PAGE 			= "Card - Admin Page";
 
-	/* User ·Î±×ÀÎ »óÅÂ */
+	/* User ë¡œê·¸ì¸ ìƒíƒœ */
 	public static final boolean		OFF					= false;
 	public static final boolean		ON					= true;
 	
-	/* User ÁöºÒ ¼ö´Ü */
+	/* User ì§€ë¶ˆ ìˆ˜ë‹¨ */
 	public static final String		CARD				= "CARD";
 	public static final String		CASH				= "CASH";
 
-	/* Food ¸Ş´º Ä«Å×°í¸® */
+	/* Food ë©”ë‰´ ì¹´í…Œê³ ë¦¬ */
 	public static final String		NOODLE				= "NOODLE";
 	public static final String		SOUP				= "SOUP";
 	public static final String		RICE				= "RICE";
 	
-	/* ÁÖ¹® ½Ã ¹öÆ°ÀÌ¸§ */
+	/* ì£¼ë¬¸ ì‹œ ë²„íŠ¼ì´ë¦„ */
 	public static final String		ADD_FOOD			= "ADD_FOOD";
 	public static final String		ORDER				= "ORDER";
 	public static final String		CANCLE_ORDER		= "CANCLE_ORDER";
 	
-	/* ¸é,ÅÁ,¹ä ¸Ş´º Å×ÀÌºí */
+	/* ë©´,íƒ•,ë°¥ ë©”ë‰´ í…Œì´ë¸” */
 	public static final String		NOODLE_TABLE		= "NOODLE_TABLE";
 	public static final String		SOUP_TABLE			= "SOUP_TABLE";
 	public static final String		RICE_TABLE			= "RICE_TABLE";

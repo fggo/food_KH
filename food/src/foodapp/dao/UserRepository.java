@@ -28,17 +28,17 @@ import foodapp.model.vo.User;
 
 public class UserRepository {
 
-	private final File dataFile=new File("Users.dat"); //List<User> ÀúÀå¿ë ÆÄÀÏ
+	private final File dataFile=new File("Users.dat"); //List<User> ì €ì¥ìš© íŒŒì¼
  
-	private List<User> users = new ArrayList<User>(); //User ¸®½ºÆ®
+	private List<User> users = new ArrayList<User>(); //User ë¦¬ìŠ¤íŠ¸
 
-	private FoodMenu foodMenu; //¼±ÅÃ°¡´ÉÇÑ À½½Ä¸Ş´º
+	private FoodMenu foodMenu; //ì„ íƒê°€ëŠ¥í•œ ìŒì‹ë©”ë‰´
 
-	private String phone; //·Î±×ÀÎ À¯Àú Æù¹øÈ£ (User°´Ã¼¿¡ 1:1¸ÊÇÎ)
+	private String phone; //ë¡œê·¸ì¸ ìœ ì € í°ë²ˆí˜¸ (Userê°ì²´ì— 1:1ë§µí•‘)
 
-	private final static int SEATS = 10; //ÁÂ¼® ¼ö
+	private final static int SEATS = 10; //ì¢Œì„ ìˆ˜
 
-	private boolean[] reservations = new boolean[SEATS]; //ÁÂ¼® ¿¹¾àÁ¤º¸
+	private boolean[] reservations = new boolean[SEATS]; //ì¢Œì„ ì˜ˆì•½ì •ë³´
 	
 	public UserRepository() {
 
@@ -86,11 +86,11 @@ public class UserRepository {
 	
 	public boolean signUp(User user, String originalPassword) {
 		if(this.phone != null) {
-			System.out.println("È¸¿ø°¡ÀÔ ÇÏ·Á¸é ¸ÕÀú ·Î±×¾Æ¿ô ÇØÁÖ¼¼¿ä.");
+			System.out.println("íšŒì›ê°€ì… í•˜ë ¤ë©´ ë¨¼ì € ë¡œê·¸ì•„ì›ƒ í•´ì£¼ì„¸ìš”.");
 			return false;
 		}
 		if(user == null) {
-			System.out.println("»ç¿ëÀÚ µ¥ÀÌÅÍ°¡ ¾ø½À´Ï´Ù.");
+			System.out.println("ì‚¬ìš©ì ë°ì´í„°ê°€ ì—†ìŠµë‹ˆë‹¤.");
 		}
 		else {
 			try {
@@ -104,12 +104,12 @@ public class UserRepository {
 		}
 
 		if(isDuplicate(user)) {
-			System.out.println("ÀÌ¹Ì Á¸ÀçÇÏ´Â È¸¿ø ÀÔ´Ï´Ù.");
+			System.out.println("ì´ë¯¸ ì¡´ì¬í•˜ëŠ” íšŒì› ì…ë‹ˆë‹¤.");
 			return false;
 		}
 		else {
 			users.add(user);
-			System.out.println("È¸¿ø°¡ÀÔÀÌ ¼º°øÀûÀ¸·Î Ã³¸®µÇ¾ú½À´Ï´Ù.");
+			System.out.println("íšŒì›ê°€ì…ì´ ì„±ê³µì ìœ¼ë¡œ ì²˜ë¦¬ë˜ì—ˆìŠµë‹ˆë‹¤.");
 
 			Collections.sort(this.users, (i,j)->{
 				return i.getUsername().compareTo(j.getUsername());
@@ -121,28 +121,28 @@ public class UserRepository {
 	
 	public User signIn(String phoneTextField, String passwordField) {
 		if(phoneTextField.equals(this.phone)) {
-			System.out.println("ÀÌ¹Ì ·Î±×ÀÎ µÇ¾î ÀÖ½À´Ï´Ù.");
+			System.out.println("ì´ë¯¸ ë¡œê·¸ì¸ ë˜ì–´ ìˆìŠµë‹ˆë‹¤.");
 			return null;
 		}
 
 		User user = getUserByPhoneAndPassword(phoneTextField, passwordField);
 
 		if(user==null) {
-			System.out.println("·Î±×ÀÎ¿¡ ½ÇÆĞ ÇÏ¿´½À´Ï´Ù.");
+			System.out.println("ë¡œê·¸ì¸ì— ì‹¤íŒ¨ í•˜ì˜€ìŠµë‹ˆë‹¤.");
 			return null;
 		}
 		else {
 			user.setLogged(true);
 			this.setPhone(phoneTextField);
-			System.out.println("·Î±×ÀÎ µÆ½¼´Ï´Ù.");
+			System.out.println("ë¡œê·¸ì¸ ëìŠ¨ë‹ˆë‹¤.");
 			return user;
 		}
 	}
 
 	public void logOff(String phoneNum) {
 		if (!phoneNum.equals(this.phone)) {
-			System.out.println("Æù¹øÈ£°¡ ÀÏÄ¡ÇÏÁö ¾Ê½À´Ï´Ù.");
-			System.out.println("·Î±×¾Æ¿ô¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+			System.out.println("í°ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.");
+			System.out.println("ë¡œê·¸ì•„ì›ƒì— ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
 			return;
 		}
 
@@ -159,14 +159,14 @@ public class UserRepository {
 					reservations[user.getSeatNo() -1] = false;
 					user.setSeatNo(0);
 				}
-				System.out.println("·Î±×¾Æ¿ô µÆ½À´Ï´Ù.");
+				System.out.println("ë¡œê·¸ì•„ì›ƒ ëìŠµë‹ˆë‹¤.");
 				break;
 			}
 		}
 	}
 
 	public void showUsers() {
-		System.out.println("ÀÌ¸§\tÀüÈ­\tÀÌ¸ŞÀÏ\tÁÖ¼Ò\t·Î±×ÀÎ»óÅÂ\tÁÖ¹®³¯Â¥\tÁÖ¹®¼ö´Ü\tÁÖ¹®¿©ºÎ");
+		System.out.println("ì´ë¦„\tì „í™”\tì´ë©”ì¼\tì£¼ì†Œ\të¡œê·¸ì¸ìƒíƒœ\tì£¼ë¬¸ë‚ ì§œ\tì£¼ë¬¸ìˆ˜ë‹¨\tì£¼ë¬¸ì—¬ë¶€");
 
 		Iterator<User> itr = users.iterator();
 		User user = null;
@@ -181,21 +181,21 @@ public class UserRepository {
 			return;
 		foodMenu = new FoodMenu();
 
-		foodMenu.addFood(new Food("NOODLE", 1, "Â¥Àå¸é", 5000));
-		foodMenu.addFood(new Food("NOODLE", 2, "Â«»Í", 6500));
-		foodMenu.addFood(new Food("NOODLE", 3, "Äá±¹¼ö", 6000));
-		foodMenu.addFood(new Food("NOODLE", 4, "ºñºö³Ã¸é", 6000));
-		foodMenu.addFood(new Food("NOODLE", 5, "¼ÕÄ®±¹¼ö", 5500));
+		foodMenu.addFood(new Food("NOODLE", 1, "ì§œì¥ë©´", 5000));
+		foodMenu.addFood(new Food("NOODLE", 2, "ì§¬ë½•", 6500));
+		foodMenu.addFood(new Food("NOODLE", 3, "ì½©êµ­ìˆ˜", 6000));
+		foodMenu.addFood(new Food("NOODLE", 4, "ë¹„ë¹”ëƒ‰ë©´", 6000));
+		foodMenu.addFood(new Food("NOODLE", 5, "ì†ì¹¼êµ­ìˆ˜", 5500));
 
-		foodMenu.addFood(new Food("SOUP", 1, "±èÄ¡Âî°³", 5500));
-		foodMenu.addFood(new Food("SOUP", 2, "µÈÀå±¹", 5500));
-		foodMenu.addFood(new Food("SOUP", 3, "È²ÅÂ±¹", 6500));
+		foodMenu.addFood(new Food("SOUP", 1, "ê¹€ì¹˜ì°Œê°œ", 5500));
+		foodMenu.addFood(new Food("SOUP", 2, "ëœì¥êµ­", 5500));
+		foodMenu.addFood(new Food("SOUP", 3, "í™©íƒœêµ­", 6500));
 
-		foodMenu.addFood(new Food("RICE", 1, "ÇÜººÀ½¹ä", 5000));
-		foodMenu.addFood(new Food("RICE", 2, "Á¦À°µ¤¹ä", 6000));
-		foodMenu.addFood(new Food("RICE", 3, "ÀâÃ¤¹ä", 6500));
-		foodMenu.addFood(new Food("RICE", 4, "ºñºö¹ä", 5500));
-		foodMenu.addFood(new Food("RICE", 5, "È¸µ¤¹ä", 8000));
+		foodMenu.addFood(new Food("RICE", 1, "í–„ë³¶ìŒë°¥", 5000));
+		foodMenu.addFood(new Food("RICE", 2, "ì œìœ¡ë®ë°¥", 6000));
+		foodMenu.addFood(new Food("RICE", 3, "ì¡ì±„ë°¥", 6500));
+		foodMenu.addFood(new Food("RICE", 4, "ë¹„ë¹”ë°¥", 5500));
+		foodMenu.addFood(new Food("RICE", 5, "íšŒë®ë°¥", 8000));
 
 		List<Food> menu = foodMenu.getFoodMenuList();
 		foodMenu.setFoodMenuList(menu);

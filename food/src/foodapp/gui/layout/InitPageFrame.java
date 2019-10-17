@@ -148,25 +148,25 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		setLocationRelativeTo(null); //center window
 		getContentPane().setLayout(new BorderLayout());
 
-		/* Ã¹¹øÂ° JSplitPane */
+		/* ì²«ë²ˆì§¸ JSplitPane */
 		createFirstTop();
 		createFirstBottom();
 		createFirstSP();
 
-		/* µÎ¹øÂ° JSplitPane */
+		/* ë‘ë²ˆì§¸ JSplitPane */
 		createSecondTop();
 		createSecondBottom();
 		createSecondSP();
 
-		/* ¼¼¹øÂ° JSplitPane */
+		/* ì„¸ë²ˆì§¸ JSplitPane */
 		createThirdTop();
 		createThirdBottom();
 		createThirdSP();
 
-		/* »ı¼ºÇÑ JSplitPaneÀÇ border ¼³Á¤ */
+		/* ìƒì„±í•œ JSplitPaneì˜ border ì„¤ì • */
 		invokeSplitPane();
 
-		/* CardLayout ¸¸µé±â */
+		/* CardLayout ë§Œë“¤ê¸° */
 		updateCards();
 
 		/* window closing */
@@ -309,33 +309,33 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		
 		orderSelectionPanel = new JPanel(new GridLayout(4,1));
 
-		menuCategoryLabel = new JLabel("¸Ş´º Ä«Å×°í¸®");
+		menuCategoryLabel = new JLabel("ë©”ë‰´ ì¹´í…Œê³ ë¦¬");
 		menuCategoryTxt = new JTextField("", 10);
 		menuCategoryTxt.setEditable(false);
 
 		for(Component card : menuTableCards.getComponents()) {
 			if(card instanceof JPanel && card.isVisible()) {
 				switch(card.getName()){
-					case NOODLE: this.menuCategoryTxt.setText("¸é ¸Ş´º"); break;
-					case SOUP: this.menuCategoryTxt.setText("ÅÁ ¸Ş´º"); break;
-					case RICE: this.menuCategoryTxt.setText("¹ä ¸Ş´º"); break;
+					case NOODLE: this.menuCategoryTxt.setText("ë©´ ë©”ë‰´"); break;
+					case SOUP: this.menuCategoryTxt.setText("íƒ• ë©”ë‰´"); break;
+					case RICE: this.menuCategoryTxt.setText("ë°¥ ë©”ë‰´"); break;
 				}
 			}
 		}
 
-		menuChoiceLabel = new JLabel("¼±ÅÃ ¸Ş´º");
+		menuChoiceLabel = new JLabel("ì„ íƒ ë©”ë‰´");
 		subMenuTxt = new JTextField(10);
 		subMenuTxt.setEditable(false);
 
-		menuQtyLabel = new JLabel("¼ö ·®");
+		menuQtyLabel = new JLabel("ìˆ˜ ëŸ‰");
 		ComboBoxModel<Integer> comboBoxModel = 
 				new DefaultComboBoxModel<Integer>(new Integer[] {1,2,3,4,5});
 		menuQtyComboBox = new JComboBox<Integer>(comboBoxModel);
 		
-		payCardBtn = new JToggleButton("Ä«µå ÁÖ¹®");
+		payCardBtn = new JToggleButton("ì¹´ë“œ ì£¼ë¬¸");
 		payCardBtn.setName(CARD);
 		payCardBtn.setBackground(Color.WHITE);
-		payCashBtn = new JToggleButton("Çö±İ ÁÖ¹®");
+		payCashBtn = new JToggleButton("í˜„ê¸ˆ ì£¼ë¬¸");
 		payCashBtn.setName(CASH);
 		payCashBtn.setBackground(Color.WHITE);
 
@@ -423,7 +423,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		popularMenuPanel = new JPanel(new BorderLayout());
 		popularMenuPanel.add(popularMenuTextArea);
 
-		orderBtn = new JButton("ÁÖ¹® ÇÏ±â");
+		orderBtn = new JButton("ì£¼ë¬¸ í•˜ê¸°");
 		orderBtn.setName(ORDER);
 		
 		subSplitPane5 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -443,7 +443,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	}
 	
 	private void createSecondTop() {
-		/* ³×ºñ°ÔÀÌ¼Ç ¸Ş´º */
+		/* ë„¤ë¹„ê²Œì´ì…˜ ë©”ë‰´ */
 		JToolBar navBar = this.createNavBar();
 		navBar.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 
@@ -470,13 +470,13 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		CardLayout cl = new CardLayout();
 		userInputCards = new JPanel(cl);
 
-		phoneTextField = new JTextField("", 11); //ÇÚµåÆù 11ÀÚ¸®
+		phoneTextField = new JTextField("", 11); //í•¸ë“œí° 11ìë¦¬
 		passwordField = new JPasswordField(11);
 
-		Font font = new Font("¹ÙÅÁÃ¼", Font.BOLD, 11);
-		phoneLabel = new JLabel("ÇÚµåÆù ¹øÈ£");
+		Font font = new Font("ë°”íƒ•ì²´", Font.BOLD, 11);
+		phoneLabel = new JLabel("í•¸ë“œí° ë²ˆí˜¸");
 		phoneLabel.setFont(font);
-		passwordLabel = new JLabel("ºñ¹Ğ¹øÈ£");
+		passwordLabel = new JLabel("ë¹„ë°€ë²ˆí˜¸");
 		passwordLabel.setFont(font);
 
 		userLogOffCard = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -493,12 +493,12 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		userInputCards.add(userLogOffCard, "USER_LOGOFF");
 		userInputCards.add(userLoggedCard, "USER_LOGGED");
 
-		signInBtn = new JButton("·Î±×ÀÎ");
+		signInBtn = new JButton("ë¡œê·¸ì¸");
 		signInBtn.setFont(font);
-		logOffBtn = new JButton("·Î±×¾Æ¿ô");
+		logOffBtn = new JButton("ë¡œê·¸ì•„ì›ƒ");
 		logOffBtn.setFont(font);
 		logOffBtn.setVisible(false);
-		signUpBtn = new JButton("È¸¿ø°¡ÀÔ");
+		signUpBtn = new JButton("íšŒì›ê°€ì…");
 		signUpBtn.setFont(font);
 		signUpBtn.setName(SIGN_UP_PAGE);
 
@@ -591,11 +591,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	}
 	
 	private TableModel createDefaultTableModel() {
-		String[] colNames = {"Ä«Å×°í¸®", "¸Ş´º¹øÈ£", "¸Ş´ºÀÌ¸§", "°¡°İ"};
+		String[] colNames = {"ì¹´í…Œê³ ë¦¬", "ë©”ë‰´ë²ˆí˜¸", "ë©”ë‰´ì´ë¦„", "ê°€ê²©"};
 
         return new DefaultTableModel(colNames, 0) {
 			private static final long serialVersionUID = 1L;
-			String[] colNames = {"Ä«Å×°í¸®", "¸Ş´º¹øÈ£", "¸Ş´ºÀÌ¸§", "°¡°İ"};
+			String[] colNames = {"ì¹´í…Œê³ ë¦¬", "ë©”ë‰´ë²ˆí˜¸", "ë©”ë‰´ì´ë¦„", "ê°€ê²©"};
 			@Override
 			public String getColumnName(int column) {
 				return colNames[column];
@@ -608,10 +608,10 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	}
 
 	private DefaultTableModel constructOrderingTableModel() {
-		String[] colNames = {"Ä«Å×°í¸®", "¸Ş´º¹øÈ£", "¸Ş´ºÀÌ¸§", "°¡°İ", "°³¼ö"};
+		String[] colNames = {"ì¹´í…Œê³ ë¦¬", "ë©”ë‰´ë²ˆí˜¸", "ë©”ë‰´ì´ë¦„", "ê°€ê²©", "ê°œìˆ˜"};
         modelOrdering = new DefaultTableModel(colNames, 0) {
 			private static final long serialVersionUID = 1L;
-			String[] colNames = {"Ä«Å×°í¸®", "¸Ş´º¹øÈ£", "¸Ş´ºÀÌ¸§", "°¡°İ", "°³¼ö"};
+			String[] colNames = {"ì¹´í…Œê³ ë¦¬", "ë©”ë‰´ë²ˆí˜¸", "ë©”ë‰´ì´ë¦„", "ê°€ê²©", "ê°œìˆ˜"};
 			@Override
 			public String getColumnName(int column) {
 				return colNames[column];
@@ -629,11 +629,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		FoodMenu menu = userRepo.getFoodMenu();
 		List<Food> foodMenuList = null;
 		Iterator<Food> itr = null;
-		//Food ¸®½ºÆ® µ¥ÀÌÅÍ¸¦ °¡Á®¿É´Ï´Ù.
+		//Food ë¦¬ìŠ¤íŠ¸ ë°ì´í„°ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
 		if(menu!= null)
 			foodMenuList = menu.getFoodMenuList();
 
-		//FoodÀÇ compareToÁ¤ÀÇµÈ Á¤·Ä ¹æ¹ı¿¡ µû¶ó Food ¸®½ºÆ® µ¥ÀÌÅÍ¸¦ Á¤·ÄÇÕ´Ï´Ù.
+		//Foodì˜ compareToì •ì˜ëœ ì •ë ¬ ë°©ë²•ì— ë”°ë¼ Food ë¦¬ìŠ¤íŠ¸ ë°ì´í„°ë¥¼ ì •ë ¬í•©ë‹ˆë‹¤.
 		if(foodMenuList != null) {
 			Collections.sort(foodMenuList, (i,j)->{
 				return i.compareTo(j);
@@ -642,13 +642,13 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			itr = foodMenuList.iterator();
 		}
 
-		//µ¥ÀÌÅÍ¸¦ ³ÖÀ» Å×ÀÌºí ¸ğµ¨À» Á¤ÀÇÇÕ´Ï´Ù.
+		//ë°ì´í„°ë¥¼ ë„£ì„ í…Œì´ë¸” ëª¨ë¸ì„ ì •ì˜í•©ë‹ˆë‹¤.
 		Food food = null;
         modelN = (DefaultTableModel)createDefaultTableModel();
         modelS = (DefaultTableModel)createDefaultTableModel();
         modelR = (DefaultTableModel)createDefaultTableModel();
 
-		//3°¡Áö ¸Ş´ºº°·Î row µ¥ÀÌÅÍ ÀúÀå
+		//3ê°€ì§€ ë©”ë‰´ë³„ë¡œ row ë°ì´í„° ì €ì¥
 		while(itr!= null && itr.hasNext()) {
 			food = itr.next();
 
@@ -663,7 +663,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			}
 		}
 		
-		//¸¸µé¾îÁø Å×ÀÌºí ¸ğµ¨ µ¥ÀÌÅÍ¸¦ TreeMap¿¡ ´ã¾Æ¼­ return ÇÕ´Ï´Ù.
+		//ë§Œë“¤ì–´ì§„ í…Œì´ë¸” ëª¨ë¸ ë°ì´í„°ë¥¼ TreeMapì— ë‹´ì•„ì„œ return í•©ë‹ˆë‹¤.
 		Map<String, DefaultTableModel> map = new TreeMap<String, DefaultTableModel>();
 		map.put(NOODLE, modelN);
 		map.put(SOUP, modelS);
@@ -759,7 +759,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		int row = orderingTable.getSelectedRow();
 
 		if (row == -1) {
-			JOptionPane.showMessageDialog(null, "ÁÖ¹®Ãë¼ÒÇÒ À½½ÄÀ» ¸ÕÀú Å¬¸¯ÇØÁÖ¼¼¿ä.", "À½½Ä ¹Ì¼±ÅÃ", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "ì£¼ë¬¸ì·¨ì†Œí•  ìŒì‹ì„ ë¨¼ì € í´ë¦­í•´ì£¼ì„¸ìš”.", "ìŒì‹ ë¯¸ì„ íƒ", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
@@ -778,7 +778,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			subTotal += entry.getKey().getMenuPrice() * entry.getValue();
 		}
 
-		this.subTotalLabel.setText("    ´©Àû ±İ¾×  " + 
+		this.subTotalLabel.setText("    ëˆ„ì  ê¸ˆì•¡  " + 
 			NumberFormat.getCurrencyInstance(Locale.KOREA).format(subTotal).toString());
 		
 		modelOrdering.removeRow(row);
@@ -793,14 +793,14 @@ public class InitPageFrame extends JFrame implements MouseListener {
 	private void addFoodOrderList() {
 		addMenuBtn.setFocusPainted(false);
 		if(this.phoneTextField.isEditable() && this.passwordField.isEditable()) {
-			JOptionPane.showMessageDialog(null, "·Î±×ÀÎÀÌ ÇÊ¿äÇÕ´Ï´Ù.", "·Î±×ÀÎ È®ÀÎ", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "ë¡œê·¸ì¸ì´ í•„ìš”í•©ë‹ˆë‹¤.", "ë¡œê·¸ì¸ í™•ì¸", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
 		User user = userRepo.getUserByPhone(this.phoneTextField.getText());
 
 		if (user == null) {
-			JOptionPane.showMessageDialog(null, "ÇÚµåÆùÁ¤º¸ À¯Àú ¾øÀ½", "·Î±×ÀÎ È®ÀÎ", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "í•¸ë“œí°ì •ë³´ ìœ ì € ì—†ìŒ", "ë¡œê·¸ì¸ í™•ì¸", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
@@ -829,7 +829,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		}
 
 		if (row==-1) {
-			JOptionPane.showMessageDialog(null, "ÁÖ¹®ÇÒ À½½ÄÀ» ¸ÕÀú Å¬¸¯ÇØÁÖ¼¼¿ä.", "À½½Ä ¹Ì¼±ÅÃ", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "ì£¼ë¬¸í•  ìŒì‹ì„ ë¨¼ì € í´ë¦­í•´ì£¼ì„¸ìš”.", "ìŒì‹ ë¯¸ì„ íƒ", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		String menuCategory = (String)model.getValueAt(row, 0);
@@ -850,23 +850,23 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			subTotal += entry.getKey().getMenuPrice() * entry.getValue();
 		}
 
-		Font font = new Font("¸¼Àº°íµñ", Font.BOLD, 12);
+		Font font = new Font("ë§‘ì€ê³ ë”•", Font.BOLD, 12);
         subTotalLabel.setFont(font);
 
-		this.subTotalLabel.setText("     ´©Àû ±İ¾×  " + 
+		this.subTotalLabel.setText("     ëˆ„ì  ê¸ˆì•¡  " + 
 			NumberFormat.getCurrencyInstance(Locale.KOREA).format(subTotal).toString());
 
-		JOptionPane.showMessageDialog(null, "ÁÖ¹®ÀÌ Ãß°¡µÇ¾ú½À´Ï´Ù.", "ÁÖ¹® Ãß°¡ È®ÀÎ", JOptionPane.WARNING_MESSAGE);
+		JOptionPane.showMessageDialog(null, "ì£¼ë¬¸ì´ ì¶”ê°€ë˜ì—ˆìŠµë‹ˆë‹¤.", "ì£¼ë¬¸ ì¶”ê°€ í™•ì¸", JOptionPane.WARNING_MESSAGE);
 		return;
 	}
 
 	private void completeOrder() {
 		if(this.phoneTextField.getText() == "") {
-			JOptionPane.showMessageDialog(null, "·Î±×ÀÎÀÌ ÇÊ¿äÇÕ´Ï´Ù.", "·Î±×ÀÎ È®ÀÎ", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "ë¡œê·¸ì¸ì´ í•„ìš”í•©ë‹ˆë‹¤.", "ë¡œê·¸ì¸ í™•ì¸", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		if(!payCardBtn.isSelected() && !payCashBtn.isSelected()) {
-			JOptionPane.showMessageDialog(null, "°áÁ¦¼ö´ÜÀ» ¼±ÅÃÇØ ÁÖ¼¼¿ä.", "°áÁ¦ ¼ö´Ü ¼±ÅÃ", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "ê²°ì œìˆ˜ë‹¨ì„ ì„ íƒí•´ ì£¼ì„¸ìš”.", "ê²°ì œ ìˆ˜ë‹¨ ì„ íƒ", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
@@ -876,11 +876,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		if(user == null)
 			return;
 		if(!user.isOrdering()) {
-			JOptionPane.showMessageDialog(null, "À½½Ä ¸Ş´º¸¦ Ãß°¡ÇØ ÁÖ¼¼¿ä.", "¸Ş´º ¹ÌÁöÁ¤", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "ìŒì‹ ë©”ë‰´ë¥¼ ì¶”ê°€í•´ ì£¼ì„¸ìš”.", "ë©”ë‰´ ë¯¸ì§€ì •", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
-		int result = JOptionPane.showConfirmDialog(null, "ÁÖ¹®À» ¿Ï·áÇÏ½Ã°Ú½À´Ï±î?", "ÁÖ¹® È®ÀÎ",
+		int result = JOptionPane.showConfirmDialog(null, "ì£¼ë¬¸ì„ ì™„ë£Œí•˜ì‹œê² ìŠµë‹ˆê¹Œ?", "ì£¼ë¬¸ í™•ì¸",
 				JOptionPane.OK_CANCEL_OPTION);
 
 		if(result!= JOptionPane.OK_OPTION) {
@@ -924,7 +924,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		this.subTotalLabel.setText("");
 
-		JOptionPane.showMessageDialog(null, "ÁÖ¹®ÀÌ ¿Ï·á µÇ¾ú½À´Ï´Ù.", "ÁÖ¹®°áÁ¦ ¿Ï·á È®ÀÎ", JOptionPane.WARNING_MESSAGE);
+		JOptionPane.showMessageDialog(null, "ì£¼ë¬¸ì´ ì™„ë£Œ ë˜ì—ˆìŠµë‹ˆë‹¤.", "ì£¼ë¬¸ê²°ì œ ì™„ë£Œ í™•ì¸", JOptionPane.WARNING_MESSAGE);
 		return;
 	}
 
@@ -965,7 +965,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		this.subMenuTxt.setText("");
 		CardLayout cl = (CardLayout)(menuTableCards.getLayout());
         cl.show(menuTableCards, NOODLE);
-        this.menuCategoryTxt.setText("¸é ¸Ş´º");
+        this.menuCategoryTxt.setText("ë©´ ë©”ë‰´");
 	}
 
 	private void showSoupMenu() {
@@ -973,7 +973,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		this.subMenuTxt.setText("");
 		CardLayout cl = (CardLayout)(menuTableCards.getLayout());
         cl.show(menuTableCards, SOUP);
-        this.menuCategoryTxt.setText("ÅÁ ¸Ş´º");
+        this.menuCategoryTxt.setText("íƒ• ë©”ë‰´");
 	}
 
 	private void showRiceMenu() {
@@ -981,14 +981,14 @@ public class InitPageFrame extends JFrame implements MouseListener {
 		this.subMenuTxt.setText("");
 		CardLayout cl = (CardLayout)(menuTableCards.getLayout());
         cl.show(menuTableCards, RICE);
-        this.menuCategoryTxt.setText("¹ä ¸Ş´º");
+        this.menuCategoryTxt.setText("ë°¥ ë©”ë‰´");
 	}
 
 	private void createAdminPage() {
 		adminPageBtn.setFocusPainted(false);
 		if(phoneTextField.getText() == null
 				|| !phoneTextField.getText().equals("admin")) {
-			JOptionPane.showMessageDialog(null, "°ü¸®ÀÚ·Î ¸ÕÀú ·Î±×ÀÎ ÇØÁÖ¼¼¿ä.", "°ü¸®ÀÚ ±ÇÇÑ ¿¡·¯", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "ê´€ë¦¬ìë¡œ ë¨¼ì € ë¡œê·¸ì¸ í•´ì£¼ì„¸ìš”.", "ê´€ë¦¬ì ê¶Œí•œ ì—ëŸ¬", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 
@@ -1076,7 +1076,7 @@ public class InitPageFrame extends JFrame implements MouseListener {
 
 		int count = 0;
 		int qty = 0;
-		String msg = "    ¡Ú  ÀÎ±â ¸Ş´º\n";
+		String msg = "    â˜…  ì¸ê¸° ë©”ë‰´\n";
 		Food food = null;
 		Iterator<Map.Entry<Integer, Food>> itr = sortedSales.iterator();
 		this.popularMenuTextArea.setText("");
@@ -1085,11 +1085,11 @@ public class InitPageFrame extends JFrame implements MouseListener {
 			newEntry = itr.next();
 			food = newEntry.getValue();
 			qty = newEntry.getKey();
-			msg += "    " + count+ "µî ¸Ş´º:   " + food.toString() + " - - - ÃÑ " + qty + " °³ ÆÈ·È¾î¿ä.";
+			msg += "    " + count+ "ë“± ë©”ë‰´:   " + food.toString() + " - - - ì´ " + qty + " ê°œ íŒ”ë ¸ì–´ìš”.";
 			if(count <5) msg+="\n";
 		}
 		popularMenuTextArea.setText(msg);
-		Font font = new Font("¸¼Àº°íµñ", Font.BOLD, 11);
+		Font font = new Font("ë§‘ì€ê³ ë”•", Font.BOLD, 11);
         popularMenuTextArea.setFont(font);
         popularMenuTextArea.setForeground(Color.BLUE);
 	}

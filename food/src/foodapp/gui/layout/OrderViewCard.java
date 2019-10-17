@@ -72,15 +72,15 @@ public class OrderViewCard extends JPanel implements MouseListener{
 		orderViewLeftPanel = new JPanel();
 		centerReceipt = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
-		Font font = new Font("¸¼Àº°íµñ", Font.BOLD, 17);
-		receiptLabel = new JLabel("ÃÖ±Ù ÁÖ¹® ³»¿ª");
+		Font font = new Font("ë§‘ì€ê³ ë”•", Font.BOLD, 17);
+		receiptLabel = new JLabel("ìµœê·¼ ì£¼ë¬¸ ë‚´ì—­");
 		receiptLabel.setFont(font);
 		receiptLabel.setForeground(Color.DARK_GRAY);
 		receiptLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		receiptLabelPanel.add(receiptLabel);
 		receiptTextArea = new JTextArea(400, 500);
 		receiptTextArea.setEditable(false);
-		font = new Font("¸¼Àº°íµñ", Font.BOLD, 13);
+		font = new Font("ë§‘ì€ê³ ë”•", Font.BOLD, 13);
         receiptTextArea.setFont(font);
         receiptTextArea.setForeground(Color.BLUE);
 
@@ -98,7 +98,7 @@ public class OrderViewCard extends JPanel implements MouseListener{
 		
 		orderViewSplitPane3 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		backButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		orderViewHomeBtn = new JButton("µÚ·Î °¡±â");
+		orderViewHomeBtn = new JButton("ë’¤ë¡œ ê°€ê¸°");
 		orderViewHomeBtn.setName(INIT_PAGE);
 		backButtonPanel.add(orderViewHomeBtn);
 		orderViewSplitPane3.setTopComponent(backButtonPanel);
@@ -152,7 +152,7 @@ public class OrderViewCard extends JPanel implements MouseListener{
 		}
 		User user = userRepo.getUserByPhone(this.phoneTextField.getText());
 		if(user ==null) {
-			JOptionPane.showMessageDialog(null, "·Î±×ÀÎÀÌ ÇÊ¿äÇÕ´Ï´Ù.", "·Î±×ÀÎ È®ÀÎ", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "ë¡œê·¸ì¸ì´ í•„ìš”í•©ë‹ˆë‹¤.", "ë¡œê·¸ì¸ í™•ì¸", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 		Map<Food, Integer> orderList = user.getOrderList();
@@ -163,19 +163,19 @@ public class OrderViewCard extends JPanel implements MouseListener{
 		}
 		
 		Date temp = new Date(user.getOrderCreated().getTimeInMillis());
-		SimpleDateFormat sdf = new SimpleDateFormat("yy³â MM¿ù ddÀÏ, HH½Ã mmºĞ ssÃÊ");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyë…„ MMì›” ddì¼, HHì‹œ mmë¶„ ssì´ˆ");
 		String date = sdf.format(temp);
-		String msg = "\tÁÖ¹® ³¯Â¥:  " + date + "\n\n";
+		String msg = "\tì£¼ë¬¸ ë‚ ì§œ:  " + date + "\n\n";
 		Food food = null;
 		int qty = 0;
 		int sum = 0;
 		for(Map.Entry<Food, Integer> entry : orderList.entrySet()) {
 			food = entry.getKey();
 			qty = entry.getValue();
-			msg += "\t" + food + " * " + qty + " °³.\n";
+			msg += "\t" + food + " * " + qty + " ê°œ.\n";
 			sum += food.getMenuPrice() * qty;
 		}
-		msg += "\n\t ÃÑ ÁÖ¹® ¾×: " + NumberFormat.getCurrencyInstance(Locale.KOREA).format(sum);
+		msg += "\n\t ì´ ì£¼ë¬¸ ì•¡: " + NumberFormat.getCurrencyInstance(Locale.KOREA).format(sum);
 
 		receiptTextArea.setText(msg);
 	}
